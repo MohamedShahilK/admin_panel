@@ -1,5 +1,8 @@
+import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -8,58 +11,73 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menu = Provider.of<SideMenuController>(context);
     return Drawer(
+      backgroundColor: sideMenuColor,
       child: SingleChildScrollView(
         // it enables scrolling
         child: Column(
           children: [
             DrawerHeader(
-              child: Image.asset("assets/images/logo.png"),
+              child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 250),
             ),
             DrawerListTile(
               title: "Dashboard",
-              svgSrc: "assets/icons/menu_dashbord.svg",
-              press: () {},
+              svgSrc: "assets/icons/dashboard_new.svg",
+              press: () {
+                menu.setMyMenu('Dashboard');
+              },
             ),
             DrawerListTile(
-              title: "Transaction",
-              svgSrc: "assets/icons/menu_tran.svg",
-              press: () {},
+              title: "Check In",
+              svgSrc: "assets/icons/checkin.svg",
+              press: () {
+                menu.setMyMenu('Check In');
+              },
             ),
             DrawerListTile(
-              title: "Task",
-              svgSrc: "assets/icons/menu_task.svg",
-              press: () {},
+              title: "Check Out",
+              svgSrc: "assets/icons/checkout.svg",
+              press: () {
+                menu.setMyMenu('Check Out');
+              },
             ),
             DrawerListTile(
-              title: "Documents",
-              svgSrc: "assets/icons/menu_doc.svg",
-              press: () {},
+              title: "Master",
+              svgSrc: "assets/icons/master.svg",
+              press: () {
+                menu.setMyMenu('Master');
+              },
             ),
             DrawerListTile(
-              title: "Store",
-              svgSrc: "assets/icons/menu_store.svg",
-              press: () {},
+              title: "Report",
+              svgSrc: "assets/icons/report.svg",
+              press: () {
+                menu.setMyMenu('Report');
+              },
             ),
             DrawerListTile(
-              title: "Notification",
-              svgSrc: "assets/icons/menu_notification.svg",
-              press: () {},
+              title: "Reset Password",
+              svgSrc: "assets/icons/reset_password.svg",
+              press: () {
+                menu.setMyMenu('Reset Password');
+              },
             ),
             DrawerListTile(
-              title: "Profile",
-              svgSrc: "assets/icons/menu_profile.svg",
-              press: () {},
-            ),
-            DrawerListTile(
-              title: "Settings",
-              svgSrc: "assets/icons/menu_setting.svg",
-              press: () {},
+              title: "LogOut",
+              svgSrc: "assets/icons/logout.svg",
+              press: () {
+                menu.setMyMenu('LogOut');
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _handlePageNavigation(BuildContext context, String route) async {
+    await Navigator.of(context).pushNamed(route);
   }
 }
 
@@ -76,17 +94,23 @@ class DrawerListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: press,
-      horizontalTitleGap: 0.0,
-      leading: SvgPicture.asset(
-        svgSrc,
-        color: Colors.white54,
-        height: 16,
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(color: Colors.white54),
+    final menu = Provider.of<SideMenuController>(context);
+    final isSelected = menu.myMenu == title;
+    return ColoredBox(
+      color: isSelected ? Colors.white54 : Colors.transparent,
+      child: ListTile(
+        onTap: press,
+        horizontalTitleGap: 12.0,
+        leading: SvgPicture.asset(
+          svgSrc,
+          // color: Colors.white54,
+          colorFilter: ColorFilter.mode(isSelected ? primaryColor : Colors.black87, BlendMode.srcIn),
+          height: 20,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(color: isSelected ? primaryColor : Colors.black87, fontSize: 13),
+        ),
       ),
     );
   }

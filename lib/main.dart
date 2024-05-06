@@ -1,4 +1,5 @@
 import 'package:admin_panel/controllers/MenuController.dart';
+import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       home: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => CustomMenuController()),
+          ChangeNotifierProvider(create: (context) => SideMenuController()),
         ],
         child: const MainScreen(),
       ),

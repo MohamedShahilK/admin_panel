@@ -1,39 +1,86 @@
-
 import 'package:admin_panel/constants.dart';
 import 'package:admin_panel/controllers/MenuController.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
 
 class Header extends StatelessWidget {
   const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (!Responsive.isDesktop(context))
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: context.read<CustomMenuController>().controlMenu,
+    return Container(
+      // color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          if (!Responsive.isDesktop(context))
+            IconButton(
+              icon: const Icon(Icons.menu, color: secondaryColor),
+              onPressed: context.read<CustomMenuController>().controlMenu,
+            ),
+          if (!Responsive.isMobile(context))
+            Text(
+              "Dashboard",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          if (!Responsive.isMobile(context))
+            Spacer(
+              flex: Responsive.isDesktop(context) ? 2 : 1,
+            ),
+          // const Expanded(
+          //   child:  SearchField(),
+          // ),
+          InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(100),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: badges.Badge(
+                badgeContent: const Text(
+                  '54',
+                  softWrap: true,
+                  style: TextStyle(fontSize: 10),
+                ),
+                badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                child: SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                  width: 25,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-        if (!Responsive.isMobile(context))
-          Text(
-            "Dashboard",
-            style: Theme.of(context).textTheme.titleLarge,
+          InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(100),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: badges.Badge(
+                badgeContent: const Text(
+                  '10',
+                  softWrap: true,
+                  style: TextStyle(fontSize: 10),
+                ),
+                badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                child: SvgPicture.asset(
+                  'assets/icons/car_ontheway.svg',
+                  colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                  width: 25,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-        if (!Responsive.isMobile(context))
-          Spacer(
-            flex: Responsive.isDesktop(context) ? 2 : 1,
-          ),
-        const Expanded(
-          child:  SearchField(),
-        ),
-        const ProfileCard()
-      ],
+          const ProfileCard(),
+        ],
+      ),
     );
-  } 
+  }
 }
 
 class ProfileCard extends StatelessWidget {
@@ -44,7 +91,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: defaultPadding),
+      margin: const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
       padding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
         vertical: defaultPadding / 2,
@@ -56,14 +103,21 @@ class ProfileCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            "assets/images/profile_pic.png",
+          // Image.asset(
+          //   "assets/images/profile_pic.png",
+          //   height: 38,
+          // ),
+          Container(
             height: 38,
+            width: 38,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(image: AssetImage("assets/images/avatar.jpg"), fit: BoxFit.cover),
+            ),
           ),
           if (!Responsive.isMobile(context))
             const Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+              padding: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
               child: Text("Angelina Joli"),
             ),
           const Icon(Icons.keyboard_arrow_down),
@@ -75,8 +129,8 @@ class ProfileCard extends StatelessWidget {
 
 class SearchField extends StatelessWidget {
   const SearchField({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
