@@ -13,68 +13,72 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context);
-    return Drawer(
-      backgroundColor: sideMenuColor,
-      child: SingleChildScrollView(
-        // it enables scrolling
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 250),
-            ),
-            DrawerListTile(
-              title: "Dashboard",
-              svgSrc: "assets/icons/dashboard_new.svg",
-              press: () {
-                menu.setMyMenu('Dashboard');
-                // _handlePageNavigation(context, '/');
-              },
-            ),
-            DrawerListTile(
-              title: "Check In",
-              svgSrc: "assets/icons/checkin.svg",
-              press: () {
-                menu.setMyMenu('Check In');
-                // _handlePageNavigation(context, '/checkin');
-              },
-            ),
-            DrawerListTile(
-              title: "Check Out",
-              svgSrc: "assets/icons/checkout.svg",
-              press: () {
-                menu.setMyMenu('Check Out');
-                // _handlePageNavigation(context, '/');
-              },
-            ),
-            DrawerListTile(
-              title: "Master",
-              svgSrc: "assets/icons/master.svg",
-              press: () {
-                menu.setMyMenu('Master');
-              },
-            ),
-            DrawerListTile(
-              title: "Report",
-              svgSrc: "assets/icons/report.svg",
-              press: () {
-                menu.setMyMenu('Report');
-              },
-            ),
-            DrawerListTile(
-              title: "Reset Password",
-              svgSrc: "assets/icons/reset_password.svg",
-              press: () {
-                menu.setMyMenu('Reset Password');
-              },
-            ),
-            DrawerListTile(
-              title: "LogOut",
-              svgSrc: "assets/icons/logout.svg",
-              press: () {
-                menu.setMyMenu('LogOut');
-              },
-            ),
-          ],
+    return SizedBox(
+      width: 100,
+      child: Drawer(
+        backgroundColor: sideMenuColor,
+        child: SingleChildScrollView(
+          // it enables scrolling
+          child: Column(
+            children: [
+              DrawerHeader(
+                // child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 250),
+                child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 200),
+              ),
+              DrawerListTile(
+                title: "Dashboard",
+                svgSrc: "assets/icons/dashboard_new.svg",
+                press: () {
+                  menu.setMyMenu('Dashboard');
+                  // _handlePageNavigation(context, '/');
+                },
+              ),
+              DrawerListTile(
+                title: "Check In",
+                svgSrc: "assets/icons/checkin.svg",
+                press: () {
+                  menu.setMyMenu('Check In');
+                  // _handlePageNavigation(context, '/checkin');
+                },
+              ),
+              DrawerListTile(
+                title: "Check Out",
+                svgSrc: "assets/icons/checkout.svg",
+                press: () {
+                  menu.setMyMenu('Check Out');
+                  // _handlePageNavigation(context, '/');
+                },
+              ),
+              DrawerListTile(
+                title: "Master",
+                svgSrc: "assets/icons/master.svg",
+                press: () {
+                  menu.setMyMenu('Master');
+                },
+              ),
+              DrawerListTile(
+                title: "Report",
+                svgSrc: "assets/icons/report.svg",
+                press: () {
+                  menu.setMyMenu('Report');
+                },
+              ),
+              DrawerListTile(
+                title: "Reset Password",
+                svgSrc: "assets/icons/reset_password.svg",
+                press: () {
+                  menu.setMyMenu('Reset Password');
+                },
+              ),
+              DrawerListTile(
+                title: "LogOut",
+                svgSrc: "assets/icons/logout.svg",
+                press: () {
+                  menu.setMyMenu('LogOut');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

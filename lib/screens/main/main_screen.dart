@@ -22,9 +22,11 @@ class MainScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (Responsive.isDesktop(context)) const Expanded(child: SideMenu()),
-            Expanded(
-              flex: 5,
-              child: pages(menu),
+            const Expanded(
+              // flex: 5,
+              flex: 7,
+              // child: pages(menu),
+              child: CheckInScreen(),
             )
           ],
         ),
