@@ -1,5 +1,5 @@
 
-import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/utils/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

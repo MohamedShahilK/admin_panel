@@ -1,10 +1,58 @@
-import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/utils/constants.dart';
+import 'package:admin_panel/controllers/MenuController.dart';
+import 'package:admin_panel/responsive.dart';
+import 'package:admin_panel/screens/main/components/side_menu.dart';
+import 'package:admin_panel/utils/custom_tools.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'components/header.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+// class DashboardScreen extends StatelessWidget {
+//   const DashboardScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       key: context.read<CustomMenuController>().scaffoldKey,
+//       drawer: const SideMenu(),
+//       body: Row(crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           if (Responsive.isDesktop(context)) const Expanded(child: SideMenu()),
+//           const Expanded(flex: 5, child: _DashboardBody()),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({
+    super.key,
+  });
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  var isLoading = true;
+
+  @override
+  void didChangeDependencies() {
+    customLoader(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(
+        const Duration(milliseconds: 300),
+        () => setState(() {
+          isLoading = false;
+          Loader.hide();
+        }),
+      );
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {

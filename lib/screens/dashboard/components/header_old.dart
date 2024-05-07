@@ -1,5 +1,5 @@
 
-import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/MenuController.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:flutter/material.dart';

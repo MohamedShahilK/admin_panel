@@ -5,7 +5,7 @@ class SideMenuController extends ChangeNotifier {
 
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
 
-//provider that will help to navigate the pages
+  // provider that will help to navigate the pages
   // String _myMenu = HomeDrawerMenuConstant.dashboard;
   String _myMenu = 'Dashboard';
 

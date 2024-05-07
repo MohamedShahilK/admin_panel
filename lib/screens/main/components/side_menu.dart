@@ -1,4 +1,5 @@
-import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
+import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,6 +27,7 @@ class SideMenu extends StatelessWidget {
               svgSrc: "assets/icons/dashboard_new.svg",
               press: () {
                 menu.setMyMenu('Dashboard');
+                // _handlePageNavigation(context, '/');
               },
             ),
             DrawerListTile(
@@ -33,6 +35,7 @@ class SideMenu extends StatelessWidget {
               svgSrc: "assets/icons/checkin.svg",
               press: () {
                 menu.setMyMenu('Check In');
+                // _handlePageNavigation(context, '/checkin');
               },
             ),
             DrawerListTile(
@@ -40,6 +43,7 @@ class SideMenu extends StatelessWidget {
               svgSrc: "assets/icons/checkout.svg",
               press: () {
                 menu.setMyMenu('Check Out');
+                // _handlePageNavigation(context, '/');
               },
             ),
             DrawerListTile(
@@ -75,9 +79,28 @@ class SideMenu extends StatelessWidget {
       ),
     );
   }
+  
 
   Future<void> _handlePageNavigation(BuildContext context, String route) async {
-    await Navigator.of(context).pushNamed(route);
+    // await Navigator.of(context).pushNamed(route);
+    await Navigator.of(context).push(
+      PageRouteBuilder(
+        settings: RouteSettings(name: '/'),
+        pageBuilder: (context, animation, _) =>  DashboardScreen(),
+        transitionsBuilder: (context, animation, _, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 }
 

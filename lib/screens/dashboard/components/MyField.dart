@@ -1,4 +1,4 @@
-import 'package:admin_panel/constants.dart';
+import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/models/MyFiles.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:flutter/material.dart';
