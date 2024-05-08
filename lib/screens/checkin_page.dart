@@ -21,22 +21,22 @@ class CheckInScreen extends StatefulWidget {
 }
 
 class _CheckInScreenState extends State<CheckInScreen> {
-  var isLoading = true;
+  // var isLoading = true;
 
-  @override
-  void didChangeDependencies() {
-    customLoader(context);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(
-        const Duration(milliseconds: 300),
-        () => setState(() {
-          isLoading = false;
-          Loader.hide();
-        }),
-      );
-    });
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   customLoader(context);
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     Future.delayed(
+  //       const Duration(milliseconds: 300),
+  //       () => setState(() {
+  //         isLoading = false;
+  //         Loader.hide();
+  //       }),
+  //     );
+  //   });
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

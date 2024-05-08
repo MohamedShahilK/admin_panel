@@ -37,22 +37,21 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var isLoading = true;
+  // var isLoading = true;
 
-  @override
-  void didChangeDependencies() {
-    customLoader(context);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(
-        const Duration(milliseconds: 300),
-        () => setState(() {
-          isLoading = false;
-          Loader.hide();
-        }),
-      );
-    });
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   customLoader(context);
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     Future.delayed(
+  //       const Duration(milliseconds: 300),
+  //       () => setState(() {
+  //         isLoading = false;
+  //         Loader.hide();
+  //       }),
+  //     );
+  //   });
+  //   super.didChangeDependencies();
 
   @override
   Widget build(BuildContext context) {

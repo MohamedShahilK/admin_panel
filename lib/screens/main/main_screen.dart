@@ -5,12 +5,19 @@ import 'package:admin_panel/screens/checkin_page.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
+import 'dart:html' as html;
 
 import 'components/side_menu.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context, listen: false);
@@ -22,8 +29,24 @@ class MainScreen extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (Responsive.isDesktop(context)) const Expanded(child: SideMenu()),
-            Expanded(
+            Builder(
+              builder: (context) {
+                final isDesktop = MediaQuery.of(context).size.width >= 1100;
+                return Expanded(
+                  flex: isDesktop ? 1 : 0,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (Responsive.isDesktop(context)) {
+                        return const SideMenu();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                );
+              }
+            ),
+            const Expanded(
               // flex: 5,
               flex: 7,
               // child: Consumer<SideMenuController>(

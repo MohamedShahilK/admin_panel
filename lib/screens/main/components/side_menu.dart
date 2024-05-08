@@ -14,7 +14,7 @@ class SideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context,listen: false);
     return SizedBox(
-      width: 100,
+      // width: 100,
       child: Drawer(
         backgroundColor: sideMenuColor,
         child: SingleChildScrollView(
