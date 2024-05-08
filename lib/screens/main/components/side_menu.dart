@@ -12,7 +12,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menu = Provider.of<SideMenuController>(context);
+    final menu = Provider.of<SideMenuController>(context,listen: false);
     return SizedBox(
       width: 100,
       child: Drawer(

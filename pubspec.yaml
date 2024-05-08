@@ -44,6 +44,7 @@ dependencies:
   flutter_overlay_loader: ^2.0.0
   syncfusion_flutter_datagrid: ^25.1.42
   dropdown_button2: ^2.3.9
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:

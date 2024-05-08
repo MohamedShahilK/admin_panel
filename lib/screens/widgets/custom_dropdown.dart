@@ -44,9 +44,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
   // String dropdownValue = '';
   @override
-  Widget build(BuildContext context) {    
-    return Padding(      
-     padding: const EdgeInsets.only(right: 15),
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -121,7 +121,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     // color: const Color.fromARGB(146, 146, 69, 197),
-                    color:secondaryColor,
+                    color: secondaryColor,
                   ),
                 ),
               ),
@@ -160,9 +160,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                         child: item == ''
                             ? Text(
                                 !widget.isReg ? widget.labelText : 'Country Of Registraion',
-                                style: const TextStyle(
-                                  // color: AppColors.dropDownItemColor,
-                                  color: Colors.black54,
+                                style: GoogleFonts.openSans().copyWith(
+                                  color: Colors.grey[700],
+                                  fontSize:12,
                                 ),
                               )
                             : Text(

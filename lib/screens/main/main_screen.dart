@@ -13,7 +13,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menu = Provider.of<SideMenuController>(context);
+    final menu = Provider.of<SideMenuController>(context, listen: false);
+    print('11111111111111111');
     return Scaffold(
       key: context.read<CustomMenuController>().scaffoldKey,
       drawer: const SideMenu(),
@@ -22,10 +23,14 @@ class MainScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (Responsive.isDesktop(context)) const Expanded(child: SideMenu()),
-            const Expanded(
+            Expanded(
               // flex: 5,
               flex: 7,
-              // child: pages(menu),
+              // child: Consumer<SideMenuController>(
+              //   builder: (context, state, _) {
+              //     return pages(menu);
+              //   },
+              // ),
               child: CheckInScreen(),
             )
           ],

@@ -5,6 +5,8 @@ import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/custom_tools.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,7 +40,264 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
+      child: Stack(
+        children: [
+          _AllChecinSection(),
+          // _NewCheckInForm(),
+
+          // Header
+          Header(),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewCheckInForm extends StatelessWidget {
+  const _NewCheckInForm({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 150,left: 30,right: 30),
+      child: Wrap(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width/4,
+            child: DottedBorder(
+              borderType: BorderType.RRect,
+              radius: const Radius.circular(10),
+              dashPattern: const [6, 6],
+              color: Colors.grey,
+              strokeWidth: 2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 10,
+                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all()
+                // ),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 110,
+                      height: 40,
+                      child: _DropDown(field: 'Source'),
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 55,
+                      height: 40,
+                      child: _PlateTextField(
+                        // textStream: bloc.codeStream,
+                        onTextChanged: (val) {},
+                        hintText: 'Code',
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: _PlateTextField(
+                          // textStream: bloc.vechicleNumberStream,
+                          onTextChanged: (val) {},
+                          hintText: 'Number',
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DropDown extends StatefulWidget {
+  const _DropDown({
+    // required this.items,
+    required this.field,
+  });
+
+  // final List<String> items;
+  final String field;
+
+  @override
+  State<_DropDown> createState() => _DropDownState();
+}
+
+class _DropDownState extends State<_DropDown> {
+  var selectedValue = '';
+  @override
+  Widget build(BuildContext context) {
+    // final bloc = Provider.of<ParkedBloc>(context, listen: false);
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2(
+        isExpanded: true,
+        hint: Text(
+          widget.field,
+          style: GoogleFonts.openSans().copyWith(
+            color: Colors.grey[900],
+            fontWeight: FontWeight.w900,
+            fontSize: 10.5,
+          ),
+        ),
+
+        style: GoogleFonts.openSans().copyWith(
+            color: Colors.grey[900],
+            fontWeight: FontWeight.w900,
+            fontSize: 10.5,
+          ),
+        
+        items: [
+          // '',
+          'DUBAI',
+          'ABU DHABI',
+          'AJMAN',
+          'Driver 4',
+        ].map((e) => DropdownMenuItem(child: Align(child: Text(e)),value: e)).toList(),
+        value: selectedValue == '' ? null : selectedValue,
+        onChanged: (value) {
+          setState(() {
+            selectedValue = value!;
+          });
+          // bloc.sourceIdStream.add(value);
+          // //print('111111111111111 $selectedValue');
+        },
+        iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor, iconDisabledColor: secondaryColor),
+        buttonStyleData: ButtonStyleData(
+          height: 50,
+          width: 160,
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              color: const Color.fromARGB(146, 146, 69, 197),
+            ),
+            color: Colors.grey[200],
+            // color: Colors.white,
+          ),
+          elevation: 2,
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          height: 40,
+        ),
+        alignment: Alignment.center,
+        dropdownStyleData: DropdownStyleData(
+          offset: const Offset(-45, 0),
+          maxHeight: 200,
+          width: 188,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(width: .3, color: Colors.grey),
+            color: Colors.grey[300],
+          ),
+          // offset: const Offset(-20, 0),
+          scrollbarTheme: ScrollbarThemeData(
+            radius: const Radius.circular(40),
+            thickness: MaterialStateProperty.all(6),
+            thumbVisibility: MaterialStateProperty.all(true),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PlateTextField extends StatefulWidget {
+  const _PlateTextField({
+    // required this.textStream,
+    required this.onTextChanged,
+    required this.hintText,
+    required this.keyboardType,
+    this.textAlign,
+    this.contentPadding,
+    this.hintStyle,
+  });
+
+  // final BehaviorSubject<String> textStream;
+  final void Function(String) onTextChanged;
+  final String hintText;
+  final TextInputType keyboardType;
+  final TextAlign? textAlign;
+  final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? hintStyle;
+
+  @override
+  State<_PlateTextField> createState() => _PlateTextFieldState();
+}
+
+class _PlateTextFieldState extends State<_PlateTextField> {
+  // final _controller = TextEditingController();
+  // @override
+  // void initState() {
+  //   widget.textStream.listen((value) {
+  //     if (value.isEmpty) {
+  //       _controller.clear();
+  //     } else if (_controller.text != value) {
+  //       _controller.text = value;
+  //     }
+  //   });
+  //   super.initState();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      scrollPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 15 * 6, // Adjust the value as needed
+      ),
+      // controller: _controller,
+      onChanged: widget.onTextChanged,
+      keyboardType: widget.keyboardType,
+      textCapitalization: TextCapitalization.characters,
+      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+      textAlign: widget.textAlign ?? TextAlign.center,
+      decoration: InputDecoration(
+        hintText: widget.hintText,
+        // hintStyle: TextStyle(fontSize: 12.w),
+        hintStyle: widget.hintStyle ??
+            GoogleFonts.openSans().copyWith(
+              color: Colors.grey[700],
+              fontSize: 10.5,
+            ),
+        // contentPadding: EdgeInsets.only(left: 15.w),
+        contentPadding: widget.contentPadding ?? const EdgeInsets.only(top: 5),
+        border: const OutlineInputBorder(),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(146, 146, 69, 197),
+          ),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            // color: Color.fromARGB(255, 80, 19, 121),
+            color: Color.fromARGB(146, 146, 69, 197),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AllChecinSection extends StatelessWidget {
+  const _AllChecinSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70),
       child: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
           child: ConstrainedBox(
@@ -47,9 +306,6 @@ class _CheckInScreenState extends State<CheckInScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
-                  Header(),
-
                   // Filter
                   _CustomExpansionTile(),
 
@@ -344,7 +600,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                             child: Row(
                               children: [
                                 const Icon(Icons.filter_alt_outlined),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 10),
                                 Text('FILTER', style: GoogleFonts.openSans().copyWith(fontSize: 12, fontWeight: FontWeight.w900)),
                               ],
                             ),
