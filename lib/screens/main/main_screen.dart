@@ -1,8 +1,9 @@
 import 'package:admin_panel/controllers/MenuController.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:admin_panel/responsive.dart';
-import 'package:admin_panel/screens/checkin_page.dart';
+import 'package:admin_panel/screens/removed/checkin_page.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
+import 'package:admin_panel/screens/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -46,15 +47,15 @@ class _MainScreenState extends State<MainScreen> {
                 );
               }
             ),
-             const Expanded(
+              Expanded(
               // flex: 5,
               flex: 7,
-              // child: Consumer<SideMenuController>(
-              //   builder: (context, state, _) {
-              //     return pages(menu);
-              //   },
-              // ),
-              child: CheckInScreen(),
+              child: Consumer<SideMenuController>(
+                builder: (context, state, _) {
+                  return pages(menu);
+                },
+              ),
+              // child: CheckInScreen(),
             )
           ],
         ),
@@ -65,8 +66,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget pages(SideMenuController menu) {
     if (menu.myMenu == 'Dashboard') {
       return const DashboardScreen();
-    } else if (menu.myMenu == 'Check In') {
-      return const CheckInScreen();
+    } else if (menu.myMenu == 'Actions') {
+      // return const CheckInScreen();
+    }else if (menu.myMenu == 'Search') {
+      return const SearchPage();
     }
     return Container();
   }

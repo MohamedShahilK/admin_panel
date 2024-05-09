@@ -596,7 +596,7 @@ class _Table extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           // '50',
-                          allUsers.length.toString(),
+                          allCheckedInUsers.length.toString(),
                           // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
                           style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
                         ),
@@ -653,7 +653,7 @@ class _SortablePageState extends State<SortablePage> {
           const Duration(seconds: 2),
           (Timer t) {
             setState(() {
-              users = List.of(allUsers);
+              users = List.of(allCheckedInUsers);
             });
           },
         );
