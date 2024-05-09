@@ -46,6 +46,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   dotted_border: ^2.1.0
   skeletonizer: ^1.1.2+1
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

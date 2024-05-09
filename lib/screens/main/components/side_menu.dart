@@ -3,6 +3,7 @@ import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SideMenu extends StatelessWidget {
@@ -80,7 +81,8 @@ class SideMenu extends StatelessWidget {
 
               DrawerListTile(
                 title: "Tickets",
-                svgSrc: "assets/icons/checkin.svg",
+                // svgSrc: "assets/icons/checkin.svg",
+                icon: FontAwesomeIcons.car,
                 press: () {
                   menu.setMyMenu('Tickets');
                   // _handlePageNavigation(context, '/');
@@ -151,16 +153,19 @@ class SideMenu extends StatelessWidget {
 }
 
 class DrawerListTile extends StatelessWidget {
-  final String title, svgSrc;
+  final String title;
+  final String? svgSrc;
+  final IconData? icon;
   final double? svgHeight;
   final VoidCallback press;
 
   const DrawerListTile({
     super.key,
     required this.title,
-    required this.svgSrc,
-    this.svgHeight,
     required this.press,
+    this.svgSrc,
+    this.icon,
+    this.svgHeight,
   });
 
   @override
@@ -172,12 +177,14 @@ class DrawerListTile extends StatelessWidget {
       child: ListTile(
         onTap: press,
         horizontalTitleGap: 12.0,
-        leading: SvgPicture.asset(
-          svgSrc,
-          // color: Colors.white54,
-          colorFilter: ColorFilter.mode(isSelected ? primaryColor : Colors.black87, BlendMode.srcIn),
-          height: svgHeight ?? 20,
-        ),
+        leading: icon == null
+            ? SvgPicture.asset(
+                svgSrc!,
+                // color: Colors.white54,
+                colorFilter: ColorFilter.mode(isSelected ? primaryColor : Colors.black87, BlendMode.srcIn),
+                height: svgHeight ?? 20,
+              )
+            : Icon(icon, size: 17.5, color: Colors.black87),
         title: Text(
           title,
           style: TextStyle(color: isSelected ? primaryColor : Colors.black87, fontSize: 13),

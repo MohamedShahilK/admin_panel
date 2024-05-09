@@ -9,6 +9,7 @@ import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/ripple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'components/header.dart';
@@ -55,59 +56,130 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const Header(),
                   // const SizedBox(height: defaultPadding * 3),
 
-                  // Top Stack Section
-                  Stack(
-                    alignment: Alignment.center,
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        color: secondaryColor,
-                        height: 170,
-                      ),
+                  const SizedBox(height: 30),
 
-                      //
-                      Positioned(
-                        bottom: -40,
-                        // left: ,
-                        child: Wrap(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const _DashTopCard(title: 'Today Check In', svgIcon: 'assets/icons/checkin.svg', count: '22').ripple(context, overlayColor: Colors.transparent, () {
-                              usersNotifier.value = [];
-                              usersNotifier.notifyListeners();
-                              Future.delayed(
-                                const Duration(seconds: 2),
-                                () {
-                                  usersNotifier.value = allCheckedInUsers;
-                                  usersNotifier.notifyListeners();
-                                },
-                              );
-                            }),
-                            const _DashTopCard(title: 'Today Check Out', svgIcon: 'assets/icons/checkout.svg', count: '15').ripple(context, overlayColor: Colors.transparent, () {
-                              usersNotifier.value = [];
-                              usersNotifier.notifyListeners();
-                              Future.delayed(
-                                const Duration(seconds: 2),
-                                () {
-                                  usersNotifier.value = allCheckedOutUsers;
-                                  usersNotifier.notifyListeners();
-                                },
-                              );
-                            }),
-                            const _DashTopCard(title: 'Current Inventory', svgIcon: 'assets/icons/inventory.svg', count: '1584').ripple(context, overlayColor: Colors.transparent, () {
-                              usersNotifier.value = [];
-                              usersNotifier.notifyListeners();
-                              Future.delayed(
-                                const Duration(seconds: 2),
-                                () {
-                                  usersNotifier.value = allUsers;
-                                  usersNotifier.notifyListeners();
-                                },
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
+                  //
+                  Wrap(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // alignment: WrapAlignment.center,
+                    runSpacing: 15,
+                    children: [
+                      _DashTopCard(
+                        title: 'Current Inventory',
+                        svgIcon: 'assets/icons/inventory.svg',
+                        count: '1584',
+                        color: Colors.brown[900]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'Check In',
+                        svgIcon: 'assets/icons/key_exchange.svg',
+                        count: '22',
+                        color: Colors.green[600]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allCheckedInUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'Parked',
+                        // svgIcon: 'assets/icons/checkout.svg',
+                        icon: Icons.local_parking_rounded,
+                        count: '15',
+                        color: Colors.yellow[800]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allParkedInUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'Requested',
+                        // svgIcon: 'assets/icons/inventory.svg',
+                        icon: FontAwesomeIcons.registered,
+                        count: '1584',
+                        color: Colors.blue[600]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allRequestedInUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'On The Way',
+                        // svgIcon: 'assets/icons/checkin.svg',
+                        icon: FontAwesomeIcons.route,
+                        count: '22',
+                        color: Colors.purple[600]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allOnthewayUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'Collect Now',
+                        svgIcon: 'assets/icons/checkin.svg',
+                        count: '15',
+                        color: Colors.orange[900]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allVehicleArrivedUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
+                      _DashTopCard(
+                        title: 'Check Out',
+                        // svgIcon: 'assets/icons/checkout.svg',
+                        icon: FontAwesomeIcons.caravan,
+                        count: '15',
+                        color: Colors.red[900]!,
+                      ).ripple(context, overlayColor: Colors.transparent, () {
+                        usersNotifier.value = [];
+                        usersNotifier.notifyListeners();
+                        Future.delayed(
+                          const Duration(seconds: 2),
+                          () {
+                            usersNotifier.value = allCheckedOutUsers;
+                            usersNotifier.notifyListeners();
+                          },
+                        );
+                      }),
                     ],
                   ),
 
@@ -134,7 +206,7 @@ class _Table extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 40, top: 70),
+        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 40, top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -359,13 +431,13 @@ class _SortablePageState extends State<SortablePage> {
     if (data == 'Checked In') {
       return Colors.green[600];
     } else if (data == 'Parked') {
-      return Colors.yellow[600];
+      return Colors.yellow[700];
     } else if (data == 'Requested') {
       return Colors.blue[600];
-    } else if (data == 'On the Way') {
+    } else if (data == 'On The Way') {
       return Colors.purple[600];
     } else if (data == 'Vehicle Arrived') {
-      return Colors.orange[600];
+      return Colors.orange[900];
     } else {
       return Colors.red[600];
     }
@@ -407,27 +479,31 @@ class _SortablePageState extends State<SortablePage> {
 
 class _DashTopCard extends StatelessWidget {
   const _DashTopCard({
-    super.key,
     required this.title,
-    required this.svgIcon,
     required this.count,
+    required this.color,
+    this.svgIcon,
+    this.icon,
   });
 
   final String title;
-  final String svgIcon;
+  final String? svgIcon;
+  final IconData? icon;
   final String count;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 5,
+      // width: MediaQuery.of(context).size.width / 5,
+      width: 250,
       height: 150,
       margin: const EdgeInsets.only(right: 45),
       padding: const EdgeInsets.symmetric(horizontal: 25),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: color,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey[400]!, offset: const Offset(1, 1), spreadRadius: 2)],
+        boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey[300]!, offset: const Offset(1, 1), spreadRadius: .5)],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -438,28 +514,29 @@ class _DashTopCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(color: Colors.black, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: primaryColor.withOpacity(.5), borderRadius: BorderRadius.circular(15)),
-                child: SvgPicture.asset(
-                  svgIcon,
-                  // color: Colors.white54,
-                  colorFilter: ColorFilter.mode(secondaryColor.withOpacity(.7), BlendMode.srcIn),
-                  height: 30,
-                ),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                child: icon == null
+                    ? SvgPicture.asset(
+                        svgIcon!,
+                        // color: Colors.white54,
+                        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                        height: 30,
+                      )
+                    : Icon(icon, size: 24, color: color),
               ),
             ],
           ),
           const SizedBox(height: 20),
           Text(
             count,
-            style: const TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.w800),
+            style: const TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.w800),
           )
         ],
       ),
     );
   }
 }
-
