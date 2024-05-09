@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
                 );
               }
             ),
-            const Expanded(
+             const Expanded(
               // flex: 5,
               flex: 7,
               // child: Consumer<SideMenuController>(

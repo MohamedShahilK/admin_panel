@@ -1,15 +1,20 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/user.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
-import 'package:admin_panel/utils/custom_tools.dart';
+import 'package:admin_panel/utils/ripple.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CheckInScreen extends StatefulWidget {
   const CheckInScreen({
@@ -62,52 +67,90 @@ class _NewCheckInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 150,left: 30,right: 30),
-      child: Wrap(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width/4,
-            child: DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(10),
-              dashPattern: const [6, 6],
-              color: Colors.grey,
-              strokeWidth: 2,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
+      padding: const EdgeInsets.only(top: 150, left: 30, right: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Vehicle Plate', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
+            const SizedBox(height: 15),
+            Wrap(
+              spacing: 30,
+              runSpacing: 15,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const _VehiclePlate(),
+                // const SizedBox(width: 30),
+                _PlateTextField(onTextChanged: (val) {}, hintText: 'Parking Slot', width: MediaQuery.of(context).size.width / 4, contentPadding: const EdgeInsets.only(left: 20)),
+                // const SizedBox(width: 30),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Text('Vehicle Information', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
+            const SizedBox(height: 15),
+            const _VehicleInformation(),
+            const SizedBox(height: 30),
+            Text('Guest Information (Optional)', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
+            const SizedBox(height: 15),
+            Wrap(
+              runAlignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 30,
+              runSpacing: 15,
+              children: [
+                _PlateTextField(onTextChanged: (val) {}, hintText: 'Guest Name', width: MediaQuery.of(context).size.width / 4, contentPadding: const EdgeInsets.only(left: 20)),
+                _PlateTextField(
+                    onTextChanged: (val) {},
+                    hintText: 'Phone number with the country code (e.g., 971, 965)',
+                    width: MediaQuery.of(context).size.width / 4,
+                    contentPadding: const EdgeInsets.only(left: 20)),
+                _PlateTextField(onTextChanged: (val) {}, hintText: 'Note', width: MediaQuery.of(context).size.width / 4, contentPadding: const EdgeInsets.only(left: 20)),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+            Theme(
+              data: Theme.of(context).copyWith(
+                dividerColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+
+                // iconTheme: IconThemeData(color: Colors.red)
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                // decoration: BoxDecoration(
-                //   border: Border.all()
-                // ),
-                child: Row(
+                child: ExpansionTile(                
+                  // trailing: const SizedBox.shrink(),
+                  iconColor: secondaryColor,
+                  tilePadding: EdgeInsets.zero,
+                  collapsedIconColor: secondaryColor,
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.image_outlined, color: secondaryColor, size: 20),
+                        const SizedBox(width: 30),
+                        Text(
+                          'UPLOAD VEHICLE IMAGES',
+                          style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 14, fontWeight: FontWeight.bold),
+                          // textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                   children: [
-                    const SizedBox(
-                      width: 110,
-                      height: 40,
-                      child: _DropDown(field: 'Source'),
-                    ),
-                    const SizedBox(width: 10),
-                    SizedBox(
-                      width: 55,
-                      height: 40,
-                      child: _PlateTextField(
-                        // textStream: bloc.codeStream,
-                        onTextChanged: (val) {},
-                        hintText: 'Code',
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: _PlateTextField(
-                          // textStream: bloc.vechicleNumberStream,
-                          onTextChanged: (val) {},
-                          hintText: 'Number',
-                          keyboardType: TextInputType.number,
+                    Container(
+                      color: Colors.white,
+                      child: Align(
+                        child: Image.asset(
+                          'assets/images/car-diagram.png',
+                          width: 400,
+                          // fit: BoxFit.cover,
+                          fit: BoxFit.fitHeight,
                         ),
                       ),
                     ),
@@ -115,8 +158,186 @@ class _NewCheckInForm extends StatelessWidget {
                 ),
               ),
             ),
+            //
+            Container(
+              margin: const EdgeInsets.only(top: 30,bottom: 30),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'CHECKIN',
+                    // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
+                    style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VehicleInformation extends StatelessWidget {
+  const _VehicleInformation({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      runAlignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 30,
+      runSpacing: 15,
+      children: [
+        SizedBox(
+          height: 40,
+          width: MediaQuery.of(context).size.width / 4,
+          child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                // color: Colors.white,
+                border: Border.all(
+                  // color: Colors.grey,
+                  color: const Color.fromARGB(146, 146, 69, 197),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Select Brand',
+                // style: TextStyle(
+                //   color: Colors.grey[700],
+                // ),
+                style: GoogleFonts.openSans().copyWith(
+                  color: Colors.grey[700],
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                ),
+              )).ripple(context, () async {}),
+        ),
+        // const SizedBox(width: 30),
+        SizedBox(
+          height: 40,
+          width: MediaQuery.of(context).size.width / 4,
+          child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                // color: Colors.white,
+                border: Border.all(
+                  // color: Colors.grey,
+                  color: const Color.fromARGB(146, 146, 69, 197),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Select Color',
+                // style: TextStyle(
+                //   color: Colors.grey[700],
+                // ),
+                style: GoogleFonts.openSans().copyWith(
+                  color: Colors.grey[700],
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                ),
+              )).ripple(context, () async {}),
+        ),
+        // const SizedBox(width: 30),
+        SizedBox(
+          height: 40,
+          width: MediaQuery.of(context).size.width / 4,
+          child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                // color: Colors.white,
+                border: Border.all(
+                  // color: Colors.grey,
+                  color: const Color.fromARGB(146, 146, 69, 197),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Select Driver',
+                // style: TextStyle(
+                //   color: Colors.grey[700],
+                // ),
+                style: GoogleFonts.openSans().copyWith(
+                  color: Colors.grey[700],
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                ),
+              )).ripple(context, () async {}),
+        ),
+      ],
+    );
+  }
+}
+
+class _VehiclePlate extends StatelessWidget {
+  const _VehiclePlate({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 4,
+      child: DottedBorder(
+        borderType: BorderType.RRect,
+        radius: const Radius.circular(10),
+        dashPattern: const [6, 6],
+        color: Colors.grey,
+        strokeWidth: 2,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
           ),
-        ],
+          // decoration: BoxDecoration(
+          //   border: Border.all()
+          // ),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 110,
+                height: 40,
+                child: _DropDown(field: 'Source'),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 55,
+                height: 40,
+                child: _PlateTextField(
+                  // textStream: bloc.codeStream,
+                  onTextChanged: (val) {},
+                  hintText: 'Code',
+                  keyboardType: TextInputType.text,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: SizedBox(
+                  height: 40,
+                  child: _PlateTextField(
+                    // textStream: bloc.vechicleNumberStream,
+                    onTextChanged: (val) {},
+                    hintText: 'Number',
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -151,20 +372,18 @@ class _DropDownState extends State<_DropDown> {
             fontSize: 10.5,
           ),
         ),
-
         style: GoogleFonts.openSans().copyWith(
-            color: Colors.grey[900],
-            fontWeight: FontWeight.w900,
-            fontSize: 10.5,
-          ),
-        
+          color: Colors.grey[900],
+          fontWeight: FontWeight.w900,
+          fontSize: 10.5,
+        ),
         items: [
           // '',
           'DUBAI',
           'ABU DHABI',
           'AJMAN',
           'Driver 4',
-        ].map((e) => DropdownMenuItem(child: Align(child: Text(e)),value: e)).toList(),
+        ].map((e) => DropdownMenuItem(child: Align(child: Text(e)), value: e)).toList(),
         value: selectedValue == '' ? null : selectedValue,
         onChanged: (value) {
           setState(() {
@@ -218,7 +437,8 @@ class _PlateTextField extends StatefulWidget {
     // required this.textStream,
     required this.onTextChanged,
     required this.hintText,
-    required this.keyboardType,
+    this.keyboardType = TextInputType.text,
+    this.width = 0,
     this.textAlign,
     this.contentPadding,
     this.hintStyle,
@@ -231,6 +451,7 @@ class _PlateTextField extends StatefulWidget {
   final TextAlign? textAlign;
   final EdgeInsetsGeometry? contentPadding;
   final TextStyle? hintStyle;
+  final double width;
 
   @override
   State<_PlateTextField> createState() => _PlateTextFieldState();
@@ -252,36 +473,39 @@ class _PlateTextFieldState extends State<_PlateTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      scrollPadding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 15 * 6, // Adjust the value as needed
-      ),
-      // controller: _controller,
-      onChanged: widget.onTextChanged,
-      keyboardType: widget.keyboardType,
-      textCapitalization: TextCapitalization.characters,
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-      textAlign: widget.textAlign ?? TextAlign.center,
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        // hintStyle: TextStyle(fontSize: 12.w),
-        hintStyle: widget.hintStyle ??
-            GoogleFonts.openSans().copyWith(
-              color: Colors.grey[700],
-              fontSize: 10.5,
-            ),
-        // contentPadding: EdgeInsets.only(left: 15.w),
-        contentPadding: widget.contentPadding ?? const EdgeInsets.only(top: 5),
-        border: const OutlineInputBorder(),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color.fromARGB(146, 146, 69, 197),
-          ),
+    return SizedBox(
+      width: widget.width,
+      child: TextFormField(
+        scrollPadding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 15 * 6, // Adjust the value as needed
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            // color: Color.fromARGB(255, 80, 19, 121),
-            color: Color.fromARGB(146, 146, 69, 197),
+        // controller: _controller,
+        onChanged: widget.onTextChanged,
+        keyboardType: widget.keyboardType,
+        textCapitalization: TextCapitalization.characters,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        textAlign: widget.textAlign ?? TextAlign.left,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          // hintStyle: TextStyle(fontSize: 12.w),
+          hintStyle: widget.hintStyle ??
+              GoogleFonts.openSans().copyWith(
+                color: Colors.grey[700],
+                fontSize: 10.5,
+              ),
+          // contentPadding: EdgeInsets.only(left: 15.w),
+          contentPadding: widget.contentPadding ?? const EdgeInsets.only(top: 5),
+          border: const OutlineInputBorder(),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Color.fromARGB(146, 146, 69, 197),
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              // color: Color.fromARGB(255, 80, 19, 121),
+              color: Color.fromARGB(146, 146, 69, 197),
+            ),
           ),
         ),
       ),
@@ -371,7 +595,8 @@ class _Table extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          '50',
+                          // '50',
+                          allUsers.length.toString(),
                           // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
                           style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
                         ),
@@ -409,15 +634,37 @@ class SortablePage extends StatefulWidget {
 }
 
 class _SortablePageState extends State<SortablePage> {
-  late List<CheckInModel> users;
+  List<CheckInModel> users = [];
   int? sortColumnIndex;
   bool isAscending = false;
+  late var timer;
 
   @override
   void initState() {
     super.initState();
+  }
 
-    users = List.of(allUsers);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        timer = Timer.periodic(
+          const Duration(seconds: 2),
+          (Timer t) {
+            setState(() {
+              users = List.of(allUsers);
+            });
+          },
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -452,33 +699,53 @@ class _SortablePageState extends State<SortablePage> {
           ))
       .toList();
 
-  List<DataRow> getRows(List<CheckInModel> users) => users.map((CheckInModel user) {
-        final cells = [
-          user.ticketNo,
-          user.checkinTime,
-          user.checkinUpdationTime,
-          user.requestTime,
-          user.onTheWayTime,
-          user.carBrand,
-          user.carColour,
-          user.cvaIn,
-          user.emirates,
-          user.plateNo,
-          user.status,
-        ];
+  List<DataRow> getRows(List<CheckInModel> users) {
+    if (users.isEmpty) {
+      return List.generate(1, (index) => DataRow(cells: getCells(['', '', '', '', '', '', '', '', '', '', ''])));
+    }
+    return users.map((CheckInModel user) {
+      final cells = [
+        user.ticketNo,
+        user.checkinTime,
+        user.checkinUpdationTime,
+        user.requestTime,
+        user.onTheWayTime,
+        user.carBrand,
+        user.carColour,
+        user.cvaIn,
+        user.emirates,
+        user.plateNo,
+        user.status,
+      ];
 
-        return DataRow(cells: getCells(cells));
-      }).toList();
+      return DataRow(cells: getCells(cells));
+    }).toList();
+  }
 
-  List<DataCell> getCells(List<dynamic> cells) => cells
-      .map((data) => DataCell(
-            Text(
-              '$data',
-              style: const TextStyle(color: Colors.black, fontSize: 12),
-              // textAlign: TextAlign.center,
-            ),
-          ))
-      .toList();
+  List<DataCell> getCells(List<dynamic> cells) {
+    if (users.isEmpty) {
+      return List.generate(
+          11,
+          (index) => DataCell(Skeletonizer(
+                effect: const ShimmerEffect(),
+                enabled: users.isEmpty,
+                containersColor: Colors.grey[100],
+                child: const Text(
+                  'data',
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+              )));
+    }
+    return cells
+        .map((data) => DataCell(
+              Text(
+                '$data',
+                style: const TextStyle(color: Colors.black, fontSize: 12),
+                // textAlign: TextAlign.center,
+              ),
+            ))
+        .toList();
+  }
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
