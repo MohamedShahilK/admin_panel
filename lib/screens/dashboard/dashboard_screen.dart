@@ -142,25 +142,25 @@ class _Table extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.download_for_offline_outlined, color: secondaryColor),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Download'.toUpperCase(),
-                          // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
-                          style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  //   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor)),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       const Icon(Icons.download_for_offline_outlined, color: secondaryColor),
+                  //       const SizedBox(width: 10),
+                  //       Text(
+                  //         'Download'.toUpperCase(),
+                  //         // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
+                  //         style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
