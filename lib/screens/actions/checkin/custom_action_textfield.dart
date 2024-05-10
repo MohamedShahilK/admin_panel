@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +26,7 @@ class CustomActionTextField extends StatefulWidget {
 }
 
 class CustomActionTextFieldState extends State<CustomActionTextField> {
-  // final _controller = TextEditingController();
+  final _controller = TextEditingController();
 
   // Timer? _timer;
 
@@ -47,7 +48,7 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
     return Form(
       // key: CustomActionTextField._loginScreenFormKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(),
           // Text(
@@ -60,10 +61,10 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
           // ),
           // SizedBox(height: 10.h),
           SizedBox(
-            height: 45,
-            width: MediaQuery.of(context).size.width / 4,
+            height: 50,
+            width: MediaQuery.of(context).size.width / 2,
             child: TextField(
-              // controller: _controller,
+              controller: _controller,
               // onChanged: widget.onTextChanged,
               // onChanged: (value) {
               //   if (_timer?.isActive ?? false) _timer!.cancel();
@@ -84,7 +85,7 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
                 hintText: 'Eg : 2355xxxx6546',
                 hintStyle: GoogleFonts.openSans().copyWith(
                   color: Colors.grey[700],
-                  fontSize: 10.5,
+                  fontSize: 18,
                 ),
                 // contentPadding: const EdgeInsets.only(left: 5),
                 contentPadding: const EdgeInsets.only(left: 20),
@@ -156,66 +157,70 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
                     ],
                   ),
                 ),
-                // prefixIcon: InkWell(
-                //   onTap: () {
-                //     final bloc = Provider.of<ActionsBloc>(context, listen: false);
-                //     customLoader(context);
-                //     Future.delayed(
-                //       const Duration(seconds: 1),
-                //       () async {
-                //         final minValue = StorageServices.to.getInt(StorageServicesKeys.minValue);
-                //         final maxValue = StorageServices.to.getInt(StorageServicesKeys.maxValue);
-                //         // statusNotifier.value = 'CheckIn';
-                //         // statusNotifier.notifyListeners();
-                //         final rng = Random();
-                //         final code = rng.nextInt(9000000) + rng.nextInt(9999999);
-                //         if (code.toString().length >= minValue && !(code.toString().length > maxValue)) {
-                //           bloc.barcodeStream.add(code.toString());
-                //           bloc.ticketIdStream.add('');
-                //           // //print('111111111111 ${await bloc.checkTicketExists(ticketNumber: code.toString())}');
-                //           await bloc.getTicketDetails(ticketNumber: code.toString());
-                //           // print('222222222222222222222 $code');
-                //           if (await bloc.checkTicketExists(ticketNumber: code.toString())) {
-                //             isExpandedNotifier.value = true;
-                //             isExpandedNotifier.notifyListeners();
-                //           }
-                //         }
-                //         // setState(() {
-                //         //   _controller.text = code.toString();
-                //         // });
-                //         widget.bloc.barcodeStream.add(code.toString());
-                //         Loader.hide();
-                //       },
-                //     );
-                //   },
-                //   child: const Padding(
-                //     padding: EdgeInsets.only(right: 15, left: 10),
-                //     child: Column(
-                //       mainAxisSize: MainAxisSize.min,
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       crossAxisAlignment: CrossAxisAlignment.end,
-                //       children: [
-                //         // Container(
-                //         //   height: 40,
-                //         //   width: 30,
-                //         //   color: Colors.orange,
-                //         //   alignment: Alignment.center,
-                //         // ),
+                prefixIcon: InkWell(
+                  onTap: () {
+                    // final bloc = Provider.of<ActionsBloc>(context, listen: false);
+                    // customLoader(context);
+                    // Future.delayed(
+                    //   const Duration(seconds: 1),
+                    //   () async {
+                    //     final minValue = StorageServices.to.getInt(StorageServicesKeys.minValue);
+                    //     final maxValue = StorageServices.to.getInt(StorageServicesKeys.maxValue);
+                    //     // statusNotifier.value = 'CheckIn';
+                    //     // statusNotifier.notifyListeners();
+                    //     final rng = Random();
+                    //     final code = rng.nextInt(9000000) + rng.nextInt(9999999);
+                    //     if (code.toString().length >= minValue && !(code.toString().length > maxValue)) {
+                    //       bloc.barcodeStream.add(code.toString());
+                    //       bloc.ticketIdStream.add('');
+                    //       // //print('111111111111 ${await bloc.checkTicketExists(ticketNumber: code.toString())}');
+                    //       await bloc.getTicketDetails(ticketNumber: code.toString());
+                    //       // print('222222222222222222222 $code');
+                    //       if (await bloc.checkTicketExists(ticketNumber: code.toString())) {
+                    //         isExpandedNotifier.value = true;
+                    //         isExpandedNotifier.notifyListeners();
+                    //       }
+                    //     }
+                    //     // setState(() {
+                    //     //   _controller.text = code.toString();
+                    //     // });
+                    //     widget.bloc.barcodeStream.add(code.toString());
+                    //     Loader.hide();
+                    //   },
+                    // );
 
-                //         // Text(
-                //         //   'Generate',
-                //         //   style: AppStyles.generateButtonStyle,
-                //         // ),
-                //         Icon(
-                //           // FontAwesomeIcons.arrowsRotate,
-                //           Icons.refresh,
-                //           size: 20,
-                //           color: Color.fromARGB(255, 146, 69, 197),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                    final rng = Random();
+                    final code = rng.nextInt(9000000) + rng.nextInt(9999999);
+                    _controller.text = code.toString();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(right: 15, left: 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // Container(
+                        //   height: 40,
+                        //   width: 30,
+                        //   color: Colors.orange,
+                        //   alignment: Alignment.center,
+                        // ),
+
+                        // Text(
+                        //   'Generate',
+                        //   style: AppStyles.generateButtonStyle,
+                        // ),
+                        Icon(
+                          // FontAwesomeIcons.arrowsRotate,
+                          Icons.refresh,
+                          size: 20,
+                          color: Color.fromARGB(255, 146, 69, 197),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

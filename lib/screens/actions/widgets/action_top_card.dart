@@ -35,6 +35,8 @@ class ActionTopCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         shadowColor: const Color.fromARGB(255, 88, 69, 197),
+        color: Colors.white,
+        elevation: 5,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -55,25 +57,26 @@ class ActionTopCard extends StatelessWidget {
                   // ),
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: const EdgeInsets.only(top: 20),
                     child: BarcodeWidget(
                       barcode: Barcode.code128(),
-                      data: '************',
-                      width: 100,
-                      height: 70,
+                      data: '*************',
+                      style: const TextStyle(color: Colors.black,fontSize: 22,letterSpacing: 2),
+                      width: 250,
+                      height: 110,
                     ),
                   ),
 
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 30),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 200,
+                        width: 600,
                         child: Text(
-                          'Location',
+                          'ARABINFOTEC-DEMO',
                           style: GoogleFonts.openSans().copyWith(
-                            fontSize: 16,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -82,10 +85,10 @@ class ActionTopCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       const SizedBox(
-                        width: 210,
+                        width: 700,
                         child: Text(
                           'Please Provide Barcode (length from 8 to 12) To Get Current Details',
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 15,color: Colors.black),
                         ),
                       ),
                     ],
@@ -99,6 +102,7 @@ class ActionTopCard extends StatelessWidget {
           ],
         ),
       ),
+    
     );
   }
 }

@@ -47,12 +47,12 @@ class _MainScreenState extends State<MainScreen> {
             Expanded(
               // flex: 5,
               flex: 7,
-              child: Consumer<SideMenuController>(
-                builder: (context, state, _) {
-                  return pages(menu);
-                },
-              ),
-              // child: CheckInScreen(),
+              // child: Consumer<SideMenuController>(
+              //   builder: (context, state, _) {
+              //     return pages(menu);
+              //   },
+              // ),
+              child: ActionsPage(),
             )
           ],
         ),
