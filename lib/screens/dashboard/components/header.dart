@@ -1,3 +1,4 @@
+import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/MenuController.dart';
 import 'package:admin_panel/responsive.dart';
@@ -13,6 +14,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menu = Provider.of<SideMenuController>(context);
     return Container(
       // color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -24,9 +26,13 @@ class Header extends StatelessWidget {
               onPressed: context.read<CustomMenuController>().controlMenu,
             ),
           if (!Responsive.isMobile(context))
-            Text(
-              "Dashboard",
-              style: Theme.of(context).textTheme.titleLarge,
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                // "Dashboard",
+                menu.myMenu,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor,fontWeight: FontWeight.bold),
+              ),
             ),
           if (!Responsive.isMobile(context))
             Spacer(

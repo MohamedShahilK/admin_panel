@@ -79,6 +79,7 @@ class SideMenu extends StatelessWidget {
               //   },
               // ),
 
+              ///////////////////////////////////////////
               DrawerListTile(
                 title: "Tickets",
                 // svgSrc: "assets/icons/checkin.svg",
@@ -88,6 +89,43 @@ class SideMenu extends StatelessWidget {
                   // _handlePageNavigation(context, '/');
                 },
               ),
+              // ExpansionDrawerListTile(
+              //   title: "Tickets",
+              //   svgSrc: "assets/icons/checkin.svg",
+              //   svgHeight: 16,
+              //   press: () {
+              //     menu.setMyMenu('Tickets');
+              //     // _handlePageNavigation(context, '/');
+              //   },
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 30),
+              //       child: Column(
+              //         children: [
+              //           DrawerListTile(
+              //             title: "Check In",
+              //             svgSrc: 'assets/icons/key_exchange.svg',
+              //             svgHeight: 13,
+              //             press: () {
+              //               menu.setMyMenu('Check In');
+              //               // _handlePageNavigation(context, '/');
+              //             },
+              //           ),
+              //           DrawerListTile(
+              //             title: "Check Out",
+              //             // svgSrc: "assets/icons/report_graph.svg",
+              //             icon: FontAwesomeIcons.caravan,
+              //             svgHeight: 13,
+              //             press: () {
+              //               menu.setMyMenu('Check Out');
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
+            
               DrawerListTile(
                 title: "Search",
                 svgSrc: "assets/icons/search.svg",
@@ -105,6 +143,48 @@ class SideMenu extends StatelessWidget {
                   menu.setMyMenu('Report');
                   // _handlePageNavigation(context, '/');
                 },
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      children: [
+                        DrawerListTile(
+                          title: "Master Report",
+                          svgSrc: "assets/icons/report_graph.svg",
+                          svgHeight: 13,
+                          press: () {
+                            menu.setMyMenu('Master Report');
+                            // _handlePageNavigation(context, '/');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Inventory Report",
+                          svgSrc: "assets/icons/report_graph.svg",
+                          svgHeight: 13,
+                          press: () {
+                            menu.setMyMenu('Inventory Report');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Ticket",
+                          svgSrc: "assets/icons/report_graph.svg",
+                          svgHeight: 13,
+                          press: () {
+                            menu.setMyMenu('Ticket');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Cash Collection",
+                          svgSrc: "assets/icons/report_graph.svg",
+                          svgHeight: 13,
+                          press: () {
+                            menu.setMyMenu('Cash Collection');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               DrawerListTile(
                 title: "Account",
@@ -184,7 +264,7 @@ class DrawerListTile extends StatelessWidget {
                 colorFilter: ColorFilter.mode(isSelected ? primaryColor : Colors.black87, BlendMode.srcIn),
                 height: svgHeight ?? 20,
               )
-            : Icon(icon, size: 17.5, color: Colors.black87),
+            : Icon(icon, size: svgHeight ?? 13, color: Colors.black87),
         title: Text(
           title,
           style: TextStyle(color: isSelected ? primaryColor : Colors.black87, fontSize: 13),
@@ -198,11 +278,12 @@ class ExpansionDrawerListTile extends StatelessWidget {
   final String title, svgSrc;
   final double? svgHeight;
   final VoidCallback press;
-
+  final List<Widget> children;
   const ExpansionDrawerListTile({
     super.key,
     required this.title,
     required this.svgSrc,
+    required this.children,
     this.svgHeight,
     required this.press,
   });
@@ -235,48 +316,7 @@ class ExpansionDrawerListTile extends StatelessWidget {
             title,
             style: TextStyle(color: isSelected ? primaryColor : Colors.black87, fontSize: 13),
           ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                children: [
-                  DrawerListTile(
-                    title: "Master Report",
-                    svgSrc: "assets/icons/report_graph.svg",
-                    svgHeight: 13,
-                    press: () {
-                      menu.setMyMenu('Master Report');
-                      // _handlePageNavigation(context, '/');
-                    },
-                  ),
-                  DrawerListTile(
-                    title: "Inventory Report",
-                    svgSrc: "assets/icons/report_graph.svg",
-                    svgHeight: 13,
-                    press: () {
-                      menu.setMyMenu('Inventory Report');
-                    },
-                  ),
-                  DrawerListTile(
-                    title: "Ticket",
-                    svgSrc: "assets/icons/report_graph.svg",
-                    svgHeight: 13,
-                    press: () {
-                      menu.setMyMenu('Ticket');
-                    },
-                  ),
-                  DrawerListTile(
-                    title: "Cash Collection",
-                    svgSrc: "assets/icons/report_graph.svg",
-                    svgHeight: 13,
-                    press: () {
-                      menu.setMyMenu('Cash Collection');
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
+          children: children,
         ),
       ),
     );

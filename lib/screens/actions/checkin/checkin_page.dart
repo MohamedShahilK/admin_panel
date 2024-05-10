@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/screens/actions/checkin/custom_action_textfield.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
@@ -48,8 +49,8 @@ class _CheckInScreenState extends State<CheckInScreen> {
     return const SafeArea(
       child: Stack(
         children: [
-          _AllChecinSection(),
-          // _NewCheckInForm(),
+          // _AllChecinSection(),
+          _NewCheckInForm(),
 
           // Header
           Header(),
@@ -72,6 +73,10 @@ class _NewCheckInForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Ticket Number', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
+            const SizedBox(height: 15),
+            CustomActionTextField(onTextChanged: (val) {}),
+            const SizedBox(height: 15),
             Text('Vehicle Plate', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
             const SizedBox(height: 15),
             Wrap(
@@ -123,7 +128,7 @@ class _NewCheckInForm extends StatelessWidget {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: ExpansionTile(                
+                child: ExpansionTile(
                   // trailing: const SizedBox.shrink(),
                   iconColor: secondaryColor,
                   tilePadding: EdgeInsets.zero,
@@ -160,7 +165,7 @@ class _NewCheckInForm extends StatelessWidget {
             ),
             //
             Container(
-              margin: const EdgeInsets.only(top: 30,bottom: 30),
+              margin: const EdgeInsets.only(top: 30, bottom: 30),
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
               child: Row(
@@ -504,7 +509,7 @@ class _PlateTextFieldState extends State<_PlateTextField> {
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(
               // color: Color.fromARGB(255, 80, 19, 121),
-              color: Color.fromARGB(146, 146, 69, 197),
+              color: Color.fromARGB(255, 80, 19, 121),
             ),
           ),
         ),
