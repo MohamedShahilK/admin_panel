@@ -62,7 +62,7 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
           // SizedBox(height: 10.h),
           SizedBox(
             height: 50,
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 2.15,
             child: TextField(
               controller: _controller,
               // onChanged: widget.onTextChanged,

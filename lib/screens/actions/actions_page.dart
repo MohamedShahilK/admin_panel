@@ -41,22 +41,27 @@ class _ActionsPageState extends State<ActionsPage> {
                   const SizedBox(height: 30),
 
                   //
-                  Wrap(
-                    // padding: const EdgeInsets.symmetric( vertical: 30),
-                    // shrinkWrap: true,
-                    // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisExtent: 100),
-                    spacing: 15,
-                    runSpacing: 5,
-                    children:  [
-                      CustomMainButton(title: 'CheckIn', bgColor: Colors.green[600]!, icon2: 'assets/icons/key_exchange.svg'),
-                      CustomMainButton(title: 'Parked', bgColor: Colors.orange[600]!, icon: Icons.local_parking_rounded),
-                      CustomMainButton(title: 'Requested', bgColor: Colors.blue[600]!, icon: FontAwesomeIcons.registered),
-                      CustomMainButton(title: 'On The Way', bgColor: Colors.purple[600]!, icon: FontAwesomeIcons.route),
-                      CustomMainButton(title: 'Vehivle Arrived', bgColor: Colors.pink[600]!, icon2: 'assets/icons/checkin.svg'),
-                      CustomMainButton(title: 'CheckOut', bgColor: Colors.red[600]!, icon: FontAwesomeIcons.caravan),
-                      CustomMainButton(title: 'Payment', bgColor: Colors.tealAccent[700]!, icon: FontAwesomeIcons.moneyBillTransfer),
-                      CustomMainButton(title: 'Outlet Validator', bgColor: Colors.grey[600]!, icon: FontAwesomeIcons.barcode),
-                    ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Wrap(
+                      // crossAxisAlignment: WrapCrossAlignment.center,
+                      alignment: WrapAlignment.center,
+                      // padding: const EdgeInsets.symmetric( vertical: 30),
+                      // shrinkWrap: true,
+                      // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisExtent: 100),
+                      spacing: 15,
+                      runSpacing: 5,
+                      children:  [
+                        CustomMainButton(title: 'CheckIn', bgColor: Colors.green[600]!, icon2: 'assets/icons/key_exchange.svg'),
+                        CustomMainButton(title: 'Parked', bgColor: Colors.orange[600]!, icon: Icons.local_parking_rounded),
+                        CustomMainButton(title: 'Requested', bgColor: Colors.blue[600]!, icon: FontAwesomeIcons.registered),
+                        CustomMainButton(title: 'On The Way', bgColor: Colors.purple[600]!, icon: FontAwesomeIcons.route),
+                        CustomMainButton(title: 'Vehivle Arrived', bgColor: Colors.pink[600]!, icon2: 'assets/icons/checkin.svg'),
+                        CustomMainButton(title: 'CheckOut', bgColor: Colors.red[600]!, icon: FontAwesomeIcons.caravan),
+                        CustomMainButton(title: 'Payment', bgColor: Colors.tealAccent[700]!, icon: FontAwesomeIcons.moneyBillTransfer),
+                        CustomMainButton(title: 'Outlet Validator', bgColor: Colors.grey[600]!, icon: FontAwesomeIcons.barcode),
+                      ],
+                    ),
                   )
                 ],
               ),

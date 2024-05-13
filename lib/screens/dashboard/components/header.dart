@@ -10,7 +10,12 @@ import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  const Header({
+    this.reqBackBtn = false,
+    super.key,
+  });
+
+  final bool reqBackBtn;
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +25,31 @@ class Header extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          if (!Responsive.isDesktop(context))
-            IconButton(
-              icon: const Icon(Icons.menu, color: secondaryColor),
-              onPressed: context.read<CustomMenuController>().controlMenu,
-            ),
-          if (!Responsive.isMobile(context))
+          if (reqBackBtn)
             Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                // "Dashboard",
-                menu.myMenu,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor,fontWeight: FontWeight.bold),
+              padding: EdgeInsets.only(left: !Responsive.isMobile(context) ? 35 : 20),
+              child: const Icon(Icons.arrow_back_ios_rounded, color: secondaryColor).ripple(context, () => Navigator.pop(context)),
+            )
+          else ...[
+            if (!Responsive.isDesktop(context))
+              IconButton(
+                icon: const Icon(Icons.menu, color: secondaryColor),
+                onPressed: context.read<CustomMenuController>().controlMenu,
               ),
-            ),
-          if (!Responsive.isMobile(context))
-            Spacer(
-              flex: Responsive.isDesktop(context) ? 2 : 1,
-            ),
+            if (!Responsive.isMobile(context))
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  // "Dashboard",
+                  menu.myMenu,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ],
+          // if (!Responsive.isMobile(context))
+          Spacer(
+            flex: Responsive.isDesktop(context) ? 2 : 1,
+          ),
           // const Expanded(
           //   child:  SearchField(),
           // ),

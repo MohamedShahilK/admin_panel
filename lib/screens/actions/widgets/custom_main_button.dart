@@ -1,8 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, lines_longer_than_80_chars, invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
+import 'package:admin_panel/screens/actions/checkin/checkin_page.dart';
+import 'package:admin_panel/utils/ripple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 class CustomMainButton extends StatefulWidget {
   const CustomMainButton({
@@ -42,7 +43,7 @@ class _CustomMainButtonState extends State<CustomMainButton> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Stack(
-        children: [          
+        children: [
           ElevatedButton.icon(
             onPressed: () {},
             icon: Padding(
@@ -68,8 +69,8 @@ class _CustomMainButtonState extends State<CustomMainButton> {
               ),
               fixedSize: Size(
                 // MediaQuery.of(context).size.width / 4,
-                MediaQuery.of(context).size.width / 7,
-                80,
+                MediaQuery.of(context).size.width / 9,
+                60,
               ),
             ),
             label: Text(widget.title, style: const TextStyle(fontSize: 17, color: Colors.white)),
@@ -82,7 +83,15 @@ class _CustomMainButtonState extends State<CustomMainButton> {
           //   child: Icon(doneIcon(), color: doneIconColor(), size: 22),
           // )
         ],
-      ),
+      ).ripple(context, () {
+        if (widget.title == 'Parked') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CheckInScreen(),
+              ));
+        }
+      }),
     );
   }
 }
