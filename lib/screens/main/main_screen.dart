@@ -4,6 +4,7 @@ import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/account/account_page.dart';
 import 'package:admin_panel/screens/actions/actions_page.dart';
 import 'package:admin_panel/screens/actions/checkin/checkin_page.dart';
+import 'package:admin_panel/screens/actions/checkout/checkout_page.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:admin_panel/screens/search/search_page.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,12 @@ class _MainScreenState extends State<MainScreen> {
             Expanded(
               // flex: 5,
               flex: 7,
-              // child: Consumer<SideMenuController>(
-              //   builder: (context, state, _) {
-              //     return pages(menu);
-              //   },
-              // ),
-              child: ActionsPage(),
+              child: Consumer<SideMenuController>(
+                builder: (context, state, _) {
+                  return pages(menu);
+                },
+              ),
+              // child: CheckOutPage(),
             )
           ],
         ),

@@ -48,7 +48,7 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
     return Form(
       // key: CustomActionTextField._loginScreenFormKey,
       child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(),
           // Text(

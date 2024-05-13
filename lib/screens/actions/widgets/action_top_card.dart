@@ -72,20 +72,21 @@ class ActionTopCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 600,
+                        width: 300,
                         child: Text(
                           'ARABINFOTEC-DEMO',
                           style: GoogleFonts.openSans().copyWith(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
+                            overflow: TextOverflow.ellipsis
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(height: 5),
                       const SizedBox(
-                        width: 700,
+                        width: 530,
                         child: Text(
                           'Please Provide Barcode (length from 8 to 12) To Get Current Details',
                           style: TextStyle(fontSize: 15,color: Colors.black),

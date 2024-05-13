@@ -52,7 +52,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
           children: [
             // _AllChecinSection(),
             _NewCheckInForm(),
-        
+
             // Header
             Header(reqBackBtn: true),
           ],
@@ -70,14 +70,40 @@ class _NewCheckInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 150, left: 30, right: 30),
+      padding: const EdgeInsets.only(top: 150, left: 210, right: 210),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Ticket Number', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
             const SizedBox(height: 15),
-            CustomActionTextField(onTextChanged: (val) {}),
+            // CustomActionTextField(onTextChanged: (val) {}),
+            Container(
+              // margin: const EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  // color: Colors.red,
+                  color: const Color.fromARGB(255, 92, 45, 153),
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Ticket No :',
+                    style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    '98736494616',
+                    style: TextStyle(color: Color.fromARGB(255, 126, 65, 155), fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 15),
             Text('Vehicle Plate', style: GoogleFonts.poppins().copyWith(fontSize: 13, color: Colors.grey[700])),
             const SizedBox(height: 15),

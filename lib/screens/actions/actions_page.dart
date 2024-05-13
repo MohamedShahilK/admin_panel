@@ -29,7 +29,7 @@ class _ActionsPageState extends State<ActionsPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 100),
+                    padding: EdgeInsets.symmetric(horizontal: 160),
                     child: ActionTopCard(title: 'title', count: 'count', icon: Icons.abc, color: Colors.red),
                   ),
 
@@ -57,8 +57,8 @@ class _ActionsPageState extends State<ActionsPage> {
                         CustomMainButton(title: 'Requested', bgColor: Colors.blue[600]!, icon: FontAwesomeIcons.registered),
                         CustomMainButton(title: 'On The Way', bgColor: Colors.purple[600]!, icon: FontAwesomeIcons.route),
                         CustomMainButton(title: 'Vehivle Arrived', bgColor: Colors.pink[600]!, icon2: 'assets/icons/checkin.svg'),
-                        CustomMainButton(title: 'CheckOut', bgColor: Colors.red[600]!, icon: FontAwesomeIcons.caravan),
                         CustomMainButton(title: 'Payment', bgColor: Colors.tealAccent[700]!, icon: FontAwesomeIcons.moneyBillTransfer),
+                        CustomMainButton(title: 'CheckOut', bgColor: Colors.red[600]!, icon: FontAwesomeIcons.caravan),
                         CustomMainButton(title: 'Outlet Validator', bgColor: Colors.grey[600]!, icon: FontAwesomeIcons.barcode),
                       ],
                     ),
