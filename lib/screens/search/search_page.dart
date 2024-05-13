@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:admin_panel/data/checkin_model.dart';
-import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/models/old/user.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';

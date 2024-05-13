@@ -1,4 +1,4 @@
-import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/models/old/user.dart';
 
 final allCheckedInUsers = <CheckInModel>[
   const CheckInModel(

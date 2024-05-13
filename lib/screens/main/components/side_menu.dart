@@ -132,7 +132,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 18,
                 press: () {
                   menu.setMyMenu('Search');
-                  _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/search');
                 },
               ),
               ExpansionDrawerListTile(
@@ -141,7 +141,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 16,
                 press: () {
                   menu.setMyMenu('Report');
-                  _handlePageNavigation(context, '/');
+                  // _handlePageNavigation(context, '/');
                 },
                 children: [
                   Padding(
@@ -154,7 +154,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Master Report');
-                            _handlePageNavigation(context, '/');
+                            _handlePageNavigation(context, '/masterreport');
                           },
                         ),
                         DrawerListTile(
@@ -163,7 +163,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Inventory Report');
-                            _handlePageNavigation(context, '/');
+                            _handlePageNavigation(context, '/inventoryreport');
                           },
                         ),
                         DrawerListTile(
@@ -172,7 +172,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Ticket');
-                            _handlePageNavigation(context, '/');
+                            _handlePageNavigation(context, '/ticketreport');
                           },
                         ),
                         DrawerListTile(
@@ -181,7 +181,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Cash Collection');
-                            _handlePageNavigation(context, '/');
+                            _handlePageNavigation(context, '/cashcollection');
                           },
                         ),
                       ],
@@ -195,7 +195,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 15,
                 press: () {
                   menu.setMyMenu('Account');
-                  _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/account');
                 },
               ),
               DrawerListTile(

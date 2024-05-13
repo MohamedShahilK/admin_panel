@@ -87,11 +87,14 @@ class _CustomMainButtonState extends State<CustomMainButton> {
         ],
       ).ripple(context, () {
         if (widget.title == 'Parked') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckInScreen()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckInScreen()));
+          Navigator.pushNamed(context, '/parked');
         } else if (widget.title == 'CheckOut') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckOutPage()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckOutPage()));
+          Navigator.pushNamed(context, '/checkout');
         } else if (widget.title == 'Payment') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage()));
+          Navigator.pushNamed(context, '/payment');
         }
       }),
     );

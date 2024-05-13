@@ -37,6 +37,7 @@ class _AccountPageState extends State<AccountPage> {
       drawer: SideMenu(),
       body: SafeArea(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Builder(builder: (context) {
               final isDesktop = MediaQuery.of(context).size.width >= 1100;

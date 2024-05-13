@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:admin_panel/data/checkin_model.dart';
-import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/models/old/user.dart';
+// import 'package:admin_panel/models/new/user.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/actions/checkin/custom_action_textfield.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';

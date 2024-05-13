@@ -48,6 +48,22 @@ dependencies:
   skeletonizer: ^1.1.2+1
   font_awesome_flutter: ^10.7.0
   barcode_widget: ^2.0.4
+  rxdart: ^0.27.7
+  get: ^4.6.6
+  json_annotation: ^4.9.0
+  hive_flutter: ^1.1.0
+  bloc: ^8.1.4
+  freezed_annotation: ^2.4.1
+  intl: ^0.19.0
+  firebase_messaging: ^14.9.2
+  image_picker: ^1.1.1
+  dio_http_formatter: ^3.2.1
+  delightful_toast: ^1.1.0
+  timezone: ^0.9.3
+  flutter_image_compress: ^2.2.0
+  connectivity_plus: ^6.0.3
+  firebase_crashlytics: ^3.5.5
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

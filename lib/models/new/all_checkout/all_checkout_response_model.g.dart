@@ -1,0 +1,97 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: lines_longer_than_80_chars
+
+part of 'all_checkout_response_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+AllCheckOutResponse _$AllCheckOutResponseFromJson(Map<String, dynamic> json) => AllCheckOutResponse(
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] == null ? null : _$DataFromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Data _$DataFromJson(Map<String, dynamic> json) => Data(
+      checkOutStatus: json['checkout_status'] as String?,
+      totalRecords: json['total_records'] as int?,
+      locationId: json['location_id'] as int?,
+      startDate: json['start_date'] as String?,
+      endDate: json['end_date'] as String?,
+      orderBy: json['order_by'] as String?,
+      orderByDirection: json['order_by_direction'] as String?,
+      count: json['count'] as int?,
+      page: json['page'] as int?,
+      recordsPerPage: json['records_per_page'] as int?,
+      totalPages: json['total_pages'] as int?,
+      checkOutList: json['checkout_list'] == null ? null : (json['checkout_list'] as List<dynamic>).map((e) => _$CheckOutListFromJson(e as Map<String, dynamic>)).toList(),
+    );
+
+CheckOutList _$CheckOutListFromJson(Map<String, dynamic> json) => CheckOutList(
+      id: json['id'].toString().replaceAll('null', ''),
+      barcode: json['barcode'].toString().replaceAll('null', ''),
+      createDate: json['create_date'].toString().replaceAll('null', ''),
+      parkingTime: json['parking_time'].toString().replaceAll('null', ''),
+      checkoutTime: json['checkout_time'].toString().replaceAll('null', ''),
+      payment: json['payment'].toString().replaceAll('null', ''),
+      voucherMainId: json['voucher_main_id'].toString().replaceAll('null', ''),
+      voucherCodeNo: json['voucher_code_no'].toString().replaceAll('null', ''),
+      cashier: json['cashier'].toString().replaceAll('null', ''),
+      checkoutStatus: json['checkout_status'].toString().replaceAll('null', ''),
+      requestedByUser: json['requested_by_user'].toString().replaceAll('null', ''),
+      initialCheckinTime: json['initial_checkin_time'].toString().replaceAll('null', ''),
+      dataCheckinTime: json['data_checkin_time'].toString().replaceAll('null', ''),
+      requestedTime: json['requested_time'].toString().replaceAll('null', ''),
+      onthewayTime: json['ontheway_time'].toString().replaceAll('null', ''),
+      paymentCalculatedOn: json['payment_calculated_on'].toString().replaceAll('null', ''),
+      finalCheckoutTime: json['final_checkout_time'].toString().replaceAll('null', ''),
+      parkingLocation: json['parking_location'].toString().replaceAll('null', ''),
+      parkingLocationnew: json['parking_locationnew'].toString().replaceAll('null', ''),
+      slotId: json['slot_id'].toString().replaceAll('null', ''),
+      vehicleNumber: json['vehicle_number'].toString().replaceAll('null', ''),
+      // vehicleModel: json['vehicle_model'].toString().replaceAll('null', ''),
+      vehicleModel: json['vehicle_model'] as int?,
+      vehicleColr: json['vehicle_colr'].toString().replaceAll('null', ''),
+      emirates: json['emirates'].toString().replaceAll('null', ''),
+      cvaIn: json['cva_in'].toString().replaceAll('null', ''),
+      cvaOut: json['cva_out'].toString().replaceAll('null', ''),
+      guestType: json['guest_type'].toString().replaceAll('null', ''),
+      slot: json['slot'].toString().replaceAll('null', ''),
+      customerDetails: json['customer_details'].toString().replaceAll('null', ''),
+      customerMobile: json['customer_mobile'].toString().replaceAll('null', ''),
+      vehicleRemark: json['vehicle_remark'].toString().replaceAll('null', ''),
+      userId: json['user_id'].toString().replaceAll('null', ''),
+      userType: json['user_type'].toString().replaceAll('null', ''),
+      status: json['status'].toString().replaceAll('null', ''),
+      inBy: json['in_by'].toString().replaceAll('null', ''),
+      outBy: json['out_by'].toString().replaceAll('null', ''),
+      paymentMethod: json['payment_method'].toString().replaceAll('null', ''),
+      paymentNote: json['payment_note'].toString().replaceAll('null', ''),
+      grossAmount: json['gross_amount'].toString().replaceAll('null', ''),
+      discountAmount: json['discount_amount'].toString().replaceAll('null', ''),
+      voucherBarcode: json['voucher_barcode'].toString().replaceAll('null', ''),
+      vatPercentage: (json['vat_percentage'] as num?)?.toDouble(),
+      vatAmount: (json['vat_amount'] as num?)?.toDouble(),
+      subTotal: (json['sub_total'] as num?)?.toDouble(),
+      outletOfferId: json['outlet_offer_id'].toString().replaceAll('null', ''),
+      offerTotalMidnight: json['offer_total_midnight'].toString().replaceAll('null', ''),
+      paymentPaidMethod: json['payment_paid_method'].toString().replaceAll('null', ''),
+      modifiedOn: json['modified_on'].toString().replaceAll('null', ''),
+      modifiedBy: json['modified_by'].toString().replaceAll('null', ''),
+      modifiedByUser: json['modified_by_user'].toString().replaceAll('null', ''),
+      paidOnCheckin: json['paid_on_checkin'].toString().replaceAll('null', ''),
+      customerRequest: json['customer_request'].toString().replaceAll('null', ''),
+      customerEmail: json['customer_email'].toString().replaceAll('null', ''),
+      customerPhoneNo: json['customer_phone_no'].toString().replaceAll('null', ''),
+      carColorName: json['car_color_name'].toString().replaceAll('null', ''),
+      carModelName: json['car_model_name'].toString().replaceAll('null', ''),
+      locationName: json['location_name'].toString().replaceAll('null', ''),
+      cvaInName: json['cva_in_name'].toString().replaceAll('null', ''),
+      cvaOutName: json['cva_out_name'].toString().replaceAll('null', ''),
+      userName: json['user_name'].toString().replaceAll('null', ''),
+      guestTypeName: json['guest_type_name'].toString().replaceAll('null', ''),
+      emiratesName: json['emirates_name'].toString().replaceAll('null', ''),
+      requestedUser: json['requested_user'] as String?,
+    );
