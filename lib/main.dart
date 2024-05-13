@@ -32,16 +32,16 @@ class MyApp extends StatelessWidget {
           canvasColor: secondaryColor,
         ),
       
-        // routes: routes,
+        routes: routes,
       
-        // onGenerateRoute: generateRoutes,
-        home: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => CustomMenuController()),
-            ChangeNotifierProvider(create: (context) => SideMenuController()),
-          ],
-          child: MainScreen(),
-        ),
+        onGenerateRoute: generateRoutes,
+        // home: MultiProvider(
+        //   providers: [
+        //     ChangeNotifierProvider(create: (context) => CustomMenuController()),
+        //     ChangeNotifierProvider(create: (context) => SideMenuController()),
+        //   ],
+        //   child: MainScreen(),
+        // ),
       ),
     );
   }

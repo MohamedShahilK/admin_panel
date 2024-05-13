@@ -4,9 +4,12 @@ import 'dart:async';
 
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/responsive.dart';
+import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/ripple.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -44,156 +47,192 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: LayoutBuilder(builder: (context, constraint) {
-        return SingleChildScrollView(
-          // padding: EdgeInsets.all(defaultPadding),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraint.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  const Header(),
-                  // const SizedBox(height: defaultPadding * 3),
+    return Scaffold(
+      drawer: SideMenu(),
+      body: SafeArea(
+        child: Row(
+          children: [
+            Builder(builder: (context) {
+              final isDesktop = MediaQuery.of(context).size.width >= 1100;
+              return Expanded(
+                flex: isDesktop ? 1 : 0,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (Responsive.isDesktop(context)) {
+                      return const SideMenu();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              );
+            }),
+            const Expanded(
+              flex: 7,
+              child: _Body(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-                  const SizedBox(height: 30),
+class _Body extends StatelessWidget {
+  const _Body({
+    super.key,
+  });
 
-                  //
-                  Wrap(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // alignment: WrapAlignment.center,
-                    runSpacing: 15,
-                    children: [
-                      _DashTopCard(
-                        title: 'Current Inventory',
-                        svgIcon: 'assets/icons/inventory.svg',
-                        count: '1584',
-                        color: Colors.brown[900]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'Check In',
-                        svgIcon: 'assets/icons/key_exchange.svg',
-                        count: '22',
-                        color: Colors.green[600]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allCheckedInUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'Parked',
-                        // svgIcon: 'assets/icons/checkout.svg',
-                        icon: Icons.local_parking_rounded,
-                        count: '15',
-                        color: Colors.yellow[800]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allParkedInUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'Requested',
-                        // svgIcon: 'assets/icons/inventory.svg',
-                        icon: FontAwesomeIcons.registered,
-                        count: '1584',
-                        color: Colors.blue[600]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allRequestedInUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'On The Way',
-                        // svgIcon: 'assets/icons/checkin.svg',
-                        icon: FontAwesomeIcons.route,
-                        count: '22',
-                        color: Colors.purple[600]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allOnthewayUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'Collect Now',
-                        svgIcon: 'assets/icons/checkin.svg',
-                        count: '15',
-                        color: Colors.orange[900]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allVehicleArrivedUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                      _DashTopCard(
-                        title: 'Check Out',
-                        // svgIcon: 'assets/icons/checkout.svg',
-                        icon: FontAwesomeIcons.caravan,
-                        count: '15',
-                        color: Colors.red[900]!,
-                      ).ripple(context, overlayColor: Colors.transparent, () {
-                        usersNotifier.value = [];
-                        usersNotifier.notifyListeners();
-                        Future.delayed(
-                          const Duration(seconds: 2),
-                          () {
-                            usersNotifier.value = allCheckedOutUsers;
-                            usersNotifier.notifyListeners();
-                          },
-                        );
-                      }),
-                    ],
-                  ),
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraint) {
+      return SingleChildScrollView(
+        // padding: EdgeInsets.all(defaultPadding),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraint.maxHeight),
+          child: IntrinsicHeight(
+            child: Column(
+              children: [
+                const Header(),
+                // const SizedBox(height: defaultPadding * 3),
 
-                  // Butt
+                const SizedBox(height: 30),
 
-                  // Table
-                  const _Table(),
-                ],
-              ),
+                //
+                Wrap(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  // alignment: WrapAlignment.center,
+                  runSpacing: 15,
+                  children: [
+                    _DashTopCard(
+                      title: 'Current Inventory',
+                      svgIcon: 'assets/icons/inventory.svg',
+                      count: '1584',
+                      color: Colors.brown[900]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'Check In',
+                      svgIcon: 'assets/icons/key_exchange.svg',
+                      count: '22',
+                      color: Colors.green[600]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allCheckedInUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'Parked',
+                      // svgIcon: 'assets/icons/checkout.svg',
+                      icon: Icons.local_parking_rounded,
+                      count: '15',
+                      color: Colors.yellow[800]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allParkedInUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'Requested',
+                      // svgIcon: 'assets/icons/inventory.svg',
+                      icon: FontAwesomeIcons.registered,
+                      count: '1584',
+                      color: Colors.blue[600]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allRequestedInUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'On The Way',
+                      // svgIcon: 'assets/icons/checkin.svg',
+                      icon: FontAwesomeIcons.route,
+                      count: '22',
+                      color: Colors.purple[600]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allOnthewayUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'Collect Now',
+                      svgIcon: 'assets/icons/checkin.svg',
+                      count: '15',
+                      color: Colors.orange[900]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allVehicleArrivedUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                    _DashTopCard(
+                      title: 'Check Out',
+                      // svgIcon: 'assets/icons/checkout.svg',
+                      icon: FontAwesomeIcons.caravan,
+                      count: '15',
+                      color: Colors.red[900]!,
+                    ).ripple(context, overlayColor: Colors.transparent, () {
+                      usersNotifier.value = [];
+                      usersNotifier.notifyListeners();
+                      Future.delayed(
+                        const Duration(seconds: 2),
+                        () {
+                          usersNotifier.value = allCheckedOutUsers;
+                          usersNotifier.notifyListeners();
+                        },
+                      );
+                    }),
+                  ],
+                ),
+
+                // Butt
+
+                // Table
+                const _Table(),
+              ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
 

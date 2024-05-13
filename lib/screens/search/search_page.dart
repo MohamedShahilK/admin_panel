@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
+import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
@@ -40,16 +42,52 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Stack(
-        children: [
-          _AllTicketsSection(),
-          // _NewCheckInForm(),
-
-          // Header
-          Header(),
-        ],
+    return Scaffold(
+      drawer: SideMenu(),
+      body: SafeArea(
+        child: Row(
+          children: [
+            Builder(builder: (context) {
+              final isDesktop = MediaQuery.of(context).size.width >= 1100;
+              return Expanded(
+                flex: isDesktop ? 1 : 0,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (Responsive.isDesktop(context)) {
+                      return const SideMenu();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              );
+            }),
+            const Expanded(
+              flex: 7,
+              child: _Body(),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _AllTicketsSection(),
+        // _NewCheckInForm(),
+
+        // Header
+        Header(),
+      ],
     );
   }
 }

@@ -31,7 +31,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/dashboard_new.svg",
                 press: () {
                   menu.setMyMenu('Dashboard');
-                  // _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/');
                 },
               ),
               // DrawerListTile(
@@ -86,7 +86,7 @@ class SideMenu extends StatelessWidget {
                 icon: FontAwesomeIcons.car,
                 press: () {
                   menu.setMyMenu('Tickets');
-                  // _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/tickets');
                 },
               ),
               // ExpansionDrawerListTile(
@@ -125,14 +125,14 @@ class SideMenu extends StatelessWidget {
               //     ),
               //   ],
               // ),
-            
+
               DrawerListTile(
                 title: "Search",
                 svgSrc: "assets/icons/search.svg",
                 svgHeight: 18,
                 press: () {
                   menu.setMyMenu('Search');
-                  // _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/');
                 },
               ),
               ExpansionDrawerListTile(
@@ -141,7 +141,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 16,
                 press: () {
                   menu.setMyMenu('Report');
-                  // _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/');
                 },
                 children: [
                   Padding(
@@ -154,7 +154,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Master Report');
-                            // _handlePageNavigation(context, '/');
+                            _handlePageNavigation(context, '/');
                           },
                         ),
                         DrawerListTile(
@@ -163,6 +163,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Inventory Report');
+                            _handlePageNavigation(context, '/');
                           },
                         ),
                         DrawerListTile(
@@ -171,6 +172,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Ticket');
+                            _handlePageNavigation(context, '/');
                           },
                         ),
                         DrawerListTile(
@@ -179,6 +181,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Cash Collection');
+                            _handlePageNavigation(context, '/');
                           },
                         ),
                       ],
@@ -192,7 +195,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 15,
                 press: () {
                   menu.setMyMenu('Account');
-                  // _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/');
                 },
               ),
               DrawerListTile(
@@ -210,25 +213,25 @@ class SideMenu extends StatelessWidget {
   }
 
   Future<void> _handlePageNavigation(BuildContext context, String route) async {
-    // await Navigator.of(context).pushNamed(route);
-    await Navigator.of(context).push(
-      PageRouteBuilder(
-        settings: RouteSettings(name: '/'),
-        pageBuilder: (context, animation, _) => DashboardScreen(),
-        transitionsBuilder: (context, animation, _, child) {
-          const begin = Offset(0.0, 1.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
+    await Navigator.of(context).pushNamed(route);
+    // await Navigator.of(context).push(
+    //   PageRouteBuilder(
+    //     settings: RouteSettings(name: '/'),
+    //     pageBuilder: (context, animation, _) => DashboardScreen(),
+    //     transitionsBuilder: (context, animation, _, child) {
+    //       const begin = Offset(0.0, 1.0);
+    //       const end = Offset.zero;
+    //       const curve = Curves.ease;
 
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+    //       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    );
+    //       return SlideTransition(
+    //         position: animation.drive(tween),
+    //         child: child,
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }
 

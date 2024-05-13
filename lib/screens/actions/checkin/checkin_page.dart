@@ -3,8 +3,10 @@ import 'dart:math';
 
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/user.dart';
+import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/actions/checkin/custom_action_textfield.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
+import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
@@ -46,18 +48,55 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: [
-            // _AllChecinSection(),
-            _NewCheckInForm(),
-
-            // Header
-            Header(reqBackBtn: true),
-          ],
+        drawer: SideMenu(),
+        body: SafeArea(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Builder(builder: (context) {
+                final isDesktop = MediaQuery.of(context).size.width >= 1100;
+                return Expanded(
+                  flex: isDesktop ? 1 : 0,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (Responsive.isDesktop(context)) {
+                        return const SideMenu();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                );
+              }),
+              const Expanded(
+                flex: 7,
+                child: _Body(),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // _AllChecinSection(),
+        _NewCheckInForm(),
+
+        // Header
+        Header(reqBackBtn: true),
+      ],
     );
   }
 }
@@ -70,7 +109,7 @@ class _NewCheckInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 150, left: 210, right: 210),
+      padding: const EdgeInsets.only(top: 110, left: 210, right: 210),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

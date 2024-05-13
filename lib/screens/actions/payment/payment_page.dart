@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/actions/widgets/amount_details.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
+import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:flutter/material.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -33,23 +35,58 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: Stack(
+        drawer: SideMenu(),
+        body: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Payment
-            Padding(
-              padding: EdgeInsets.only(top: 120, left: 220, right: 220),
-              // padding: EdgeInsets.only(top: 120, left: 50, right: 50),
-              // padding: EdgeInsets.only(top: 120),
-              child: PaymentOption(ticketNumber: '6565498796'),
+            Builder(builder: (context) {
+              final isDesktop = MediaQuery.of(context).size.width >= 1100;
+              return Expanded(
+                flex: isDesktop ? 1 : 0,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (Responsive.isDesktop(context)) {
+                      return const SideMenu();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+              );
+            }),
+            const Expanded(
+              flex: 7,
+              child: _Body(),
             ),
-
-            // Header
-            Header(reqBackBtn: true),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Payment
+        Padding(
+          padding: EdgeInsets.only(top: 120, left: 220, right: 220),
+          // padding: EdgeInsets.only(top: 120, left: 50, right: 50),
+          // padding: EdgeInsets.only(top: 120),
+          child: PaymentOption(ticketNumber: '6565498796'),
+        ),
+
+        // Header
+        Header(reqBackBtn: true),
+      ],
     );
   }
 }
@@ -116,7 +153,7 @@ class _PaymentOptionState extends State<PaymentOption> with SingleTickerProvider
                 // color: Colors.grey,
                 // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 height: 28,
-                width:MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width / 4,
                 child: TabBar(
                   padding: EdgeInsets.zero,
                   controller: _tabController,
@@ -171,7 +208,7 @@ class _PaymentOptionState extends State<PaymentOption> with SingleTickerProvider
                             Container(
                               alignment: Alignment.topLeft,
                               height: 28,
-                              width:MediaQuery.of(context).size.width / 4,
+                              width: MediaQuery.of(context).size.width / 4,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                               ),
@@ -226,19 +263,19 @@ class _PaymentOptionState extends State<PaymentOption> with SingleTickerProvider
                                 children: [
                                   // Regular
                                   // Container(color: Colors.red),
-                                  AmountDetails(ticketNumber: '54489464778',isPaymentPage: true),
+                                  AmountDetails(ticketNumber: '54489464778', isPaymentPage: true),
 
                                   // VIP
                                   // Container(color: Colors.green),
-                                  AmountDetails(ticketNumber: '54489464778',isPaymentPage: true),
+                                  AmountDetails(ticketNumber: '54489464778', isPaymentPage: true),
 
                                   // CAR WASH 1
                                   // Container(color: Colors.blue),
-                                  AmountDetails(ticketNumber: '54489464778',isPaymentPage: true),
+                                  AmountDetails(ticketNumber: '54489464778', isPaymentPage: true),
 
                                   // CAR WASH 2
                                   // Container(color: Colors.grey),
-                                  AmountDetails(ticketNumber: '54489464778',isPaymentPage: true),
+                                  AmountDetails(ticketNumber: '54489464778', isPaymentPage: true),
                                 ],
                               ),
                             ),
@@ -251,15 +288,15 @@ class _PaymentOptionState extends State<PaymentOption> with SingleTickerProvider
 
                     // Stamped
                     // Container(color: Colors.amber),
-                    const AmountDetails(ticketNumber: '58711694649',isPaymentPage: true),
+                    const AmountDetails(ticketNumber: '58711694649', isPaymentPage: true),
 
                     // Loyalty Card
                     // Container(color: Colors.purple),
-                    const AmountDetails(ticketNumber: '58711694649',isPaymentPage: true),
+                    const AmountDetails(ticketNumber: '58711694649', isPaymentPage: true),
 
                     // Other
                     // Container(color: Colors.pink),
-                    const AmountDetails(ticketNumber: '58711694649',isPaymentPage: true),
+                    const AmountDetails(ticketNumber: '58711694649', isPaymentPage: true),
                   ],
                 ),
               ),

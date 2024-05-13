@@ -36,7 +36,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: SideMenu(),
         body: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Builder(builder: (context) {
               final isDesktop = MediaQuery.of(context).size.width >= 1100;
@@ -53,7 +55,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ),
               );
             }),
-            Expanded(
+            const Expanded(
               flex: 7,
               child: _Body(),
             ),
@@ -71,11 +73,11 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
         // Payment
         Padding(
-          padding: EdgeInsets.only(top: 120, left: 220, right: 220),
+          padding: const EdgeInsets.only(top: 120, left: 220, right: 220),
           // padding: EdgeInsets.only(top: 120, left: 50, right: 50),
           // padding: EdgeInsets.only(top: 120),
           child: PaymentOption(ticketNumber: '6565498796'),

@@ -34,7 +34,10 @@ class Header extends StatelessWidget {
             if (!Responsive.isDesktop(context))
               IconButton(
                 icon: const Icon(Icons.menu, color: secondaryColor),
-                onPressed: context.read<CustomMenuController>().controlMenu,
+                onPressed: () {
+                  print('111111111111111111111111111');
+                  Scaffold.of(context).openDrawer();
+                },
               ),
             if (!Responsive.isMobile(context))
               Padding(

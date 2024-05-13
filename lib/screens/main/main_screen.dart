@@ -23,40 +23,36 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context, listen: false);
     print('11111111111111111');
-    return Scaffold(
-      key: context.read<CustomMenuController>().scaffoldKey,
-      drawer: const SideMenu(),
-      body: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Builder(builder: (context) {
-              final isDesktop = MediaQuery.of(context).size.width >= 1100;
-              return Expanded(
-                flex: isDesktop ? 1 : 0,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (Responsive.isDesktop(context)) {
-                      return const SideMenu();
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-              );
-            }),
-            Expanded(
-              // flex: 5,
-              flex: 7,
-              child: Consumer<SideMenuController>(
-                builder: (context, state, _) {
-                  return pages(menu);
-                },
-              ),
-              // child: CheckOutPage(),
-            )
-          ],
-        ),
+    return SafeArea(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Builder(builder: (context) {
+          //   final isDesktop = MediaQuery.of(context).size.width >= 1100;
+          //   return Expanded(
+          //     flex: isDesktop ? 1 : 0,
+          //     child: LayoutBuilder(
+          //       builder: (context, constraints) {
+          //         if (Responsive.isDesktop(context)) {
+          //           return const SideMenu();
+          //         } else {
+          //           return const SizedBox();
+          //         }
+          //       },
+          //     ),
+          //   );
+          // }),
+          // Expanded(
+          //   // flex: 5,
+          //   flex: 7,
+          //   child: Consumer<SideMenuController>(
+          //     builder: (context, state, _) {
+          //       return pages(menu);
+          //     },
+          //   ),
+          //   // child: CheckOutPage(),
+          // )
+        ],
       ),
     );
   }
