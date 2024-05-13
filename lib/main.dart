@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/constants.dart';
-import 'screens/main/main_screen.dart';
 
 Future<void> main() async {
   await mainInitialization();
