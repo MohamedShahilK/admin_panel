@@ -291,6 +291,7 @@ class DashBoardServices {
       final token = StorageServices.to.getString(StorageServicesKeys.token);
       final haveToken = token.isNotEmpty;
       if (haveToken) {
+        print('6848468468447878697');
         final response = await api.dio?.get<Map<String, dynamic>>(
           options: Options(
             headers: {
@@ -306,7 +307,7 @@ class DashBoardServices {
           },
           EndPoints.dashboard,
         );
-        //print('1111111111111111111111111111 ${response!.data?['location_name']}');
+        print('1111111111111111111111111111 ${response!.data?['location_name']}');
         final respModel = DashBoardResponseModel.fromJson(response!.data ?? {});
         await StorageServices.to.setString('logoPath', respModel.logoPath!);
 
@@ -666,11 +667,17 @@ class DashBoardServices {
     try {
       final token = StorageServices.to.getString(StorageServicesKeys.token);
       final haveToken = token.isNotEmpty;
+      print(token);
       if (haveToken) {
         final response = await api.dio?.get<Map<String, dynamic>>(
           options: Options(
             headers: {
               // 'accept': '*/*',
+              'Access-Control-Allow-Origin': '*',
+              // 'Access-Control-Allow-Headers': 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, Access-Control-Allow-Origin',
+              // 'Access-Control-Expose-Headers': 'Authorization, authenticated',
+              // 'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, OPTIONS',
+              // 'Access-Control-Allow-Credentials': 'true',
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             },
