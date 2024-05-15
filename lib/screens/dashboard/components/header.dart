@@ -20,86 +20,91 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context);
-    return Container(
-      // color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          if (reqBackBtn)
-            Padding(
-              padding: EdgeInsets.only(left: !Responsive.isMobile(context) ? 35 : 20),
-              child: const Icon(Icons.arrow_back_ios_rounded, color: secondaryColor).ripple(context, () => Navigator.pop(context)),
-            )
-          else ...[
-            if (!Responsive.isDesktop(context))
-              IconButton(
-                icon: const Icon(Icons.menu, color: secondaryColor),
-                onPressed: () {
-                  print('111111111111111111111111111');
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            if (!Responsive.isMobile(context))
+    return Card(
+      elevation: .4,
+      margin: EdgeInsets.symmetric(horizontal: 2),
+      color: Colors.white,
+      child: Container(
+        // color: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            if (reqBackBtn)
               Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  // "Dashboard",
-                  menu.myMenu,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor, fontWeight: FontWeight.bold),
+                padding: EdgeInsets.only(left: !Responsive.isMobile(context) ? 35 : 20),
+                child: const Icon(Icons.arrow_back_ios_rounded, color: secondaryColor).ripple(context, () => Navigator.pop(context)),
+              )
+            else ...[
+              if (!Responsive.isDesktop(context))
+                IconButton(
+                  icon: const Icon(Icons.menu, color: secondaryColor),
+                  onPressed: () {
+                    print('111111111111111111111111111');
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              // if (!Responsive.isMobile(context))
+              //   Padding(
+              //     padding: const EdgeInsets.only(left: 20),
+              //     child: Text(
+              //       // "Dashboard",
+              //       menu.myMenu,
+              //       style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor, fontWeight: FontWeight.bold),
+              //     ),
+              //   ),
+            ],
+            // if (!Responsive.isMobile(context))
+            Spacer(
+              flex: Responsive.isDesktop(context) ? 2 : 1,
+            ),
+            // const Expanded(
+            //   child:  SearchField(),
+            // ),
+            InkWell(
+              onTap: () {},
+              borderRadius: BorderRadius.circular(100),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: badges.Badge(
+                  badgeContent: const Text(
+                    '54',
+                    softWrap: true,
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                  child: SvgPicture.asset(
+                    'assets/icons/notification.svg',
+                    colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                    width: 25,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+            ),
+            InkWell(
+              onTap: () {},
+              borderRadius: BorderRadius.circular(100),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: badges.Badge(
+                  badgeContent: const Text(
+                    '10',
+                    softWrap: true,
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                  child: SvgPicture.asset(
+                    'assets/icons/car_ontheway.svg',
+                    colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                    width: 25,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            const ProfileCard(),
           ],
-          // if (!Responsive.isMobile(context))
-          Spacer(
-            flex: Responsive.isDesktop(context) ? 2 : 1,
-          ),
-          // const Expanded(
-          //   child:  SearchField(),
-          // ),
-          InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(100),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: badges.Badge(
-                badgeContent: const Text(
-                  '54',
-                  softWrap: true,
-                  style: TextStyle(fontSize: 10),
-                ),
-                badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
-                child: SvgPicture.asset(
-                  'assets/icons/notification.svg',
-                  colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
-                  width: 25,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(100),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: badges.Badge(
-                badgeContent: const Text(
-                  '10',
-                  softWrap: true,
-                  style: TextStyle(fontSize: 10),
-                ),
-                badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
-                child: SvgPicture.asset(
-                  'assets/icons/car_ontheway.svg',
-                  colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
-                  width: 25,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          const ProfileCard(),
-        ],
+        ),
       ),
     );
   }

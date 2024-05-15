@@ -2,6 +2,7 @@ import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +23,20 @@ class SideMenu extends StatelessWidget {
           // it enables scrolling
           child: Column(
             children: [
-              DrawerHeader(
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 15),
                 // child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 250),
-                child: Image.asset("assets/images/new_logo-removebg-preview.png", width: 200),
+                child: Image.asset(
+                  "assets/images/new_logo-removebg-preview.png",
+                  width: 200,
+                  height: 50,
+                  // frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  //   if (!wasSynchronouslyLoaded) {
+                  //     return child;
+                  //   }
+                  //   return CircularProgressIndicator();
+                  // },
+                ),
               ),
               DrawerListTile(
                 title: "Dashboard",

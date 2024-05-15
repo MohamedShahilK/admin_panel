@@ -136,10 +136,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allUsers;
-                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList ?? [];
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -153,10 +153,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allCheckedInUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -171,10 +171,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allParkedInUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'P').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -189,10 +189,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allRequestedInUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -207,10 +207,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allOnthewayUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -224,10 +224,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allVehicleArrivedUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -242,10 +242,10 @@ class _Body extends StatelessWidget {
                               usersNotifier.value = [];
                               usersNotifier.notifyListeners();
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () {
                                   // usersNotifier.value = allCheckedOutUsers;
-                                   usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
+                                  usersNotifier.value = ticketsList!.where((e) => e.checkoutStatus == 'N').toList();
                                   usersNotifier.notifyListeners();
                                 },
                               );
@@ -305,33 +305,32 @@ class _Table extends StatelessWidget {
                   //   ),
                   // ),
                   ValueListenableBuilder(
-                    valueListenable: usersNotifier,
-                    builder: (context, list,_) {
-                      return Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Total Tickets:'.toUpperCase(),
-                              // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
-                              style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              // '50',
-                              // allCheckedInUsers.length.toString(),
-                              usersNotifier.value.length.toString(),
-                              // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
-                              style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  ),
+                      valueListenable: usersNotifier,
+                      builder: (context, list, _) {
+                        return Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Total Tickets:'.toUpperCase(),
+                                // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
+                                style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                // '50',
+                                // allCheckedInUsers.length.toString(),
+                                usersNotifier.value.length.toString(),
+                                // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
+                                style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                 ],
               ),
             ),
@@ -359,7 +358,6 @@ class _Table extends StatelessWidget {
 
 class SortablePage extends StatefulWidget {
   const SortablePage({super.key});
-  
 
   @override
   _SortablePageState createState() => _SortablePageState();
@@ -369,44 +367,7 @@ class _SortablePageState extends State<SortablePage> {
   // List<CheckInModel> users = [];
   int? sortColumnIndex;
   bool isAscending = false;
-  late var timer;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   print('12222222222222222222222222222222222');
-  //   if (mounted) {
-  //     Future.delayed(
-  //       const Duration(seconds: 2),
-  //       () {
-  //         // usersNotifier.value = allCheckedInUsers;
-  //         usersNotifier.notifyListeners();
-  //       },
-  //     );
-  //   }
-  // }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     // if (mounted) {
-  //     //   timer = Timer.periodic(
-  //     //     const Duration(seconds: 2),
-  //     //     (Timer t) {
-  //     //       usersNotifier.value = allCheckedInUsers;
-  //     //       usersNotifier.notifyListeners();
-  //     //     },
-  //     //   );
-  //     // }
-  //   // });
-  // }
-
-  // @override
-  // void dispose() {
-  //   timer.cancel();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) => ScrollableWidget(child: buildDataTable());
@@ -456,7 +417,7 @@ class _SortablePageState extends State<SortablePage> {
         user.requestedTime ?? '',
         user.onthewayTime ?? '',
         user.carModelName ?? '',
-        user.carColorName ??'',
+        user.carColorName ?? '',
         user.cvaInName ?? '',
         user.emiratesName ?? '',
         user.vehicleNumber ?? '',
@@ -470,11 +431,17 @@ class _SortablePageState extends State<SortablePage> {
   List<DataCell> getCells(List<dynamic> cells) {
     if (usersNotifier.value.isEmpty) {
       return List.generate(
-          11,
-          (index) => DataCell(usersNotifier.value.isEmpty ? LoadingAnimationWidget.hexagonDots(color: secondaryColor, size: 13) : const Text(
-                'data',
-                style: TextStyle(color: Colors.black, fontSize: 12),
-              )));
+        11,
+        (index) => const DataCell(
+          // usersNotifier.value.isEmpty
+          //     ? LoadingAnimationWidget.hexagonDots(color: secondaryColor, size: 13)
+          //     : 
+              Text(
+                  '',
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+        ),
+      );
     }
     return cells.map((data) {
       if (data == cells.last) {
@@ -518,11 +485,11 @@ class _SortablePageState extends State<SortablePage> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.barcode ?? '',user1.barcode ?? ''));
+      usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.barcode ?? '', user2.barcode ?? ''));
     } else if (columnIndex == 1) {
-      usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.initialCheckinTime ?? '', user1.initialCheckinTime ?? ''));
+      usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.initialCheckinTime ?? '', user2.initialCheckinTime ?? ''));
     } else if (columnIndex == 2) {
-      usersNotifier.value.sort((user1, user2) => compareString(ascending,user1.dataCheckinTime ?? '', user1.dataCheckinTime ?? ''));
+      usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.dataCheckinTime ?? '', user2.dataCheckinTime ?? ''));
     } else if (columnIndex == 3) {
       usersNotifier.value.sort((user1, user2) => compareString(ascending, user1.requestedTime ?? '', user2.requestedTime ?? ''));
     } else if (columnIndex == 4) {
