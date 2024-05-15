@@ -16,6 +16,7 @@ import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/ripple.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
@@ -141,8 +142,8 @@ class _Body extends StatelessWidget {
 
                         //
                         Wrap(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          // alignment: WrapAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,\
+                          // alignment: WrapAlignment.start,
                           runSpacing: 15,
                           children: [
                             _DashTopCard(
@@ -283,8 +284,6 @@ class _Body extends StatelessWidget {
                             }),
                           ],
                         ),
-
-                        // Butt
 
                         // Table
                         Consumer<DashBoardTabController>(
@@ -985,6 +984,8 @@ class _Table extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dashBloc = Provider.of<DashboardBloc>(context, listen: false);
+
     final length = item == null
         ? item2 == null
             ? item3 == null
@@ -1004,8 +1005,67 @@ class _Table extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Filter
+                  Row(
+                    children: [
+                      const SizedBox(width: 12),
+                      Icon(
+                        FontAwesomeIcons.filter,
+                        size: 19,
+                        color: Colors.grey[700],
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        // width: double.infinity,
+                        padding: const EdgeInsets.all(8.0),
+                        // height: 30,
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          // border: Border.all(color: Colors.green[100]!),
+                          // border: Border.all(
+                          //   color: const Color.fromARGB(146, 194, 151, 223),
+                          // ),
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Icon(
+                              //   FontAwesomeIcons.filter,
+                              //   size: 17,
+                              //   color: Colors.grey[800],
+                              // ),
+                              // const SizedBox(width: 16),
+                              StreamBuilder(
+                                stream: dashBloc.state.filterDate,
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    // 'Filtered By Today',
+                                    // 'Filtered By ${snapshot.data}',
+                                    snapshot.data ?? '',
+                                    style: GoogleFonts.openSans().copyWith(
+                                      fontSize: 16,
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  );
+                                },
+                              ),
+                              // const Spacer(),
+                              // const SizedBox(width: 28),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(flex: 2),
+
                   // Container(
                   //   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
                   //   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor)),
@@ -1258,7 +1318,6 @@ class _SortablePageState extends State<SortablePage> {
       return Colors.red[600];
     }
   }
-
 
   String _status(status, dataCheckInTime) {
     if (status == 'N' && dataCheckInTime != null && dataCheckInTime == '') {
