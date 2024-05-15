@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:admin_panel/controllers/MenuController.dart';
+import 'package:admin_panel/controllers/dashboard_tab_controller.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_bloc.dart';
 import 'package:admin_panel/main_initialization.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CustomMenuController()),
         ChangeNotifierProvider(create: (context) => SideMenuController()),
+        ChangeNotifierProvider(create: (context) => DashBoardTabController()),
 
         //
         Provider(

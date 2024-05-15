@@ -577,7 +577,7 @@ class DashBoardServices {
           EndPoints.getAllCheckOuts,
         );
         //print('Done');
-        // //print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${(response!.data?['checkin_list'] as List).length}');
+        // print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${response!.data}');
         final respModel = AllCheckOutResponse.fromJson(response!.data ?? {});
         return respModel;
       }
