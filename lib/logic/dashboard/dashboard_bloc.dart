@@ -2,7 +2,7 @@
 
 import 'package:admin_panel/utils/storage_services.dart';
 import 'package:admin_panel/utils/utility_functions.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_state.dart';
@@ -20,7 +20,6 @@ class DashboardBloc {
   }
 
   Future<void> initDetails() async {
-    
     await getSettings();
     final userType = StorageServices.to.getString('userType');
 
@@ -50,15 +49,12 @@ class DashboardBloc {
     final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
 
     await getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate);
-    
+
     final locationId = StorageServices.to.getInt('locationId');
     await getPrintingSettingsAndHeader(locationId: locationId);
     // Last 3 days Filter Default
 
     // await getDashBoardWithTicket(pageNo: 1);
-
-    
-
 
     await getCheckInTickets(orderBy: 'id', pageNo: 1);
     await getCheckOutTickets(orderBy: 'id', pageNo: 1);
@@ -68,35 +64,10 @@ class DashboardBloc {
     await getParkedTickets(orderBy: 'id', pageNo: 1);
     await getCarBrands();
 
-    // if (StorageServices.to.getString('userType') == 'A' || StorageServices.to.getString('userType') == 'ADMIN') {
-    //   await getPrintingSettingsAndHeader(locationId: 1);
-    // } else {
-    //   await getPrintingSettingsAndHeader(locationId: locationId);
-    // }
-
     // Calling Settings
     await getSettings();
 
-    final FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    // await messaging.getToken().then((value) => print(value));
-
-    // final operatorId = StorageServices.to.getString('operatorId');
-    // final userType = StorageServices.to.getString('userType');
-    // final locationName = StorageServices.to.getString('locationName').trim().replaceAll(' ', '');
-
-    // await FirebaseMessaging.instance.subscribeToTopic('allDevices');
-    // await FirebaseMessaging.instance.subscribeToTopic('$operatorId$userType');
-
-    // await FirebaseMessaging.instance.subscribeToTopic('$userType$operatorId');
-
-    // String userCat = userType == 'ADMIN' ? 'A' : userType;
-
-    // print('1111111111111111111111111111locationName $locationName');
-
-    // if (userCat != 'A') {
-    //   await FirebaseMessaging.instance.subscribeToTopic('$locationName$operatorId');
-    // }
+    // final FirebaseMessaging messaging = FirebaseMessaging.instance;
   }
 
   final state = DashboardState();

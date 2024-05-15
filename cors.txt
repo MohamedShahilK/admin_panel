@@ -1,0 +1,7 @@
+ For Development
+ -----------------------------
+ flutter clean && flutter run -d chrome --web-browser-flag "--disable-web-security" (Not Proper way, have security issues...just only for development)
+
+ For Production
+ -----------------------------
+ 

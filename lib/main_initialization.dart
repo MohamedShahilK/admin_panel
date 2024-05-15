@@ -1,14 +1,10 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 // import 'package:awesome_notifications/awesome_notifications.dart';
-import 'dart:ui';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:firebase_analytics/firebase_analytics.dart';
 // import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
