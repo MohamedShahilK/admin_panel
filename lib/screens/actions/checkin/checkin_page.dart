@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/models/old/user.dart';
 // import 'package:admin_panel/models/new/user.dart';
 import 'package:admin_panel/responsive.dart';
-import 'package:admin_panel/screens/actions/checkin/custom_action_textfield.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
@@ -14,9 +12,7 @@ import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/ripple.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -54,7 +50,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: SideMenu(),
+        drawer: const SideMenu(),
         body: SafeArea(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,9 +70,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                   ),
                 );
               }),
-              const Expanded(
+               Expanded(
                 flex: 7,
-                child: _Body(),
+                child: _Body(tickNum : widget.result),
               ),
             ],
           ),
@@ -88,18 +84,20 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
 class _Body extends StatelessWidget {
   const _Body({
-    super.key,
+    super.key, this.tickNum,
   });
+
+  final String? tickNum;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return  Stack(
       children: [
         // _AllChecinSection(),
-        _NewCheckInForm(),
+        _NewCheckInForm(tickNum : tickNum),
 
         // Header
-        Header(reqBackBtn: true),
+        const Header(reqBackBtn: true),
       ],
     );
   }
@@ -107,8 +105,10 @@ class _Body extends StatelessWidget {
 
 class _NewCheckInForm extends StatelessWidget {
   const _NewCheckInForm({
-    super.key,
+    super.key, this.tickNum,
   });
+
+   final String? tickNum;
 
   @override
   Widget build(BuildContext context) {
@@ -131,18 +131,18 @@ class _NewCheckInForm extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Ticket No :',
                     style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   Text(
-                    '98736494616',
-                    style: TextStyle(color: Color.fromARGB(255, 126, 65, 155), fontSize: 20, fontWeight: FontWeight.bold),
+                    tickNum ?? '',
+                    style: const TextStyle(color: Color.fromARGB(255, 126, 65, 155), fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

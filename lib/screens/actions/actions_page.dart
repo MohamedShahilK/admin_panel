@@ -12,6 +12,7 @@ import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/utils/ripple.dart';
 import 'package:admin_panel/utils/storage_services.dart';
+import 'package:admin_panel/utils/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
@@ -79,10 +80,18 @@ class _ActionsPageState extends State<ActionsPage> {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends StatefulWidget {
   const _Body({
     super.key,
   });
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> {
+  final ValueNotifier<bool> isExpanded = ValueNotifier(false);
+  final ValueNotifier<bool> isExists = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -272,173 +281,224 @@ class _Body extends StatelessWidget {
                         ],
                       );
                     }
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 120, left: 160, right: 160),
-                      child: SingleChildScrollView(
-                        child: StreamBuilder(
-                            stream: bloc.barcodeStream,
-                            builder: (context, snapshot) {
-                              final result = snapshot.data;
-                              var checkOutStatus = '';
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 160),
-                                    child: ActionTopCard(title: 'title', count: 'count', icon: Icons.abc, color: Colors.red),
-                                  ),
+                    return ValueListenableBuilder(
+                        valueListenable: isExists,
+                        builder: (context, exi, _) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 120, left: 160, right: 160),
+                            child: SingleChildScrollView(
+                              child: StreamBuilder(
+                                  stream: bloc.barcodeStream,
+                                  builder: (context, snapshot) {
+                                    final result = snapshot.data;
+                                    var checkOutStatus = '';
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 160),
+                                          child: ActionTopCard(title: 'title', count: 'count', icon: Icons.abc, color: Colors.red),
+                                        ),
 
-                                  const SizedBox(height: 50),
+                                        const SizedBox(height: 50),
 
-                                  //
-                                  CustomActionTextField(onTextChanged: (val) {}),
+                                        //
+                                        Builder(
+                                          builder: (context) {
+                                            final minValue = StorageServices.to.getInt(StorageServicesKeys.minValue);
+                                            final maxValue = StorageServices.to.getInt(StorageServicesKeys.maxValue);
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top: 20),
+                                              child: CustomActionTextField(
+                                                bloc: bloc,
+                                                textStream: bloc.barcodeStream,
+                                                errorStream: bloc.barcodeStreamError,
+                                                onTextChanged: (value) async {
+                                                  print(value);
+                                                  bloc.ticketIdStream.add('');
+                                                  isExpandedNotifier2.value = false;
+                                                  isExpandedNotifier2.notifyListeners();
+                                                  bloc.barcodeStream.add(value);
+                                                  if (await bloc.checkValidation()) {
+                                                    //print('existsss ${await bloc.checkTicketExists(ticketNumber: value)}');
+                                                    if (bloc.ticketIdStream.value != '') {
+                                                      await bloc.getOneCheckoutTicket(ticketId: bloc.ticketIdStream.value);
+                                                      // bloc.ticketIdStream.add('');
+                                                      print('888888888888888888888888888888888888888');
+                                                      return;
+                                                    } else {
+                                                      isExists.value = await bloc.checkTicketExists(ticketNumber: value);
+                                                      await bloc.getTicketDetails(ticketNumber: value);
+                                                      await bloc.getAllCheckOutItems(id: bloc.ticketDetailsResponse.value?.data?.ticketInfo?[0].id);
+                                                      await bloc.getAllPermissions();
+                                                      if (isExists.value) {
+                                                        if (value.length >= minValue && !(value.length > maxValue)) {
+                                                          isExpandedNotifier.value = true;
+                                                          isExpandedNotifier.notifyListeners();
 
-                                  const SizedBox(height: 30),
+                                                          // statusNotifier.value = 'CheckIn';
+                                                          // statusNotifier.notifyListeners();
+                                                        } else {
+                                                          isExpandedNotifier.value = false;
+                                                          isExpandedNotifier.notifyListeners();
+                                                        }
+                                                        // }
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
 
-                                  //
-                                  StreamBuilder(
-                                      stream: bloc.ticketDetailsResponse,
-                                      builder: (context, snapshot) {
-                                        var tickinfo = <TicketInfo>[];
-                                        // //print('aaaaaaaa ${snapshot.hasData}');
-                                        if (snapshot.hasData) {
-                                          final ticketDetails = snapshot.data;
-                                          tickinfo = ticketDetails!.data!.ticketInfo!;
+                                        const SizedBox(height: 30),
 
-                                          //print('111111111111111111 : $tickinfo');
-                                          // //print('create Date ${tickinfo[0].createDate}');
-                                        }
+                                        //
+                                        StreamBuilder(
+                                            stream: bloc.ticketDetailsResponse,
+                                            builder: (context, snapshot) {
+                                              var tickinfo = <TicketInfo>[];
+                                              // //print('aaaaaaaa ${snapshot.hasData}');
+                                              if (snapshot.hasData) {
+                                                final ticketDetails = snapshot.data;
+                                                tickinfo = ticketDetails!.data!.ticketInfo!;
 
-                                        if (tickinfo.isNotEmpty) {
-                                          bloc.getAllCheckOutItems(id: tickinfo[0].id).then((value) {
-                                            // print('1111111111111111111111111111111111');
-                                          });
-                                        }
-                                        return StreamBuilder(
-                                            stream: bloc.getAllCheckOutItemsStream,
-                                            builder: (context, getAllCheckOutItemsStreamsnapshot) {
-                                              final snap = getAllCheckOutItemsStreamsnapshot.data;
-                                              final isFeeCollectionAllowed = (snap?.data?.cashSetting?.popupStatus == 'A' && snap?.data?.cashSetting?.popupSettingId == 1) &&
-                                                  (permissionResp.data?.first.feeCollection == 'Y');
-                                              // print('111111111111111111111111111 ${permissionResp.data?.first.feeCollection == 'Y'}');
-                                              // print('111111111111111111111111111 ${snap?.data.cashSetting.popupStatus == 'A' && snap?.data.cashSetting.popupSettingId == 1}');
-                                              // final  isFeeCollectionAllowed = true;
-                                              return SizedBox(
-                                                width: MediaQuery.of(context).size.width / 2,
-                                                child: Wrap(
-                                                  // crossAxisAlignment: WrapCrossAlignment.center,
-                                                  alignment: WrapAlignment.center,
-                                                  // padding: const EdgeInsets.symmetric( vertical: 30),
-                                                  // shrinkWrap: true,
-                                                  // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisExtent: 100),
-                                                  spacing: 15,
-                                                  runSpacing: 5,
-                                                  children: [
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'CheckIn',
-                                                      result: result,
-                                                      bgColor: Colors.green[600]!,
-                                                      icon2: 'assets/icons/key_exchange.svg',
-                                                      status: 'N',
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'Parked',
-                                                      bgColor: Colors.orange[600]!,
-                                                      icon: Icons.local_parking_rounded,
-                                                      result: result,
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                      child: CheckInScreen(result: result),
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'Requested',
-                                                      bgColor: Colors.blue[600]!,
-                                                      icon: FontAwesomeIcons.registered,
-                                                      result: result,
-                                                      status: 'R',
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'On The Way',
-                                                      bgColor: Colors.purple[600]!,
-                                                      icon: FontAwesomeIcons.route,
-                                                      result: result,
-                                                      status: 'O',
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'Vehivle Arrived',
-                                                      bgColor: Colors.pink[600]!,
-                                                      icon2: 'assets/icons/checkin.svg',
-                                                      result: result,
-                                                      status: 'C',
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'Payment',
-                                                      bgColor: Colors.tealAccent[700]!,
-                                                      icon: FontAwesomeIcons.moneyBillTransfer,
-                                                      result: result,
-                                                      allPermissions: permissionResp,
-                                                      isPaymentPage: true,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                      child: PaymentPage(
-                                                        ticketNumber: result,
-                                                        id: tickinfo.isEmpty ? 0 : tickinfo[0].id,
+                                                //print('111111111111111111 : $tickinfo');
+                                                // //print('create Date ${tickinfo[0].createDate}');
+                                              }
+
+                                              if (tickinfo.isNotEmpty) {
+                                                bloc.getAllCheckOutItems(id: tickinfo[0].id).then((value) {
+                                                  // print('1111111111111111111111111111111111');
+                                                });
+                                              }
+                                              return StreamBuilder(
+                                                  stream: bloc.getAllCheckOutItemsStream,
+                                                  builder: (context, getAllCheckOutItemsStreamsnapshot) {
+                                                    final snap = getAllCheckOutItemsStreamsnapshot.data;
+                                                    final isFeeCollectionAllowed = (snap?.data?.cashSetting?.popupStatus == 'A' && snap?.data?.cashSetting?.popupSettingId == 1) &&
+                                                        (permissionResp.data?.first.feeCollection == 'Y');
+                                                    // print('111111111111111111111111111 ${permissionResp.data?.first.feeCollection == 'Y'}');
+                                                    // print('111111111111111111111111111 ${snap?.data.cashSetting.popupStatus == 'A' && snap?.data.cashSetting.popupSettingId == 1}');
+                                                    // final  isFeeCollectionAllowed = true;
+                                                    return SizedBox(
+                                                      width: MediaQuery.of(context).size.width / 2,
+                                                      child: Wrap(
+                                                        // crossAxisAlignment: WrapCrossAlignment.center,
+                                                        alignment: WrapAlignment.center,
+                                                        // padding: const EdgeInsets.symmetric( vertical: 30),
+                                                        // shrinkWrap: true,
+                                                        // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisExtent: 100),
+                                                        spacing: 15,
+                                                        runSpacing: 5,
+                                                        children: [
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'CheckIn',
+                                                            result: result,
+                                                            bgColor: Colors.green[600]!,
+                                                            icon2: 'assets/icons/key_exchange.svg',
+                                                            status: 'N',
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'Parked',
+                                                            bgColor: Colors.orange[600]!,
+                                                            icon: Icons.local_parking_rounded,
+                                                            result: result,
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                            child: CheckInScreen(result: result),
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'Requested',
+                                                            bgColor: Colors.blue[600]!,
+                                                            icon: FontAwesomeIcons.registered,
+                                                            result: result,
+                                                            status: 'R',
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'On The Way',
+                                                            bgColor: Colors.purple[600]!,
+                                                            icon: FontAwesomeIcons.route,
+                                                            result: result,
+                                                            status: 'O',
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'Vehivle Arrived',
+                                                            bgColor: Colors.pink[600]!,
+                                                            icon2: 'assets/icons/checkin.svg',
+                                                            result: result,
+                                                            status: 'C',
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'Payment',
+                                                            bgColor: Colors.tealAccent[700]!,
+                                                            icon: FontAwesomeIcons.moneyBillTransfer,
+                                                            result: result,
+                                                            allPermissions: permissionResp,
+                                                            isPaymentPage: true,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                            child: PaymentPage(
+                                                              ticketNumber: result,
+                                                              id: tickinfo.isEmpty ? 0 : tickinfo[0].id,
+                                                            ),
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'CheckOut',
+                                                            bgColor: Colors.red[600]!,
+                                                            icon: FontAwesomeIcons.caravan,
+                                                            result: result,
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                            child: CheckOutPage(
+                                                              ticketNumber: result,
+                                                              isAllCheckin: true,
+                                                              id: tickinfo.isEmpty ? 0 : tickinfo[0].id,
+                                                            ),
+                                                          ),
+                                                          CustomMainButton(
+                                                            tickinFo: tickinfo,
+                                                            title: 'Outlet Validator',
+                                                            bgColor: Colors.grey[600]!,
+                                                            icon: FontAwesomeIcons.barcode,
+                                                            result: result,
+                                                            allPermissions: permissionResp,
+                                                            settings: settings,
+                                                            isFeeCollectionAllowed: isFeeCollectionAllowed,
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'CheckOut',
-                                                      bgColor: Colors.red[600]!,
-                                                      icon: FontAwesomeIcons.caravan,
-                                                      result: result,
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                      child: CheckOutPage(
-                                                        ticketNumber: result,
-                                                        isAllCheckin: true,
-                                                        id: tickinfo.isEmpty ? 0 : tickinfo[0].id,
-                                                      ),
-                                                    ),
-                                                    CustomMainButton(
-                                                      tickinFo: tickinfo,
-                                                      title: 'Outlet Validator',
-                                                      bgColor: Colors.grey[600]!,
-                                                      icon: FontAwesomeIcons.barcode,
-                                                      result: result,
-                                                      allPermissions: permissionResp,
-                                                      settings: settings,
-                                                      isFeeCollectionAllowed: isFeeCollectionAllowed,
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            });
-                                      })
-                                ],
-                              );
-                            }),
-                      ),
-                    );
+                                                    );
+                                                  });
+                                            })
+                                      ],
+                                    );
+                                  }),
+                            ),
+                          );
+                        });
                   });
             }),
 

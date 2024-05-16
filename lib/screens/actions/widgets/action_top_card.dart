@@ -4,6 +4,9 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+final ValueNotifier<bool> isExpandedNotifier = ValueNotifier(true);
+final ValueNotifier<bool> isExpandedNotifier2 = ValueNotifier(false);
+
 class ActionTopCard extends StatelessWidget {
   const ActionTopCard({
     required this.title,

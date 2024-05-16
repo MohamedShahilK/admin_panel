@@ -3,21 +3,30 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:admin_panel/logic/actions/actions_bloc.dart';
+import 'package:admin_panel/screens/actions/widgets/action_top_card.dart';
+import 'package:admin_panel/utils/custom_tools.dart';
+import 'package:admin_panel/utils/storage_services.dart';
+import 'package:admin_panel/utils/string_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
+
 
 class CustomActionTextField extends StatefulWidget {
   const CustomActionTextField({
-    // required this.bloc,
-    // required this.textStream,
+    required this.bloc,
     required this.onTextChanged,
+    required this.textStream,
     this.errorStream,
   });
 
-  // final ActionsBloc bloc;
+  final ActionsBloc bloc;
   final void Function(String) onTextChanged;
   final Stream<String>? errorStream;
-  // final BehaviorSubject<String> textStream;
+  final BehaviorSubject<String> textStream;
 
   // static final GlobalKey<FormState> _loginScreenFormKey = GlobalKey<FormState>();
 
@@ -28,27 +37,41 @@ class CustomActionTextField extends StatefulWidget {
 class CustomActionTextFieldState extends State<CustomActionTextField> {
   final _controller = TextEditingController();
 
-  // Timer? _timer;
+  Timer? _timer;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.bloc.barcodeStream.listen((value) {
-  //     if (value.isEmpty) {
-  //       _controller.clear();
-  //     } else if (_controller.text != value) {
-  //       _controller.text = value;
-  //     }
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    widget.bloc.barcodeStream.listen((value) {
+      if (value.isEmpty) {
+        _controller.clear();
+      } else if (_controller.text != value) {
+        _controller.text = value;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final actionsBloc = Provider.of<ActionsBloc>(context, listen: false);
+    final actionsBloc = Provider.of<ActionsBloc>(context, listen: false);
     return Form(
       // key: CustomActionTextField._loginScreenFormKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: StreamBuilder<String>(
+        stream: widget.textStream,
+        builder: (context, textSnapshot) {
+          final textData = textSnapshot.data ?? '';
+          //print(textData);
+          //  actionsBloc.getTicketDetails(ticketNumber: textData);
+          if (actionsBloc.ticketIdStream.value != '') {
+            actionsBloc.getOneCheckoutTicket(ticketId: actionsBloc.ticketIdStream.value);
+            // actionsBloc.ticketIdStream.add('');
+            // print('ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt');
+          } else {
+            // print('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+            actionsBloc.getTicketDetails(ticketNumber: textData);
+          }
+          return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(),
           // Text(
@@ -157,104 +180,116 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
                     ],
                   ),
                 ),
-                prefixIcon: InkWell(
-                  onTap: () {
-                    // final bloc = Provider.of<ActionsBloc>(context, listen: false);
-                    // customLoader(context);
-                    // Future.delayed(
-                    //   const Duration(seconds: 1),
-                    //   () async {
-                    //     final minValue = StorageServices.to.getInt(StorageServicesKeys.minValue);
-                    //     final maxValue = StorageServices.to.getInt(StorageServicesKeys.maxValue);
-                    //     // statusNotifier.value = 'CheckIn';
-                    //     // statusNotifier.notifyListeners();
-                    //     final rng = Random();
-                    //     final code = rng.nextInt(9000000) + rng.nextInt(9999999);
-                    //     if (code.toString().length >= minValue && !(code.toString().length > maxValue)) {
-                    //       bloc.barcodeStream.add(code.toString());
-                    //       bloc.ticketIdStream.add('');
-                    //       // //print('111111111111 ${await bloc.checkTicketExists(ticketNumber: code.toString())}');
-                    //       await bloc.getTicketDetails(ticketNumber: code.toString());
-                    //       // print('222222222222222222222 $code');
-                    //       if (await bloc.checkTicketExists(ticketNumber: code.toString())) {
-                    //         isExpandedNotifier.value = true;
-                    //         isExpandedNotifier.notifyListeners();
-                    //       }
-                    //     }
-                    //     // setState(() {
-                    //     //   _controller.text = code.toString();
-                    //     // });
-                    //     widget.bloc.barcodeStream.add(code.toString());
-                    //     Loader.hide();
-                    //   },
-                    // );
+                    prefixIcon: InkWell(
+                      onTap: () {
+                        final bloc = Provider.of<ActionsBloc>(context, listen: false);
+                        customLoader(context);
+                        Future.delayed(
+                          const Duration(seconds: 1),
+                          () async {
+                            final minValue = StorageServices.to.getInt(StorageServicesKeys.minValue);
+                            final maxValue = StorageServices.to.getInt(StorageServicesKeys.maxValue);
+                            // statusNotifier.value = 'CheckIn';
+                            // statusNotifier.notifyListeners();
+                            final rng = Random();
+                            final code = rng.nextInt(9000000) + rng.nextInt(9999999);
+                            if (code.toString().length >= minValue && !(code.toString().length > maxValue)) {
+                              bloc.barcodeStream.add(code.toString());
+                              bloc.ticketIdStream.add('');
+                              // //print('111111111111 ${await bloc.checkTicketExists(ticketNumber: code.toString())}');
+                              await bloc.getTicketDetails(ticketNumber: code.toString());
+                              // print('222222222222222222222 $code');
+                              if (await bloc.checkTicketExists(ticketNumber: code.toString())) {
+                                isExpandedNotifier.value = true;
+                                isExpandedNotifier.notifyListeners();
+                              }
+                            }
+                            // setState(() {
+                            //   _controller.text = code.toString();
+                            // });
+                            widget.bloc.barcodeStream.add(code.toString());
+                            Loader.hide();
+                          },
+                        );
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 15, left: 10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // Container(
+                            //   height: 40,
+                            //   width: 30,
+                            //   color: Colors.orange,
+                            //   alignment: Alignment.center,
+                            // ),
 
-                    final rng = Random();
-                    final code = rng.nextInt(9000000) + rng.nextInt(9999999);
-                    _controller.text = code.toString();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(right: 15, left: 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        // Container(
-                        //   height: 40,
-                        //   width: 30,
-                        //   color: Colors.orange,
-                        //   alignment: Alignment.center,
-                        // ),
-
-                        // Text(
-                        //   'Generate',
-                        //   style: AppStyles.generateButtonStyle,
-                        // ),
-                        Icon(
-                          // FontAwesomeIcons.arrowsRotate,
-                          Icons.refresh,
-                          size: 20,
-                          color: Color.fromARGB(255, 146, 69, 197),
+                            // Text(
+                            //   'Generate',
+                            //   style: AppStyles.generateButtonStyle,
+                            // ),
+                            Icon(
+                              // FontAwesomeIcons.arrowsRotate,
+                              Icons.refresh,
+                              size: 20,
+                              color: Color.fromARGB(255, 146, 69, 197),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          // StreamBuilder<String>(
-          //   stream: widget.errorStream,
-          //   builder: (context, snapshot) {
-          //     final error = snapshot.data ?? '';
-          //     return StreamBuilder<String>(
-          //       stream: widget.textStream,
-          //       builder: (context, textSnapshot) {
-          //         final textData = textSnapshot.data ?? '';
-          //         // if (widget.isEmptyError &&
-          //         //     textData.isEmpty &&
-          //         //     error.isNotEmpty) {
-          //         //   return _ErrorTextWidget(errorText: error);
-          //         // } else if (!widget.isEmptyError && error.isNotEmpty) {
-          //         //   return _ErrorTextWidget(errorText: error);
-          //         // } else {
-          //         //   return Container();
-          //         // }
-          //         if (textData.isEmpty && error.isNotEmpty) {
-          //           return ErrorTextWidget(errorText: error);
-          //         } else if (textData.isNotEmpty && error.isNotEmpty) {
-          //           return ErrorTextWidget(errorText: error);
-          //         } else {
-          //           return Container();
-          //         }
-          //       },
-          //     );
-          //   },
-          // ),
-        ],
+              const SizedBox(height: 10),
+              StreamBuilder<String>(
+                stream: widget.errorStream,
+                builder: (context, snapshot) {
+                  final error = snapshot.data ?? '';
+                  return StreamBuilder<String>(
+                    stream: widget.textStream,
+                    builder: (context, textSnapshot) {
+                      final textData = textSnapshot.data ?? '';
+                      // if (widget.isEmptyError &&
+                      //     textData.isEmpty &&
+                      //     error.isNotEmpty) {
+                      //   return _ErrorTextWidget(errorText: error);
+                      // } else if (!widget.isEmptyError && error.isNotEmpty) {
+                      //   return _ErrorTextWidget(errorText: error);
+                      // } else {
+                      //   return Container();
+                      // }
+                      if (textData.isEmpty && error.isNotEmpty) {
+                        return ErrorTextWidget(errorText: error);
+                      } else if (textData.isNotEmpty && error.isNotEmpty) {
+                        return ErrorTextWidget(errorText: error);
+                      } else {
+                        return Container();
+                      }
+                    },
+                  );
+                },
+              ),
+            ],
+          );
+        },
       ),
+    );
+  }
+}
+
+class ErrorTextWidget extends StatelessWidget {
+  final String errorText;
+
+  const ErrorTextWidget({required this.errorText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      style: GoogleFonts.openSans().copyWith(color: Colors.red, fontSize: 12),
+      errorText,
     );
   }
 }
