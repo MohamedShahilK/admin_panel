@@ -253,7 +253,7 @@ class DashBoardServices {
           },
           EndPoints.dashboard,
         );
-        //print('1111111111111111111111111111 ${response!.data?['location_name']}');
+        print('getDashBoardWithTicket1111111111111111111111111111 ${(response!.data?['data']['active_tickets'] as List).length}');
         final respModel = DashBoardResponseModel.fromJson(response!.data ?? {});
 
         await StorageServices.to.setString('logoPath', respModel.logoPath!);

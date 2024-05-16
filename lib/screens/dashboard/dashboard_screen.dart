@@ -15,7 +15,9 @@ import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
+import 'package:admin_panel/utils/custom_tools.dart';
 import 'package:admin_panel/utils/ripple.dart';
+import 'package:admin_panel/utils/utility_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -30,6 +33,9 @@ import 'components/header.dart';
 
 // final usersNotifier = ValueNotifier<List<CheckInModel>>([]);
 // final usersNotifier = ValueNotifier<List<ActiveTickets>>([]);
+
+final ValueNotifier<DateTime> fromDate = ValueNotifier(DateTime.now());
+final ValueNotifier<DateTime> toDate = ValueNotifier(DateTime.now());
 
 ValueNotifier<int> currentPageForDashBoardPage = ValueNotifier(1);
 ValueNotifier<int> currentPageForDashBoardPageCheckIns = ValueNotifier(1);
@@ -103,6 +109,7 @@ class _Body extends StatelessWidget {
             child: StreamBuilder(
                 stream: dashBloc.state.getDashRespStream,
                 builder: (context, getDashRespStreamSnapshot) {
+                  DashBoardResponseModel? allTicketsModel;
                   List<ActiveTickets>? ticketsList = [];
                   var totalCountForAdmin = 0;
                   var totalCounCheckIn = 0;
@@ -112,7 +119,7 @@ class _Body extends StatelessWidget {
                   var totalCountCollectnow = 0;
                   var totalCountCheckout = 0;
                   if (getDashRespStreamSnapshot.hasData) {
-                    final allTicketsModel = getDashRespStreamSnapshot.data;
+                    allTicketsModel = getDashRespStreamSnapshot.data;
                     ticketsList = allTicketsModel!.data!.activeTickets ?? <ActiveTickets>[];
                     // usersNotifier.value = ticketsList;
                     // usersNotifier.notifyListeners();
@@ -289,8 +296,151 @@ class _Body extends StatelessWidget {
                         Consumer<DashBoardTabController>(
                           builder: (context, c, _) {
                             if (dashTabController.menuName == 'Current Inventory') {
-                              return _Table(
-                                item: ticketsList?.where((e) => e.checkoutStatus == 'N').toList(),
+                              return Expanded(
+                                child: Column(
+                                  children: [
+                                    _Table(item: ticketsList),
+                                    if (allTicketsModel?.totalPages != null && (allTicketsModel?.totalPages)! > 1)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              // ...List.generate(20, (index) {
+                                              ...List.generate(allTicketsModel?.totalPages ?? 0, (index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                                                  child: ValueListenableBuilder(
+                                                    valueListenable: currentPageForDashBoardPage,
+                                                    builder: (context, ix, _) {
+                                                      return Container(
+                                                        height: 22,
+                                                        width: 22,
+                                                        decoration: BoxDecoration(
+                                                          color: index + 1 != currentPageForDashBoardPage.value ? Colors.grey : Colors.purple[400],
+                                                          borderRadius: BorderRadius.circular(50),
+                                                        ),
+                                                        child: InkWell(
+                                                          onTap: () async {
+                                                            //print('object');
+                                                            // await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
+
+                                                            Loader.show(
+                                                              context,
+                                                              progressIndicator: LoadingAnimationWidget.fallingDot(
+                                                                color: secondaryColor,
+                                                                size: 40,
+                                                              ),
+                                                            );
+
+                                                            if (dashBloc.state.filterDate.value == 'All') {
+                                                              final isLoading = await dashBloc.getDashBoardWithTicket(pageNo: index + 1, isNewPageLoading: true);
+
+                                                              if (isLoading) {
+                                                                Future.delayed(
+                                                                  const Duration(seconds: 1),
+                                                                  () {
+                                                                    _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                                                    currentPageForDashBoardPage.value = index + 1;
+                                                                    currentPageForDashBoardPage.notifyListeners();
+                                                                    Loader.hide();
+                                                                  },
+                                                                );
+                                                              } else {
+                                                                _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                                                currentPageForDashBoardPage.value = index + 1;
+                                                                currentPageForDashBoardPage.notifyListeners();
+                                                                Loader.hide();
+                                                              }
+                                                            } else {
+                                                              final now = DateTime.now();
+                                                              DateTime startDate;
+                                                              DateTime endDate;
+
+                                                              final dateOnlystart = DateFormat('yyyy-MM-dd').format(fromDate.value);
+                                                              final dateOnlyend = DateFormat('yyyy-MM-dd').format(toDate.value);
+
+                                                              if (dashBloc.state.filterDate.value == 'This Month') {
+                                                                startDate = DateTime(now.year, now.month, 1, 0, 0, 0);
+                                                                endDate = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
+                                                              } else if (dashBloc.state.filterDate.value == 'Today') {
+                                                                startDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+                                                                endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
+                                                              } else if (dashBloc.state.filterDate.value == 'Last 6 Months') {
+                                                                final sixMonthsAgo = now.subtract(const Duration(days: 180));
+                                                                startDate = DateTime(sixMonthsAgo.year, sixMonthsAgo.month, 1, 0, 0, 0);
+                                                                endDate = DateTime(now.year, now.month, 0, 23, 59, 59);
+                                                              } else if (dashBloc.state.filterDate.value == 'Yesterday') {
+                                                                startDate = DateTime(now.year, now.month, now.day - 1, 0, 0, 0);
+                                                                endDate = DateTime(now.year, now.month, now.day - 1, 23, 59, 59);
+                                                              } else if (dashBloc.state.filterDate.value == 'This Year') {
+                                                                startDate = DateTime(now.year, 1, 1, 0, 0, 0);
+                                                                endDate = DateTime(now.year, 12, 31, 23, 59, 59);
+                                                              } else if (dashBloc.state.filterDate.value == '$dateOnlystart - $dateOnlyend') {
+                                                                startDate = fromDate.value;
+                                                                endDate = toDate.value;
+                                                              } else if (dashBloc.state.filterDate.value == 'Last 3 Days') {
+                                                                // Calculate the first date of the 3-day period
+                                                                startDate = now.subtract(const Duration(days: 3));
+                                                                endDate = DateTime.now();
+                                                              } else if (dashBloc.state.filterDate.value == 'Last 7 Days') {
+                                                                // Calculate the first date of the 3-day period
+                                                                startDate = now.subtract(const Duration(days: 7));
+                                                                endDate = DateTime.now();
+                                                              } else {
+                                                                startDate = DateTime.now();
+                                                                endDate = DateTime.now();
+                                                              }
+
+                                                              final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate);
+                                                              final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(endDate);
+                                                              final isLoading = await dashBloc.getDashBoardAllTicketsWithDate(
+                                                                pageNo: index + 1,
+                                                                isNewPageLoading: true,
+                                                                startDate: formattedStartDate,
+                                                                endDate: formattedEndDate,
+                                                              );
+
+                                                              if (isLoading) {
+                                                                Future.delayed(
+                                                                  const Duration(seconds: 1),
+                                                                  () {
+                                                                    _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                                                    currentPageForDashBoardPage.value = index + 1;
+                                                                    currentPageForDashBoardPage.notifyListeners();
+                                                                    Loader.hide();
+                                                                  },
+                                                                );
+                                                              } else {
+                                                                _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                                                currentPageForDashBoardPage.value = index + 1;
+                                                                currentPageForDashBoardPage.notifyListeners();
+                                                                Loader.hide();
+                                                              }
+                                                            }
+
+                                                            Loader.hide();
+                                                          },
+                                                          child: Center(
+                                                            child: Text(
+                                                              (index + 1).toString(),
+                                                              style: const TextStyle(color: Colors.white, fontSize: 12),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               );
                             } else if (dashTabController.menuName == 'Check In') {
                               return StreamBuilder(
@@ -1063,7 +1213,10 @@ class _Table extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  ).ripple(context, () async {
+                    await filteringByDate(context, fromDate, toDate);
+                  }),
+
                   const Spacer(flex: 2),
 
                   // Container(
@@ -1504,5 +1657,664 @@ class _DashTopCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Future<dynamic> filteringByDate(
+  BuildContext context,
+  ValueNotifier<DateTime?> fromDate,
+  ValueNotifier<DateTime?> toDate,
+) {
+  final dashBloc = Provider.of<DashboardBloc>(context, listen: false);
+  final dashTabController = Provider.of<DashBoardTabController>(context, listen: false);
+
+  // For Ipad
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+  final largeDev = (screenHeight > 1100) && (screenWidth > 800);
+  // For Ipad
+
+  return showDialog(
+    context: context,
+    builder: (context) => Container(
+      height: largeDev ? 380 : 430,
+      child: AlertDialog(
+        backgroundColor: Colors.white,
+        contentPadding: EdgeInsets.zero,
+        title: Container(
+          decoration: const BoxDecoration(
+            // border: Border.all(color: Colors.purple[100]!),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              // Heading
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                // color: Colors.grey,
+                alignment: Alignment.topLeft,
+                // padding: EdgeInsets.symmetric(
+                //   horizontal: 15,
+                //   vertical: largeDev ? 10 : 20,
+                // ),
+                child: Text(
+                  'Filtering By Date',
+                  style: GoogleFonts.openSans().copyWith(fontSize: largeDev ? 12 : 16, fontWeight: FontWeight.w900, color: secondaryColor),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+
+                          // final endDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+
+                          // Calculate the first date of the 3-day period
+                          final startDate = now.subtract(const Duration(days: 3));
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('Last 3 Days');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'Last 3 Days',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+
+                          // final endDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+
+                          // Calculate the first date of the 7-day period
+                          final startDate = now.subtract(const Duration(days: 7));
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('Last 7 Days');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'Last 7 Days',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+                          await dashBloc.getDashBoardWithTicket(pageNo: 1).then((value) {
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('All');
+                          });
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'All',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+                          final firstDayOfThisMonth = DateTime(now.year, now.month, 1, 0, 0, 0);
+                          final lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(firstDayOfThisMonth);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(lastDayOfThisMonth);
+
+                          print('firstDayOfThisMonth $firstDayOfThisMonth');
+                          print('lastDayOfThisMonth $lastDayOfThisMonth');
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('This Month');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'This Month',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Today
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+                          final todayStartDate = DateTime(now.year, now.month, now.day, 0, 0, 0);
+                          final todayEndDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(todayStartDate);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(todayEndDate);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('Today');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'Today',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 9 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+                          final sixMonthsAgo = now.subtract(const Duration(days: 180));
+                          final firstDayOfLast6Months = DateTime(sixMonthsAgo.year, sixMonthsAgo.month, 1, 0, 0, 0);
+                          final lastDayOfThisMonth = DateTime(now.year, now.month, 0, 23, 59, 59);
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(firstDayOfLast6Months);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(lastDayOfThisMonth);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('Last 6 Months');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'Last 6 Months',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Yesterday
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+                          final yesterdayStartDate = DateTime(now.year, now.month, now.day - 1, 0, 0, 0);
+                          final yesterdayEndDate = DateTime(now.year, now.month, now.day - 1, 23, 59, 59);
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(yesterdayStartDate);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(yesterdayEndDate);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('Yesterday');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'Yesterday',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        onTap: () async {
+                          customLoader(context);
+
+                          final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
+                          final firstDayOfThisYear = DateTime(now.year, 1, 1, 0, 0, 0);
+                          final lastDayOfThisYear = DateTime(now.year, 12, 31, 23, 59, 59);
+
+                          final formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(firstDayOfThisYear);
+                          final formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(lastDayOfThisYear);
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate).then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+                            dashBloc.state.filterDate.add('This Year');
+                          });
+
+                          Loader.hide();
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(
+                          Icons.today_outlined,
+                          color: Colors.grey[700],
+                          size: largeDev ? 9 : null,
+                        ),
+                        title: Text(
+                          'This Year',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Date Range
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                child: Column(
+                  children: [
+                    // Align(
+                    //   alignment: Alignment.topLeft,
+                    //   child: Text(
+                    //     'Filter By DATE',
+                    //     style: GoogleFonts.openSans().copyWith(
+                    //       color: Colors.black,
+                    //       fontSize: largeDev ? 10 : 12,
+                    //       fontWeight: FontWeight.w900,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 10),
+
+                    // From Date
+                    Row(
+                      children: <Widget>[
+                        ValueListenableBuilder(
+                          valueListenable: fromDate,
+                          builder: (context, date, _) {
+                            return Text(
+                              // '${fromDate.value.add(const Duration(days: 15)).toLocal()}'
+                              //     .split(' ')[0],
+                              '${fromDate.value?.toLocal()}'.split(' ')[0],
+                              style: GoogleFonts.openSans().copyWith(
+                                color: Colors.grey[700],
+                                fontSize: largeDev ? 11 : 15,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ).ripple(context, () async {
+                              // final picked = await showDatePicker(
+                              //   context: context,
+                              //   initialDate: fromDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()),
+                              //   firstDate: DateTime(2000),
+                              //   // lastDate: DateTime(2025),
+                              //   lastDate: DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()),
+                              // );
+                              // if (picked != null && picked != fromDate.value) {
+                              //   fromDate.value = picked;
+                              //   fromDate.notifyListeners();
+                              // }
+
+                              await _selectDate(context, fromDate, isStartedDate: true);
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 10),
+
+                        Text(
+                          'To',
+                          style: GoogleFonts.openSans().copyWith(
+                            color: Colors.grey[700],
+                            fontSize: largeDev ? 10 : 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        // To Date
+                        ValueListenableBuilder(
+                          valueListenable: toDate,
+                          builder: (context, date, _) {
+                            return Text(
+                              '${toDate.value?.toLocal()}'.split(' ')[0],
+                              style: GoogleFonts.openSans().copyWith(
+                                color: Colors.grey[700],
+                                fontSize: largeDev ? 11 : 15,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ).ripple(context, () async {
+                              // final picked = await showDatePicker(
+                              //   context: context,
+                              //   // initialDate:
+                              //   //     toDate.value.add(const Duration(days: 15)),
+                              //   initialDate: toDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()),
+                              //   firstDate: DateTime(2000),
+                              //   // lastDate: DateTime(2025),
+                              //   lastDate: DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()),
+                              // );
+                              // if (picked != null && picked != toDate.value) {
+                              //   toDate.value = picked;
+                              //   toDate.notifyListeners();
+                              // }
+
+                              await _selectDate(context, toDate);
+                            });
+                          },
+                        ),
+
+                        const Spacer(),
+
+                        const SizedBox(width: 20),
+
+                        if (!largeDev)
+                          // Filter Button
+                          Container(
+                            // color: Colors.red,
+                            width: MediaQuery.of(context).size.width / 12,
+                            height: 35,
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 3.4,
+                              //  height: 35,
+                              height: 30,
+                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: secondaryColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text('FILTER', style: GoogleFonts.openSans().copyWith(fontSize: 12, fontWeight: FontWeight.w900)),
+                            ).ripple(context, () async {
+                              customLoader(context);
+                              String? formattedStartDate;
+                              String? formattedEndDate;
+
+                              if (fromDate.value != null) {
+                                // print('111111111111111111');
+                                formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(fromDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                              } else if (toDate.value != null && fromDate.value == null) {
+                                // await toastInfo(
+                                //   msg: 'Please Select Start Date',
+                                //   gravity: ToastGravity.BOTTOM,
+                                // );
+                                await warningMotionToastInfo(context, msg: 'Please Select Start Date');
+                                Loader.hide();
+                                return;
+                              }
+
+                              if (toDate.value != null) {
+                                if (toDate.value!.isBefore(fromDate.value!)) {
+                                  await erroMotionToastInfo(context, msg: 'Selected End Date is not allowed. Select a date that after the start date');
+                                  Loader.hide();
+                                  return;
+                                }
+
+                                // formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(toDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                                formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime(toDate.value!.year, toDate.value!.month, toDate.value!.day, 23, 59, 59));
+                              } else if (toDate.value == null && fromDate.value != null) {
+                                // await toastInfo(
+                                //   msg: 'Please Select End Date',
+                                //   gravity: ToastGravity.BOTTOM,
+                                // );
+                                await warningMotionToastInfo(context, msg: 'Please Select End Date');
+                                Loader.hide();
+                                return;
+                              }
+
+                              await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate ?? '', endDate: formattedEndDate ?? '').then((value) {
+                                currentPageForDashBoardPage.value = 1;
+                                currentPageForDashBoardPage.notifyListeners();
+                                dashTabController.setMenuName('Current Inventory');
+
+                                final dateOnlystart = DateFormat('yyyy-MM-dd').format(fromDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                                final dateOnlyend = DateFormat('yyyy-MM-dd').format(toDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+
+                                dashBloc.state.filterDate.add('$dateOnlystart - $dateOnlyend');
+                              });
+
+                              Loader.hide();
+
+                              Navigator.pop(context);
+                            }),
+                          ),
+                      ],
+                    ),
+
+                    if (largeDev) const SizedBox(height: 15),
+                    if (largeDev)
+                      // Filter Button
+                      Container(
+                        // color: Colors.red,
+                        width: MediaQuery.of(context).size.width / 3.2,
+                        height: 35,
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 3.4,
+                          //  height: 35,
+                          height: 40,
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.purple[400],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text('FILTER', style: GoogleFonts.openSans().copyWith(fontSize: 12, fontWeight: FontWeight.w900)),
+                        ).ripple(context, () async {
+                          customLoader(context);
+                          String? formattedStartDate;
+                          String? formattedEndDate;
+
+                          if (fromDate.value != null) {
+                            // print('111111111111111111');
+                            formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(fromDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                          }
+
+                          if (toDate.value != null) {
+                            formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(toDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                          }
+
+                          await dashBloc.getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate ?? '', endDate: formattedEndDate ?? '').then((value) {
+                            currentPageForDashBoardPage.value = 1;
+                            currentPageForDashBoardPage.notifyListeners();
+                            dashTabController.setMenuName('Current Inventory');
+
+                            final dateOnlystart = DateFormat('yyyy-MM-dd').format(fromDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+                            final dateOnlyend = DateFormat('yyyy-MM-dd').format(toDate.value ?? DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime()));
+
+                            dashBloc.state.filterDate.add('$dateOnlystart - $dateOnlyend');
+                          });
+
+                          Loader.hide();
+
+                          Navigator.pop(context);
+                        }),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> _selectDate(BuildContext context, ValueNotifier<DateTime?> selectedDate, {bool isStartedDate = false}) async {
+  final now = DateTime.now();
+
+  final picked = await showDatePicker(
+    context: context,
+    // initialDate: selectedDate.value == null ? DateTime.now() : selectedDate.value!,
+    initialDate: selectedDate.value == null
+        ? !isStartedDate
+            ? DateTime.now()
+            : DateTime(now.year, now.month)
+        : selectedDate.value!,
+    firstDate: DateTime(2000),
+    lastDate: DateTime.now(),
+  );
+
+  if (picked != null) {
+    // ignore: use_build_context_synchronously
+    // final pickedTime = await showTimePicker(
+    //   context: context,
+    //   initialTime: TimeOfDay.fromDateTime(selectedDate.value ?? DateTime.now()),
+    // );
+    // if (pickedTime != null) {
+    //   selectedDate.value = DateTime(
+    //     picked.year,
+    //     picked.month,
+    //     picked.day,
+    //     pickedTime.hour,
+    //     pickedTime.minute,
+    //   );
+
+    selectedDate.value = DateTime(
+      picked.year,
+      picked.month,
+      picked.day,
+    );
+    selectedDate.notifyListeners();
+
+    print('77777777777777777777777777777 ${DateFormat('yyyy-MM-dd').format(selectedDate.value!)}');
   }
 }
