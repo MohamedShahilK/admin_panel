@@ -15,6 +15,7 @@ import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
+import 'package:admin_panel/utils/custom_tools.dart';
 import 'package:admin_panel/utils/ripple.dart';
 import 'package:admin_panel/utils/storage_services.dart';
 import 'package:admin_panel/utils/utility_functions.dart';
@@ -573,8 +574,199 @@ class _NewCheckInForm extends StatelessWidget {
                                           style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
                                         ),
                                       ],
-                                    ),
-                                  ),
+                                    ).ripple(context, () async {
+                                      FocusManager.instance.primaryFocus?.unfocus();
+
+                                      customLoader(context);
+
+                                      // print('11111111111111111111111111 ${bloc.sourceIdStream.valueOrNull }');
+                                      // print('11111111111111111111111111 ${'${bloc.codeStream.valueOrNull}${bloc.vechicleNumberStream.valueOrNull}' }');
+
+                                      //  print('5453415343543543436 ${!await bloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                      //     emirates: bloc.sourceIdStream.valueOrNull ?? 0,
+                                      //     vehicleNumber: '${bloc.codeStream.value}${bloc.vechicleNumberStream.value}'.trim(),
+                                      //   )}');
+
+                                      if (details!.data!.ticketInfo!.isEmpty) {
+                                        print('3333333333333333333333333333333333333333333333333');
+
+                                        print(parkedBloc.codeStream.value);
+
+                                        // print('468464646846846846846846846843');
+                                        // print('5453415343543543436 ${!await bloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                        //   emirates: bloc.sourceIdStream.valueOrNull ?? 0,
+                                        //   vehicleNumber: '${bloc.codeStream.valueOrNull}${bloc.vechicleNumberStream.valueOrNull}',
+                                        // )}');
+                                        // if (bloc.sourceIdStream.value == null && (bloc.codeStream.value != '' && bloc.vechicleNumberStream.value != '')) {
+                                        //   await erroMotionToastInfo(context, msg: 'Please Select Country');
+                                        // } else
+                                        if (!await parkedBloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                              emirates: parkedBloc.sourceIdStream.valueOrNull ?? 0,
+                                              vehicleNumber: '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}',
+                                            ) ||
+                                            (parkedBloc.sourceIdStream.value == null && parkedBloc.codeStream.value == '' && parkedBloc.vechicleNumberStream.value == '')) {
+                                          // print('44444444444444444444444444444444444444444444444444');
+
+                                          await actionsBloc.checkInSubmit(ticketNumber: tickNum ?? '').then((value) async {
+                                            // print('8888888888888888888888888888888888888888888888888888888888');
+                                            await parkedBloc.getTicketDetails(ticketNumber: tickNum ?? '').then((value) async {
+                                              // print('99999999999999999999999999999999999999999999999999999999999');
+                                              await parkedBloc.checkInSubmitEdit(context, ticketNumber: tickNum ?? '').then((value) async {
+                                                // print('777777777777777777777777777777777777777777777777777777777777');
+                                                // print('44444444444444444444444444444444444444444444444444');
+                                                Loader.hide();
+
+                                                // if (bloc.checkInSubmitResponse.value == null) return;
+                                                parkedBloc.checkInSubmitResponse.listen((value) {
+                                                  if (value == null) {
+                                                    // erroMotionToastInfo(context, msg: 'something wrong');
+                                                    return;
+                                                  }
+                                                });
+
+                                                // print('44444444444444444444444444444444444444444444444444');
+
+                                                actionsBloc.barcodeStream.add(tickNum ?? '');
+                                                await actionsBloc.getTicketDetails(ticketNumber: tickNum ?? '').then((value) {
+                                                  final tick = actionsBloc.ticketDetailsResponse.value;
+                                                  if (tick?.data?.ticketInfo?[0].vehicleColr != null && tick?.data?.ticketInfo?[0].carColorName != null) {
+                                                    parkedBloc.colorIdStream.add(tick?.data?.ticketInfo?[0].vehicleColr);
+                                                    parkedBloc.colorStream.add(tick?.data?.ticketInfo?[0].carColorName ?? '');
+                                                  }
+                                                  if (tick?.data?.ticketInfo?[0].vehicleModel != null && tick?.data?.ticketInfo?[0].carBrandName != null) {
+                                                    parkedBloc.brandIdStream.add(tick?.data?.ticketInfo?[0].vehicleModel);
+                                                    parkedBloc.brandStream.add(tick?.data?.ticketInfo?[0].carBrandName ?? '');
+                                                  }
+
+                                                  if (tick?.data?.ticketInfo?[0].cvaIn != null && tick?.data?.ticketInfo?[0].cvaInName != null) {
+                                                    parkedBloc.driverIdStream.add(tick?.data?.ticketInfo?[0].cvaIn);
+                                                    parkedBloc.driverStream.add(tick?.data?.ticketInfo?[0].cvaInName ?? '');
+                                                  }
+
+                                                  if (tick?.data?.ticketInfo?[0].emirates != null && tick?.data?.ticketInfo?[0].emiratesName != null) {
+                                                    parkedBloc.sourceIdStream.add(tick?.data?.ticketInfo?[0].emirates ?? 0);
+                                                    parkedBloc.sourceStream.add(tick?.data?.ticketInfo?[0].emiratesName ?? '');
+                                                  }
+
+                                                  parkedBloc.codeStream.add(UtilityFunctions.extractAlphabets(tick?.data?.ticketInfo?[0].vehicleNumber ?? ''));
+                                                  parkedBloc.vechicleNumberStream.add(UtilityFunctions.extractNumbers(tick?.data?.ticketInfo?[0].vehicleNumber ?? ''));
+                                                  parkedBloc.parkingSlotStream.add(tick?.data?.ticketInfo?[0].slot ?? '');
+                                                  parkedBloc.guestNameStream.add(tick?.data?.ticketInfo?[0].customerDetails ?? '');
+                                                  parkedBloc.guestNumberStream.add(tick?.data?.ticketInfo?[0].customerPhoneNo ?? '');
+                                                  parkedBloc.guestNotesStream.add(tick?.data?.ticketInfo?[0].vehicleRemark ?? '');
+                                                });
+
+                                                //
+                                                //
+                                                // Navigator.pop(context);
+                                                //
+                                                //
+
+                                                await successMotionToastInfo(context, msg: 'Vechicle Details Added Sucessfully');
+                                              });
+                                              Loader.hide();
+                                            });
+                                            Loader.hide();
+                                          });
+
+                                          Loader.hide();
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => CheckInScreen(result: details?.ticketNumber),
+                                              ));
+                                        } else if (await parkedBloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                          emirates: parkedBloc.sourceIdStream.valueOrNull ?? 0,
+                                          vehicleNumber: '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}',
+                                        )) {
+                                          print('3333333333333333333333333333333333333333333');
+                                          await erroMotionToastInfo(context, msg: 'Vehicle Number is already used in another ticket', height: 50);
+                                          Loader.hide();
+                                        }
+                                        Loader.hide();
+                                      } else {
+                                        // if (bloc.sourceIdStream.value == null && bloc.codeStream.value != '' && bloc.vechicleNumberStream.value != '') {
+                                        //   // print('1111111111111111111111111111111111111111111111111');
+                                        //   await erroMotionToastInfo(context, msg: 'Please Select Country');
+                                        // } else
+                                        if (
+                                            // if ticket is not null and plate number is not exist
+                                            (parkedBloc.sourceIdStream.value != null &&
+                                                    details != null &&
+                                                    details.data != null &&
+                                                    details.data!.ticketInfo != null &&
+                                                    details.data!.ticketInfo!.isNotEmpty &&
+                                                    !await parkedBloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                                      emirates: parkedBloc.sourceIdStream.valueOrNull ?? 0,
+                                                      vehicleNumber: '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}',
+                                                    )) ||
+
+                                                // plate number is not exist and emirate is null but either the code or plate number is not null
+                                                (details != null &&
+                                                    details.data != null &&
+                                                    details.data!.ticketInfo != null &&
+                                                    details.data!.ticketInfo!.isNotEmpty &&
+                                                    !await parkedBloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                                      emirates: parkedBloc.sourceIdStream.valueOrNull ?? 0,
+                                                      vehicleNumber: '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}',
+                                                    ) &&
+                                                    parkedBloc.sourceIdStream.value == null &&
+                                                    (parkedBloc.codeStream.value != '' || parkedBloc.vechicleNumberStream.value != '')) ||
+
+                                                // pass the save function when we empty all plate number field
+                                                (details != null &&
+                                                    details.data != null &&
+                                                    details.data!.ticketInfo != null &&
+                                                    details.data!.ticketInfo!.isNotEmpty &&
+                                                    parkedBloc.sourceIdStream.value == null &&
+                                                    parkedBloc.codeStream.value == '' &&
+                                                    parkedBloc.vechicleNumberStream.value == '') ||
+
+                                                // pass the save function when field values in plate number fields are same to ticket details
+                                                (details != null &&
+                                                    details.data != null &&
+                                                    details.data!.ticketInfo != null &&
+                                                    details.data!.ticketInfo!.isNotEmpty && // (details.data!.ticketInfo[0].emirates == null || details.data!.ticketInfo[0].emirates == 0) &&
+                                                    details.data!.ticketInfo?[0].emirates == (parkedBloc.sourceIdStream.valueOrNull ?? 0) &&
+                                                    // (details.data!.ticketInfo[0].vehicleNumber == null || details.data!.ticketInfo[0].vehicleNumber == '') &&
+                                                    details.data!.ticketInfo?[0].vehicleNumber == '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}')) {
+                                          // print('22222222222222222222222222222222222222222222222222222222222222');
+                                          //
+                                          print(parkedBloc.vechicleNumberStream.value);
+                                          // customLoader(context);
+                                          if (parkedBloc.guestNumberStream.value != '' && parkedBloc.guestNumberStream.value.length < 10) {
+                                            erroMotionToastInfo(context, msg: 'Mobile Number Must be 10 in length');
+                                            Loader.hide();
+                                          } else {
+                                            await parkedBloc.checkInSubmitEdit(context, ticketNumber: tickNum ?? '').then((value) async {
+                                              Loader.hide();
+
+                                              if (parkedBloc.checkInSubmitResponse.value == null) return;
+
+                                              actionsBloc.barcodeStream.add(tickNum ?? '');
+                                              // await actionsBloc.getTicketDetails(ticketNumber: widget.result ?? '');
+
+                                              Navigator.pop(context);
+
+                                              await successMotionToastInfo(context, msg: 'Vechicle Details Added Sucessfully');
+                                            });
+                                            Loader.hide();
+                                          }
+                                          Loader.hide();
+                                          // } else if (bloc.sourceIdStream.value != null &&
+                                        } else if (await parkedBloc.ticketHavingSamePlateNumberExcludeCheckOut(
+                                          emirates: parkedBloc.sourceIdStream.valueOrNull ?? 0,
+                                          vehicleNumber: '${parkedBloc.codeStream.valueOrNull}${parkedBloc.vechicleNumberStream.valueOrNull}',
+                                        )) {
+                                          print('3333333333333333333333333333333333333333333');
+                                          await erroMotionToastInfo(context, msg: 'Vehicle Number is already used in another ticket', height: 50);
+                                          Loader.hide();
+                                        }
+                                      }
+
+                                      Loader.hide();
+                                    }),
+                                  )
                                 ],
                               ),
                             ),
@@ -1725,7 +1917,7 @@ class _PlateTextFieldState extends State<_PlateTextField> {
         onChanged: widget.onTextChanged,
         keyboardType: widget.keyboardType,
         textCapitalization: TextCapitalization.characters,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700,color: secondaryColor),
         textAlign: widget.textAlign ?? TextAlign.left,
         decoration: InputDecoration(
           hintText: widget.hintText,

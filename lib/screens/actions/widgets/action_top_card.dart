@@ -1032,7 +1032,7 @@ class ActionTopCardState extends State<ActionTopCard> with WidgetsBindingObserve
                                       valueListenable: statusNotifier,
                                       builder: (context, status, _) {
                                         return SizedBox(
-                                          width: MediaQuery.of(context).size.width / 1.8,
+                                          // width: MediaQuery.of(context).size.width / 1.8,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -1176,6 +1176,7 @@ class ActionTopCardState extends State<ActionTopCard> with WidgetsBindingObserve
                                       },
                                     ),
                                   ),
+                                  const Spacer(),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
