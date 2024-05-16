@@ -89,12 +89,12 @@ class CustomActionTextFieldState extends State<CustomActionTextField> {
             child: TextField(
               controller: _controller,
               // onChanged: widget.onTextChanged,
-              // onChanged: (value) {
-              //   if (_timer?.isActive ?? false) _timer!.cancel();
-              //   _timer = Timer(const Duration(milliseconds: 500), () {
-              //     widget.onTextChanged(value);
-              //   });
-              // },
+              onChanged: (value) {
+                if (_timer?.isActive ?? false) _timer!.cancel();
+                _timer = Timer(const Duration(milliseconds: 500), () {
+                  widget.onTextChanged(value);
+                });
+              },
               // initialValue: '51365468665',
               style: GoogleFonts.openSans().copyWith(
                 color: Colors.black54,

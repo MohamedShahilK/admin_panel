@@ -295,9 +295,18 @@ class _BodyState extends State<_Body> {
                                     return Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 160),
-                                          child: ActionTopCard(title: 'title', count: 'count', icon: Icons.abc, color: Colors.red),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 160),
+                                          child: ActionTopCard(
+                                            // title: 'Current Inventory',
+                                            title: 'Demo-Location, Dubai',
+                                            count: '233',
+                                            icon: Icons.inventory,
+                                            color: Colors.orange,
+                                            result: result,
+                                            isExists: isExists.value,
+                                            allPermissions: permissionResp,
+                                          ),
                                         ),
 
                                         const SizedBox(height: 50),
@@ -439,7 +448,7 @@ class _BodyState extends State<_Body> {
                                                           ),
                                                           CustomMainButton(
                                                             tickinFo: tickinfo,
-                                                            title: 'Vehivle Arrived',
+                                                            title: 'Vehicle Arrived',
                                                             bgColor: Colors.pink[600]!,
                                                             icon2: 'assets/icons/checkin.svg',
                                                             result: result,
