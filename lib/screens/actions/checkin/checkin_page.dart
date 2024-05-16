@@ -22,8 +22,11 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class CheckInScreen extends StatefulWidget {
   const CheckInScreen({
+     this.result,
     super.key,
   });
+
+    final String? result;
 
   @override
   State<CheckInScreen> createState() => _CheckInScreenState();

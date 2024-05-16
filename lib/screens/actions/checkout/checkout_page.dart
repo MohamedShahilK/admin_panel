@@ -1,39 +1,44 @@
+import 'package:admin_panel/logic/actions/actions_bloc.dart';
+import 'package:admin_panel/logic/check_out/check_out_bloc.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/actions/widgets/amount_details.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CheckOutPage extends StatefulWidget {
-  const CheckOutPage({
-    super.key,
-  });
+  const CheckOutPage({super.key, this.id, this.ticketNumber, this.isAllCheckin = false});
+
+  final String? ticketNumber;
+  final bool isAllCheckin;
+  final int? id;
 
   @override
   State<CheckOutPage> createState() => _CheckOutPageState();
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
-  // var isLoading = true;
+  CheckOutBloc? bloc;
+  ActionsBloc? actionBloc;
 
-  // @override
-  // void didChangeDependencies() {
-  //   customLoader(context);
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     Future.delayed(
-  //       const Duration(milliseconds: 300),
-  //       () => setState(() {
-  //         isLoading = false;
-  //         Loader.hide();
-  //       }),
-  //     );
-  //   });
-  //   super.didChangeDependencies();
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bloc ??= Provider.of<CheckOutBloc>(context);
+    actionBloc ??= Provider.of<ActionsBloc>(context);
+    bloc!.getTicketDetails(ticketNumber: widget.ticketNumber ?? '');
+    actionBloc!.getAllCheckOutItems(id: widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CheckOutBloc>(context);
+    final actionsBloc = Provider.of<ActionsBloc>(context);
+    final parkedBloc = Provider.of<ActionsBloc>(context);
+    final state = bloc.state;
+    state.barcodeStream.add(widget.ticketNumber ?? '');
     return SafeArea(
       child: Scaffold(
         drawer: SideMenu(),

@@ -1,15 +1,19 @@
 import 'dart:io';
 
+import 'package:admin_panel/logic/actions/actions_bloc.dart';
+import 'package:admin_panel/logic/check_out/check_out_bloc.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/actions/widgets/amount_details.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({
-    super.key,
-  });
+  const PaymentPage({this.ticketNumber, this.id, super.key});
+
+  final String? ticketNumber;
+  final int? id;
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -32,6 +36,18 @@ class _PaymentPageState extends State<PaymentPage> {
   //   });
   //   super.didChangeDependencies();
   // }
+
+  CheckOutBloc? bloc;
+  ActionsBloc? actionBloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bloc ??= Provider.of<CheckOutBloc>(context);
+    actionBloc ??= Provider.of<ActionsBloc>(context);
+    bloc!.getTicketDetails(ticketNumber: widget.ticketNumber ?? '');
+    actionBloc!.getAllCheckOutItems(id: widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
