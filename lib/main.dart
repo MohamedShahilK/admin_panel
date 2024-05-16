@@ -5,9 +5,11 @@ import 'package:admin_panel/controllers/dashboard_tab_controller.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:admin_panel/logic/account/account_bloc.dart';
 import 'package:admin_panel/logic/actions/actions_bloc.dart';
+import 'package:admin_panel/logic/check_in/check_in_bloc.dart';
 import 'package:admin_panel/logic/check_out/check_out_bloc.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_bloc.dart';
 import 'package:admin_panel/logic/notification/notification_bloc.dart';
+import 'package:admin_panel/logic/parked/parked_bloc.dart';
 import 'package:admin_panel/logic/search/search_bloc.dart';
 import 'package:admin_panel/main_initialization.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
@@ -56,18 +58,23 @@ class MyApp extends StatelessWidget {
           dispose: (context, bloc) => bloc.dispose(),
         ),
 
-         Provider(
+        Provider(
           create: (context) => NotificationBloc(),
           dispose: (context, bloc) => bloc.dispose(),
         ),
 
-         Provider(
+        Provider(
           create: (context) => AccountBloc(),
           dispose: (context, bloc) => bloc.dispose(),
         ),
 
-         Provider(
+        Provider(
           create: (context) => SearchBloc(),
+          dispose: (context, bloc) => bloc.dispose(),
+        ),
+
+        Provider(
+          create: (context) => ParkedBloc(),
           dispose: (context, bloc) => bloc.dispose(),
         ),
       ],
