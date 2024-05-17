@@ -1,11 +1,9 @@
-import 'dart:io';
 
 import 'package:admin_panel/logic/actions/actions_bloc.dart';
 import 'package:admin_panel/logic/check_out/check_out_bloc.dart';
 import 'package:admin_panel/models/new/actions/ticket_models/ticket_details_response_model.dart';
 import 'package:admin_panel/responsive.dart';
-import 'package:admin_panel/screens/actions/checkout/checkout_page.dart';
-import 'package:admin_panel/screens/actions/widgets/amount_details.dart';
+import 'package:admin_panel/screens/actions/payment/widgets/payment_option.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/utils/ripple.dart';
@@ -77,9 +75,9 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
               );
             }),
-            const Expanded(
+            Expanded(
               flex: 7,
-              child: _Body(),
+              child: _Body(id: widget.id, tickNum: widget.ticketNumber),
             ),
           ],
         ),
@@ -92,9 +90,11 @@ class _Body extends StatelessWidget {
   const _Body({
     super.key,
     this.id,
+    this.tickNum,
   });
 
   final int? id;
+  final String? tickNum;
 
   @override
   Widget build(BuildContext context) {
@@ -144,31 +144,32 @@ class _Body extends StatelessWidget {
                 final respModel = snapshot.data;
 
                 return StreamBuilder(
-                    stream: checkOutBloc.ticketDetailsResponse,
-                    builder: (context, snapshot) {
-                      TicketDetailsResponseModel? details;
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // return const CircularProgressIndicator();
-                        return Center(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                LoadingAnimationWidget.prograssiveDots(color: Colors.purple, size: 35),
-                                const Text('Please Wait ...', style: TextStyle(fontSize: 14)),
-                              ],
-                            ),
+                  stream: checkOutBloc.ticketDetailsResponse,
+                  builder: (context, snapshot) {
+                    TicketDetailsResponseModel? details;
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // return const CircularProgressIndicator();
+                      return Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              LoadingAnimationWidget.prograssiveDots(color: Colors.purple, size: 35),
+                              const Text('Please Wait ...', style: TextStyle(fontSize: 14)),
+                            ],
                           ),
-                        );
-                      }
-                      details = snapshot.data;
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 120, left: 220, right: 220),
+                        ),
+                      );
+                    }
+                    details = snapshot.data;
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 120, left: 220, right: 220),
                         // padding: EdgeInsets.only(top: 120, left: 50, right: 50),
                         // padding: EdgeInsets.only(top: 120),
-                        child: PaymentOption(ticketNumber: '6565498796'),
-                      );
-                    });
+                        // child: PaymentOption(ticketNumber: '6565498796'),
+                        child: PaymentOption(ticketNumber: tickNum, respModel: respModel!, ticketDetails: details, isPaymentPage: true));
+                  },
+                );
               }
             }),
 
@@ -178,5 +179,3 @@ class _Body extends StatelessWidget {
     );
   }
 }
-
-
