@@ -251,7 +251,7 @@ class _AllTicketsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 70),
+      padding: const EdgeInsets.only(top: 100),
       child: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
           controller: scrollController,
@@ -1182,7 +1182,10 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
               Container(
                 height: 170,
                 margin: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(color: Colors.grey[100], borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                decoration: const BoxDecoration(
+                  // color: Colors.grey[100],
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
+                ),
                 child: StreamBuilder(
                     stream: bloc.getAllCheckInItemsStream,
                     builder: (context, getAllCheckInItemsStreamsnapshot) {

@@ -42,6 +42,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 17,
                 press: () {
                   menu.setMyMenu('Dashboard');
+                  menu.setmyMenuExpand('');
                   _handlePageNavigation(context, '/');
                 },
               ),
@@ -98,6 +99,7 @@ class SideMenu extends StatelessWidget {
                 // icon: FontAwesomeIcons.car,
                 press: () {
                   menu.setMyMenu('Tickets');
+                  menu.setmyMenuExpand('');
                   _handlePageNavigation(context, '/tickets');
                 },
               ),
@@ -144,6 +146,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 18,
                 press: () {
                   menu.setMyMenu('Search');
+                  menu.setmyMenuExpand('');
                   _handlePageNavigation(context, '/search');
                 },
               ),
@@ -152,12 +155,13 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/report-file.svg",
                 svgHeight: 16,
                 press: () {
-                  menu.setMyMenu('Report');
+                  menu.setmyMenuExpand('Report');
+                  print('1231231213 ${menu.myMenuExpand}');
                   // _handlePageNavigation(context, '/');
                 },
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.only(left: 30),
                     child: Column(
                       children: [
                         DrawerListTile(
@@ -166,6 +170,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Master Report');
+                            menu.setmyMenuExpand('Report');
                             _handlePageNavigation(context, '/masterreport');
                           },
                         ),
@@ -175,6 +180,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Inventory Report');
+                            menu.setmyMenuExpand('Report');
                             _handlePageNavigation(context, '/inventoryreport');
                           },
                         ),
@@ -184,6 +190,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Ticket');
+                            menu.setmyMenuExpand('Report');
                             _handlePageNavigation(context, '/ticketreport');
                           },
                         ),
@@ -193,6 +200,7 @@ class SideMenu extends StatelessWidget {
                           svgHeight: 13,
                           press: () {
                             menu.setMyMenu('Cash Collection');
+                            menu.setmyMenuExpand('Report');
                             _handlePageNavigation(context, '/cashcollection');
                           },
                         ),
@@ -207,6 +215,7 @@ class SideMenu extends StatelessWidget {
                 svgHeight: 15,
                 press: () {
                   menu.setMyMenu('Account');
+                  menu.setmyMenuExpand('');
                   _handlePageNavigation(context, '/account');
                 },
               ),
@@ -216,6 +225,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/logout2.svg",
                 press: () {
                   menu.setMyMenu('LogOut');
+                  menu.setmyMenuExpand('');
                 },
               ),
             ],
@@ -317,7 +327,7 @@ class ExpansionDrawerListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menu = Provider.of<SideMenuController>(context);
-    final isSelected = menu.myMenu == title;
+    final isSelected = menu.myMenuExpand == title && menu.myMenuExpand != '';
     return ColoredBox(
       color: isSelected ? Colors.white54 : Colors.transparent,
       child: Theme(
@@ -329,7 +339,9 @@ class ExpansionDrawerListTile extends StatelessWidget {
           // iconTheme: IconThemeData(color: Colors.red)
         ),
         child: ExpansionTile(
+          onExpansionChanged: (expa) => press(),
           trailing: const SizedBox.shrink(),
+          initiallyExpanded: isSelected,
           // onTap: press,
           // horizontalTitleGap: 12.0,
           leading: SvgPicture.asset(

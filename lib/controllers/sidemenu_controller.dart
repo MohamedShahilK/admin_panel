@@ -9,12 +9,23 @@ class SideMenuController extends ChangeNotifier {
   // String _myMenu = HomeDrawerMenuConstant.dashboard;
   String _myMenu = 'Dashboard';
 
+  String _myMenuExpand = '';
+
   String get myMenu {
     return _myMenu;
   }
 
+  String get myMenuExpand {
+    return _myMenuExpand;
+  }
+
   void setMyMenu(String myMenu) {
     _myMenu = myMenu;
+    notifyListeners();
+  }
+
+  void setmyMenuExpand(String myMenu) {
+    _myMenuExpand = myMenu;
     notifyListeners();
   }
 

@@ -250,7 +250,7 @@ class _AllTicketsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 70),
+      padding: const EdgeInsets.only(top: 100),
       child: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
           controller: scrollController,

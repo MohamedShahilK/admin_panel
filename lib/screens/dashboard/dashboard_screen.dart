@@ -3,14 +3,11 @@
 import 'dart:async';
 
 import 'package:admin_panel/controllers/dashboard_tab_controller.dart';
-import 'package:admin_panel/controllers/sidemenu_controller.dart';
-import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_bloc.dart';
 import 'package:admin_panel/models/new/all_checkin/all_checkin_response_model.dart';
 import 'package:admin_panel/models/new/all_checkout/all_checkout_response_model.dart';
 import 'package:admin_panel/models/new/all_tickets/get_all_tickets_response.dart';
 import 'package:admin_panel/models/new/dashboard/dashboard_resp_model.dart';
-import 'package:admin_panel/models/old/user.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
@@ -18,9 +15,7 @@ import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/utils/custom_tools.dart';
 import 'package:admin_panel/utils/ripple.dart';
 import 'package:admin_panel/utils/utility_functions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
