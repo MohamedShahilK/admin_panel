@@ -1,3 +1,4 @@
+import 'package:admin_panel/logic/report/ticket_bloc.dart';
 import 'package:admin_panel/models/new/all_tickets/get_all_tickets_response.dart';
 import 'package:admin_panel/utils/utility_functions.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,9 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 final ticketListNotifier = BehaviorSubject<List<TicketsList>>.seeded([]);
+final ticketListRespmodelNotifier = BehaviorSubject<GetAllTicketsResponse?>();
+
+final sampleList = ValueNotifier<List<TicketsList>>([]);
 
 final searchListNotifier = BehaviorSubject<List<TicketsList>>.seeded([]);
 final searchListRespmodelNotifier = BehaviorSubject<GetAllTicketsResponse?>();
@@ -52,13 +56,13 @@ class TicketReport extends StatefulWidget {
 }
 
 class _TicketReportState extends State<TicketReport> with WidgetsBindingObserver {
-  MasterReportBloc? bloc;
+  TicketBloc? bloc;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    context.read<MasterReportBloc>().mainSearchStream.listen((value) {
+    context.read<TicketBloc>().mainSearchStream.listen((value) {
       if (value.isEmpty) {
         _controller.clear();
       } else if (_controller.text != value) {
@@ -97,10 +101,16 @@ class _TicketReportState extends State<TicketReport> with WidgetsBindingObserver
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc ??= Provider.of<MasterReportBloc>(context);
+    bloc ??= Provider.of<TicketBloc>(context);
     bloc?.clearSreams();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await bloc!.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+      // await bloc!.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+      await bloc!.getAllTickets(orderBy: 'parking_time');
+
+      bloc?.getAllTicketsRespStream.listen((model) {
+        ticketListNotifier.add(model?.data?.ticketsList ?? []);
+        ticketListRespmodelNotifier.add(model);
+      });
       await bloc!.getAllCheckInItems();
     });
   }
@@ -288,7 +298,7 @@ class _Table extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = Provider.of<MasterReportBloc>(context);
+    final searchBloc = Provider.of<TicketBloc>(context);
     final dashBloc = Provider.of<DashboardBloc>(context);
 
     // For Ipad
@@ -446,7 +456,9 @@ class _Table extends StatelessWidget {
                   );
                 } else if (snapshot.hasData) {
                   final allTickets = snapshot.data;
-                  final sampleList = ValueNotifier<List<TicketsList>>(allTickets?.data?.ticketsList ?? []);
+                  // final sampleList = ValueNotifier<List<TicketsList>>(allTickets?.data?.ticketsList ?? []);
+                  sampleList.value = allTickets?.data?.ticketsList ?? [];
+                  sampleList.notifyListeners();
 
                   return Expanded(
                     child: Column(
@@ -497,12 +509,44 @@ class _Table extends StatelessWidget {
                                             StreamBuilder(
                                                 stream: searchListNotifier,
                                                 builder: (context, searchSnapshot) {
+                                                  final now = DateTime.now();
+                                                  final list1 =
+                                                      UtilityFunctions.generateDateList(startDate: selectedStartDate.value ?? DateTime(now.year, now.month), endDate: selectedEndDate.value);
+                                                  // if (users.isEmpty) {
+                                                  //   return List.generate(1, (index) => DataRow(cells: getCells(['', '', '', '', '', '', '', '', '', '', ''])));
+                                                  // }
+                                                  List<int> countList = [];
+
+                                                  for (final a in list1 ?? []) {
+                                                    final ticketCountList = searchListNotifier.value.isEmpty && filterValue.value.isEmpty
+                                                        ? sampleList.value?.where((e) {
+                                                            if (e.createDate!.contains(a)) {
+                                                              return true;
+                                                            } else {
+                                                              return false;
+                                                            }
+                                                          }).toList()
+                                                        : searchSnapshot.data?.where((e) {
+                                                            if (e.createDate!.contains(a)) {
+                                                              return true;
+                                                            } else {
+                                                              return false;
+                                                            }
+                                                          }).toList();
+
+                                                    // print('4444444444444444444444444444444444 ${ticketCountList?.length}');
+
+                                                    countList.add(ticketCountList?.length ?? 0);
+                                                  }
+
+                                                  final total = countList.reduce((a, b) => a + b);
                                                   return Text(
                                                     // '50',
                                                     // allUsers.length.toString(),
-                                                    (searchListNotifier.value.isEmpty && filterValue.value.isEmpty)
-                                                        ? sampleList.value.length.toString()
-                                                        : (searchListNotifier.value.isEmpty ? '0' : searchListNotifier.value.length.toString()),
+                                                    // (searchListNotifier.value.isEmpty && filterValue.value.isEmpty)
+                                                    //     ? sampleList.value.length.toString()
+                                                    //     : (searchListNotifier.value.isEmpty ? '0' : searchListNotifier.value.length.toString()),
+                                                    total.toString(),
                                                     // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
                                                     style: GoogleFonts.poppins().copyWith(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
                                                   );
@@ -538,273 +582,273 @@ class _Table extends StatelessWidget {
                                       );
                                     }),
 
-                                StreamBuilder(
-                                  stream: searchListNotifier,
-                                  builder: (context, searchSnapshot) {
-                                    // return (searchListNotifier.value.isEmpty && searchBloc.barcodeStream.value.isEmpty)
-                                    print('akfhasfasfdsalog ${searchSnapshot.data}');
-                                    return (searchListNotifier.value.isEmpty && filterValue.value.isEmpty)
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  // ...List.generate(20, (index) {
-                                                  ...List.generate(allTickets?.data?.totalPages ?? 0, (index) {
-                                                    return Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                                                      child: ValueListenableBuilder(
-                                                        valueListenable: currentPageForTicketReport,
-                                                        builder: (context, ix, _) {
-                                                          return Container(
-                                                            height: 22,
-                                                            width: 22,
-                                                            decoration: BoxDecoration(
-                                                              color: index + 1 != currentPageForTicketReport.value ? Colors.grey : Colors.purple[400],
-                                                              borderRadius: BorderRadius.circular(50),
-                                                            ),
-                                                            child: InkWell(
-                                                              onTap: () async {
-                                                                Loader.show(
-                                                                  context,
-                                                                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
-                                                                );
-                                                                //print('object');
-                                                                final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
-                                                                currentPageForTicketReport.value = index + 1;
-                                                                currentPageForTicketReport.notifyListeners();
+                                // StreamBuilder(
+                                //   stream: searchListNotifier,
+                                //   builder: (context, searchSnapshot) {
+                                //     // return (searchListNotifier.value.isEmpty && searchBloc.barcodeStream.value.isEmpty)
+                                //     print('akfhasfasfdsalog ${searchSnapshot.data}');
+                                //     return (searchListNotifier.value.isEmpty && filterValue.value.isEmpty)
+                                //         ? Padding(
+                                //             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                //             child: SingleChildScrollView(
+                                //               scrollDirection: Axis.horizontal,
+                                //               child: Row(
+                                //                 mainAxisAlignment: MainAxisAlignment.center,
+                                //                 children: [
+                                //                   // ...List.generate(20, (index) {
+                                //                   ...List.generate(allTickets?.data?.totalPages ?? 0, (index) {
+                                //                     return Padding(
+                                //                       padding: const EdgeInsets.symmetric(horizontal: 3),
+                                //                       child: ValueListenableBuilder(
+                                //                         valueListenable: currentPageForTicketReport,
+                                //                         builder: (context, ix, _) {
+                                //                           return Container(
+                                //                             height: 22,
+                                //                             width: 22,
+                                //                             decoration: BoxDecoration(
+                                //                               color: index + 1 != currentPageForTicketReport.value ? Colors.grey : Colors.purple[400],
+                                //                               borderRadius: BorderRadius.circular(50),
+                                //                             ),
+                                //                             child: InkWell(
+                                //                               onTap: () async {
+                                //                                 Loader.show(
+                                //                                   context,
+                                //                                   progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
+                                //                                 );
+                                //                                 //print('object');
+                                //                                 final isLoading = await searchBloc.getAllTickets(orderBy: 'parking_time');
+                                //                                 currentPageForTicketReport.value = index + 1;
+                                //                                 currentPageForTicketReport.notifyListeners();
 
-                                                                if (isLoading) {
-                                                                  Future.delayed(const Duration(seconds: 1), () {
-                                                                    scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                    currentPageForTicketReport.value = index + 1;
-                                                                    currentPageForTicketReport.notifyListeners();
-                                                                    Loader.hide();
-                                                                  });
-                                                                } else {
-                                                                  // ignore: unawaited_futures
-                                                                  scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                  currentPageForTicketReport.value = index + 1;
-                                                                  currentPageForTicketReport.notifyListeners();
-                                                                  Loader.hide();
-                                                                }
-                                                              },
-                                                              child: Center(
-                                                                child: Text(
-                                                                  (index + 1).toString(),
-                                                                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    );
-                                                  }),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        // : const SizedBox.shrink();
-                                        : StreamBuilder(
-                                            stream: isSearchListNotifierAlongWithSearchKey,
-                                            builder: (context, isSearchListNotifierAlongWithSearchKeySnapshot) {
-                                              final isSearchListAlongWithSearchKey = isSearchListNotifierAlongWithSearchKeySnapshot.data ?? false;
-                                              return StreamBuilder(
-                                                stream: searchListRespmodelNotifier,
-                                                builder: (context, snapshot) {
-                                                  print('22222222222222222 ${snapshot.data?.data?.totalPages}');
-                                                  return StreamBuilder(
-                                                    stream: searchBloc.getAllCheckInItemsStream,
-                                                    builder: (context, getAllCheckInItemsStreamsSnapshot) {
-                                                      final checkInitems = getAllCheckInItemsStreamsSnapshot.data;
-                                                      return Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                                        child: SingleChildScrollView(
-                                                          scrollDirection: Axis.horizontal,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              // ...List.generate(20, (index) {
-                                                              ...List.generate(snapshot.data?.data?.totalPages ?? 0, (index) {
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                                                                  child: ValueListenableBuilder(
-                                                                    valueListenable: currentPageForTicketReport,
-                                                                    builder: (context, ix, _) {
-                                                                      return Container(
-                                                                        height: 22,
-                                                                        width: 22,
-                                                                        decoration: BoxDecoration(
-                                                                          color: index + 1 != currentPageForTicketReport.value ? Colors.grey : Colors.purple[400],
-                                                                          borderRadius: BorderRadius.circular(50),
-                                                                        ),
-                                                                        child: InkWell(
-                                                                          onTap: () async {
-                                                                            Loader.show(
-                                                                              context,
-                                                                              progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
-                                                                            );
-                                                                            //print('object');
-                                                                            // final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
+                                //                                 if (isLoading) {
+                                //                                   Future.delayed(const Duration(seconds: 1), () {
+                                //                                     scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                //                                     currentPageForTicketReport.value = index + 1;
+                                //                                     currentPageForTicketReport.notifyListeners();
+                                //                                     Loader.hide();
+                                //                                   });
+                                //                                 } else {
+                                //                                   // ignore: unawaited_futures
+                                //                                   scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                //                                   currentPageForTicketReport.value = index + 1;
+                                //                                   currentPageForTicketReport.notifyListeners();
+                                //                                   Loader.hide();
+                                //                                 }
+                                //                               },
+                                //                               child: Center(
+                                //                                 child: Text(
+                                //                                   (index + 1).toString(),
+                                //                                   style: const TextStyle(color: Colors.white, fontSize: 12),
+                                //                                 ),
+                                //                               ),
+                                //                             ),
+                                //                           );
+                                //                         },
+                                //                       ),
+                                //                     );
+                                //                   }),
+                                //                 ],
+                                //               ),
+                                //             ),
+                                //           )
+                                //         // : const SizedBox.shrink();
+                                //         : StreamBuilder(
+                                //             stream: isSearchListNotifierAlongWithSearchKey,
+                                //             builder: (context, isSearchListNotifierAlongWithSearchKeySnapshot) {
+                                //               final isSearchListAlongWithSearchKey = isSearchListNotifierAlongWithSearchKeySnapshot.data ?? false;
+                                //               return StreamBuilder(
+                                //                 stream: searchListRespmodelNotifier,
+                                //                 builder: (context, snapshot) {
+                                //                   print('22222222222222222 ${snapshot.data?.data?.totalPages}');
+                                //                   return StreamBuilder(
+                                //                     stream: searchBloc.getAllCheckInItemsStream,
+                                //                     builder: (context, getAllCheckInItemsStreamsSnapshot) {
+                                //                       final checkInitems = getAllCheckInItemsStreamsSnapshot.data;
+                                //                       return Padding(
+                                //                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                //                         child: SingleChildScrollView(
+                                //                           scrollDirection: Axis.horizontal,
+                                //                           child: Row(
+                                //                             mainAxisAlignment: MainAxisAlignment.center,
+                                //                             children: [
+                                //                               // ...List.generate(20, (index) {
+                                //                               ...List.generate(snapshot.data?.data?.totalPages ?? 0, (index) {
+                                //                                 return Padding(
+                                //                                   padding: const EdgeInsets.symmetric(horizontal: 3),
+                                //                                   child: ValueListenableBuilder(
+                                //                                     valueListenable: currentPageForTicketReport,
+                                //                                     builder: (context, ix, _) {
+                                //                                       return Container(
+                                //                                         height: 22,
+                                //                                         width: 22,
+                                //                                         decoration: BoxDecoration(
+                                //                                           color: index + 1 != currentPageForTicketReport.value ? Colors.grey : Colors.purple[400],
+                                //                                           borderRadius: BorderRadius.circular(50),
+                                //                                         ),
+                                //                                         child: InkWell(
+                                //                                           onTap: () async {
+                                //                                             Loader.show(
+                                //                                               context,
+                                //                                               progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
+                                //                                             );
+                                //                                             //print('object');
+                                //                                             // final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
 
-                                                                            String? formattedStartDate;
-                                                                            String? formattedEndDate;
-                                                                            if (selectedStartDate.value != null) {
-                                                                              formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedStartDate.value!);
-                                                                            } else if (selectedEndDate.value != null && selectedStartDate.value == null) {
-                                                                              // await toastInfo(
-                                                                              //   msg: 'Please Select Start Date',
-                                                                              //   gravity: ToastGravity.BOTTOM,
-                                                                              // );
-                                                                              await warningMotionToastInfo(context, msg: 'Please Select Start Date');
-                                                                              Loader.hide();
-                                                                              return;
-                                                                            }
-                                                                            if (selectedEndDate.value != null) {
-                                                                              formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedEndDate.value!);
-                                                                            } else if (selectedEndDate.value == null && selectedStartDate.value != null) {
-                                                                              // await toastInfo(
-                                                                              //   msg: 'Please Select End Date',
-                                                                              //   gravity: ToastGravity.BOTTOM,
-                                                                              // );
-                                                                              await warningMotionToastInfo(context, msg: 'Please Select End Date');
-                                                                              Loader.hide();
-                                                                              return;
-                                                                            }
+                                //                                             String? formattedStartDate;
+                                //                                             String? formattedEndDate;
+                                //                                             if (selectedStartDate.value != null) {
+                                //                                               formattedStartDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedStartDate.value!);
+                                //                                             } else if (selectedEndDate.value != null && selectedStartDate.value == null) {
+                                //                                               // await toastInfo(
+                                //                                               //   msg: 'Please Select Start Date',
+                                //                                               //   gravity: ToastGravity.BOTTOM,
+                                //                                               // );
+                                //                                               await warningMotionToastInfo(context, msg: 'Please Select Start Date');
+                                //                                               Loader.hide();
+                                //                                               return;
+                                //                                             }
+                                //                                             if (selectedEndDate.value != null) {
+                                //                                               formattedEndDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedEndDate.value!);
+                                //                                             } else if (selectedEndDate.value == null && selectedStartDate.value != null) {
+                                //                                               // await toastInfo(
+                                //                                               //   msg: 'Please Select End Date',
+                                //                                               //   gravity: ToastGravity.BOTTOM,
+                                //                                               // );
+                                //                                               await warningMotionToastInfo(context, msg: 'Please Select End Date');
+                                //                                               Loader.hide();
+                                //                                               return;
+                                //                                             }
 
-                                                                            final brandId = checkInitems?.data?.carModels
-                                                                                ?.where((e) => e.modelTitle == searchBloc.vehicleModelStream.value)
-                                                                                .firstOrNull
-                                                                                ?.modelId;
-                                                                            final colorId = checkInitems?.data?.carColors
-                                                                                ?.where((e) => e.carTitle == searchBloc.vehicleColorStream.value)
-                                                                                .firstOrNull
-                                                                                ?.carId;
-                                                                            final emiratesId = checkInitems?.data?.vehicleLocations
-                                                                                ?.where((e) => e.vehicleLocationName == searchBloc.vehicleLocationStream.value)
-                                                                                .firstOrNull
-                                                                                ?.vehicleLocationId;
-                                                                            final outletId = checkInitems?.data?.outlets
-                                                                                ?.where((e) => e.outletPostName == searchBloc.outletsStream.value)
-                                                                                .firstOrNull
-                                                                                ?.outletPostId;
-                                                                            final cvaInId = checkInitems?.data?.cvas
-                                                                                ?.where((e) => e.departmentName == searchBloc.cvaInStream.value)
-                                                                                .firstOrNull
-                                                                                ?.departmentId;
-                                                                            final cvaOutId = checkInitems?.data?.cvas
-                                                                                ?.where((e) => e.departmentName == searchBloc.cvaOutStream.value)
-                                                                                .firstOrNull
-                                                                                ?.departmentId;
-                                                                            final locationId = allTickets?.data?.locationsList!
-                                                                                .where((e) => e.departmentName == searchBloc.locationStream.value)
-                                                                                .firstOrNull
-                                                                                ?.departmentId;
-                                                                            final userId = allTickets?.data?.usersList!
-                                                                                .where((e) => e.departmentName == searchBloc.userTypeStream.value)
-                                                                                .firstOrNull
-                                                                                ?.departmentId;
+                                //                                             final brandId = checkInitems?.data?.carModels
+                                //                                                 ?.where((e) => e.modelTitle == searchBloc.vehicleModelStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.modelId;
+                                //                                             final colorId = checkInitems?.data?.carColors
+                                //                                                 ?.where((e) => e.carTitle == searchBloc.vehicleColorStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.carId;
+                                //                                             final emiratesId = checkInitems?.data?.vehicleLocations
+                                //                                                 ?.where((e) => e.vehicleLocationName == searchBloc.vehicleLocationStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.vehicleLocationId;
+                                //                                             final outletId = checkInitems?.data?.outlets
+                                //                                                 ?.where((e) => e.outletPostName == searchBloc.outletsStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.outletPostId;
+                                //                                             final cvaInId = checkInitems?.data?.cvas
+                                //                                                 ?.where((e) => e.departmentName == searchBloc.cvaInStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.departmentId;
+                                //                                             final cvaOutId = checkInitems?.data?.cvas
+                                //                                                 ?.where((e) => e.departmentName == searchBloc.cvaOutStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.departmentId;
+                                //                                             final locationId = allTickets?.data?.locationsList!
+                                //                                                 .where((e) => e.departmentName == searchBloc.locationStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.departmentId;
+                                //                                             final userId = allTickets?.data?.usersList!
+                                //                                                 .where((e) => e.departmentName == searchBloc.userTypeStream.value)
+                                //                                                 .firstOrNull
+                                //                                                 ?.departmentId;
 
-                                                                            if (isSearchListAlongWithSearchKey) {
-                                                                              final respModel =
-                                                                                  await searchBloc.getTicketsWithSearchKey(orderBy: 'parking_time', searchKey: filterValue.value, pageNo: 1);
-                                                                              final list = respModel?.data?.ticketsList ?? [];
+                                //                                             if (isSearchListAlongWithSearchKey) {
+                                //                                               final respModel =
+                                //                                                   await searchBloc.getTicketsWithSearchKey(orderBy: 'parking_time', searchKey: filterValue.value, pageNo: 1);
+                                //                                               final list = respModel?.data?.ticketsList ?? [];
 
-                                                                              currentPageForTicketReport.value = 1;
-                                                                              currentPageForTicketReport.notifyListeners();
+                                //                                               currentPageForTicketReport.value = 1;
+                                //                                               currentPageForTicketReport.notifyListeners();
 
-                                                                              if (_controller.text.isEmpty) {
-                                                                                searchListNotifier.add([]);
-                                                                              }
+                                //                                               if (_controller.text.isEmpty) {
+                                //                                                 searchListNotifier.add([]);
+                                //                                               }
 
-                                                                              searchListNotifier.add(list);
+                                //                                               searchListNotifier.add(list);
 
-                                                                              isSearchListNotifierAlongWithSearchKey.add(true);
+                                //                                               isSearchListNotifierAlongWithSearchKey.add(true);
 
-                                                                              currentPageForTicketReport.value = index + 1;
-                                                                              currentPageForTicketReport.notifyListeners();
-                                                                            } else {
-                                                                              final respModel = await searchBloc.getTicketsWithCombinations(
-                                                                                orderBy: 'parking_time',
-                                                                                checkOutStatus: searchBloc.statusStream.value,
-                                                                                parkingLocationId: locationId ?? 0,
-                                                                                locationUserId: userId ?? 0,
-                                                                                cvaOut: cvaOutId ?? 0,
-                                                                                cvaIn: cvaInId ?? 0,
-                                                                                outletId: outletId ?? 0,
-                                                                                emiratesId: emiratesId ?? 0,
-                                                                                vehicleColorlId: colorId ?? 0,
-                                                                                vehicleModelId: brandId ?? 0,
-                                                                                startDate: formattedStartDate ?? '',
-                                                                                endDate: formattedEndDate ?? '',
-                                                                                mobileNumber: searchBloc.mobileNumberStream.value,
-                                                                                vehicleNumber: searchBloc.plateNumberStream.value,
-                                                                                barcode: searchBloc.barcodeStream.value,
-                                                                                pageNo: index + 1,
-                                                                              );
+                                //                                               currentPageForTicketReport.value = index + 1;
+                                //                                               currentPageForTicketReport.notifyListeners();
+                                //                                             } else {
+                                //                                               final respModel = await searchBloc.getAllTicketsWithCombinations(
+                                //                                                 orderBy: 'parking_time',
+                                //                                                 checkOutStatus: searchBloc.statusStream.value,
+                                //                                                 parkingLocationId: locationId ?? 0,
+                                //                                                 locationUserId: userId ?? 0,
+                                //                                                 cvaOut: cvaOutId ?? 0,
+                                //                                                 cvaIn: cvaInId ?? 0,
+                                //                                                 outletId: outletId ?? 0,
+                                //                                                 emiratesId: emiratesId ?? 0,
+                                //                                                 vehicleColorlId: colorId ?? 0,
+                                //                                                 vehicleModelId: brandId ?? 0,
+                                //                                                 startDate: formattedStartDate ?? '',
+                                //                                                 endDate: formattedEndDate ?? '',
+                                //                                                 mobileNumber: searchBloc.mobileNumberStream.value,
+                                //                                                 vehicleNumber: searchBloc.plateNumberStream.value,
+                                //                                                 barcode: searchBloc.barcodeStream.value,
+                                //                                                 // pageNo: index + 1,
+                                //                                               );
 
-                                                                              final list = respModel?.data?.ticketsList!;
+                                //                                               final list = respModel?.data?.ticketsList!;
 
-                                                                              if (_filterController.text.isEmpty) {
-                                                                                searchListNotifier.add([]);
-                                                                              }
+                                //                                               if (_filterController.text.isEmpty) {
+                                //                                                 searchListNotifier.add([]);
+                                //                                               }
 
-                                                                              searchListNotifier.add(list ?? []);
+                                //                                               searchListNotifier.add(list ?? []);
 
-                                                                              isSearchListNotifierAlongWithSearchKey.add(false);
+                                //                                               isSearchListNotifierAlongWithSearchKey.add(false);
 
-                                                                              currentPageForTicketReport.value = index + 1;
-                                                                              currentPageForTicketReport.notifyListeners();
-                                                                            }
+                                //                                               currentPageForTicketReport.value = index + 1;
+                                //                                               currentPageForTicketReport.notifyListeners();
+                                //                                             }
 
-                                                                            // if (isLoading) {
-                                                                            //   Future.delayed(const Duration(seconds: 1), () {
-                                                                            //     _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            //     currentPageForTicketReport.value = index + 1;
-                                                                            //     currentPageForTicketReport.notifyListeners();
-                                                                            //     Loader.hide();
-                                                                            //   });
-                                                                            // } else {
-                                                                            //   // ignore: unawaited_futures
-                                                                            //   _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            //   currentPageForTicketReport.value = index + 1;
-                                                                            //   currentPageForTicketReport.notifyListeners();
-                                                                            //   Loader.hide();
-                                                                            // }
+                                //                                             // if (isLoading) {
+                                //                                             //   Future.delayed(const Duration(seconds: 1), () {
+                                //                                             //     _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                //                                             //     currentPageForTicketReport.value = index + 1;
+                                //                                             //     currentPageForTicketReport.notifyListeners();
+                                //                                             //     Loader.hide();
+                                //                                             //   });
+                                //                                             // } else {
+                                //                                             //   // ignore: unawaited_futures
+                                //                                             //   _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                //                                             //   currentPageForTicketReport.value = index + 1;
+                                //                                             //   currentPageForTicketReport.notifyListeners();
+                                //                                             //   Loader.hide();
+                                //                                             // }
 
-                                                                            // ignore: unawaited_futures
-                                                                            scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            currentPageForTicketReport.value = index + 1;
-                                                                            currentPageForTicketReport.notifyListeners();
-                                                                            Loader.hide();
-                                                                          },
-                                                                          child: Center(
-                                                                            child: Text(
-                                                                              (index + 1).toString(),
-                                                                              style: const TextStyle(color: Colors.white, fontSize: 12),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              }),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                  },
-                                ),
+                                //                                             // ignore: unawaited_futures
+                                //                                             scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+                                //                                             currentPageForTicketReport.value = index + 1;
+                                //                                             currentPageForTicketReport.notifyListeners();
+                                //                                             Loader.hide();
+                                //                                           },
+                                //                                           child: Center(
+                                //                                             child: Text(
+                                //                                               (index + 1).toString(),
+                                //                                               style: const TextStyle(color: Colors.white, fontSize: 12),
+                                //                                             ),
+                                //                                           ),
+                                //                                         ),
+                                //                                       );
+                                //                                     },
+                                //                                   ),
+                                //                                 );
+                                //                               }),
+                                //                             ],
+                                //                           ),
+                                //                         ),
+                                //                       );
+                                //                     },
+                                //                   );
+                                //                 },
+                                //               );
+                                //             },
+                                //           );
+                                //   },
+                                // ),
                               ],
                             ),
                           ),
@@ -841,7 +885,7 @@ class _Table extends StatelessWidget {
                         ).ripple(
                           context,
                           () async {
-                            await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+                            await searchBloc.getAllTickets(orderBy: 'parking_time');
                           },
                           borderRadius: BorderRadius.circular(15),
                           overlayColor: Colors.purple.withOpacity(.15),
@@ -958,7 +1002,7 @@ class _SortablePageState extends State<SortablePage> {
     List<int> countList = [];
 
     for (final a in list1 ?? []) {
-      final ticketCountList = widget.sampleList.value?.where((e) {
+      final ticketCountList = widget.list?.where((e) {
         if (e.createDate!.contains(a)) {
           return true;
         } else {
@@ -973,14 +1017,29 @@ class _SortablePageState extends State<SortablePage> {
 
     print('222222222222222222222222222 $list1');
     print('222222222222222222222222222 $countList');
-    return widget.list!.map((TicketsList user) {
-      final cells = [
-        user.createDate ?? '',
-        user.initialCheckinTime ?? '',
-      ];
+    // return widget.list!.map((TicketsList user) {
+    //   var i = 0;
+    // var cells = [
+    //   list1[i],
+    //   countList[i],
+    // ];
 
-      return DataRow(cells: getCells(cells));
-    }).toList();
+    //   i++;
+
+    //   return DataRow(cells: getCells(cells));
+    // }).toList();
+
+    var listOfDataRow = <DataRow>[];
+    var cells = [];
+    for (var i = 0; i < list1.length; i++) {
+      cells = [
+        list1[i],
+        countList[i],
+      ];
+      listOfDataRow.add(DataRow(cells: getCells(cells)));
+    }
+
+    return listOfDataRow;
   }
 
   List<DataCell> getCells(List<dynamic> cells) {
@@ -1105,7 +1164,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
     List<String> checkOutStatusStaticList = ['', 'CheckIn', 'Requested', 'On The Way', 'Collect Now', 'Parked', 'CheckOut'];
     Map<String, String> checkOutStatusStaticListMappingToSymbol = {'': '', 'CheckIn': 'N', 'Requested': 'R', 'On The Way': 'O', 'Collect Now': 'C', 'Parked': 'P', 'CheckOut': 'Y'};
     Map<String, String> checkOutStatusStaticListMappingToName = {'': '', 'N': 'CheckIn', 'R': 'Requested', 'O': 'On The Way', 'C': 'Collect Now', 'P': 'Parked', 'Y': 'CheckOut'};
-    final bloc = Provider.of<MasterReportBloc>(context);
+    final bloc = Provider.of<TicketBloc>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Theme(
@@ -1160,7 +1219,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                     currentPageForTicketReport.value = 1;
                     currentPageForTicketReport.notifyListeners();
 
-                    await context.read<MasterReportBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+                    await context.read<TicketBloc>().getAllTickets(orderBy: 'parking_time');
 
                     // isSearchListNotifierAlongWithSearchKey.add(false);
 
@@ -1225,7 +1284,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                     builder: (context, getAllCheckInItemsStreamsnapshot) {
                       final checkInitems = getAllCheckInItemsStreamsnapshot.data;
                       return Wrap(
-                        alignment: WrapAlignment.center,
+                        // alignment: WrapAlignment.center,
                         runSpacing: 10,
                         spacing: 10,
                         children: [
@@ -1254,7 +1313,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedStartDate));
+                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedStartDate, isStartedDate: true));
                             },
                           ),
                           ValueListenableBuilder(
@@ -1284,6 +1343,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                               ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedEndDate));
                             },
                           ),
+
                           FilterTextField(
                             textStream: bloc.barcodeStream,
                             onTextChanged: (value) {
@@ -1713,192 +1773,6 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                               );
                             },
                           ),
-                          if (widget.allTickets != null &&
-                              widget.allTickets!.data != null &&
-                              widget.allTickets!.data!.locationsList != null &&
-                              widget.allTickets!.data!.usersList != null &&
-                              widget.allTickets!.data!.locationsList!.isNotEmpty &&
-                              widget.allTickets!.data!.usersList!.isNotEmpty)
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 2.3,
-                              child: StreamBuilder(
-                                stream: bloc.locationStream,
-                                builder: (context, snapshot) {
-                                  return CustomDropDown(
-                                    onChanged: (String? val) async {
-                                      filterValue.add('');
-                                      filterValue.add(val ?? '');
-
-                                      // bloc.plateNumberStream.add('');
-                                      // bloc.mobileNumberStream.add('');
-                                      // bloc.barcodeStream.add('');
-                                      _controller.text = '';
-                                      // selectedStartDate.value = null;
-                                      // selectedStartDate.notifyListeners();
-                                      // selectedEndDate.value = null;
-                                      // selectedEndDate.notifyListeners();
-
-                                      // bloc.vehicleColorStream.add('');
-                                      // bloc.vehicleModelStream.add('');
-                                      // bloc.outletsStream.add('');
-                                      // bloc.vehicleLocationStream.add('');
-                                      // bloc.cvaInStream.add('');
-                                      // bloc.cvaOutStream.add('');
-
-                                      // bloc.statusStream.add('');
-                                      // bloc.userTypeStream.add('');
-
-                                      bloc.locationStream.add(val ?? 'Users');
-                                      final id = widget.allTickets?.data?.locationsList?.where((e) => e.departmentName == val).first.departmentId;
-                                      // print('9999999999999999999999999999999999999999999999999999 $id');
-                                      bloc.userTypeStream.add('');
-                                      await bloc.getUsersWithLocation(orderBy: 'parking_time', locationId: id ?? 0);
-                                    },
-                                    value: snapshot.data ?? '',
-                                    field: 'Locations',
-                                    labelText: 'Locations',
-                                    // list: checkInitems == null ? [] : ['', ...widget.allTickets!.data!.locationsList!.map((e) => e.departmentName ?? '')],
-                                    list: widget.allTickets == null || widget.allTickets?.data == null || widget.allTickets?.data?.locationsList == null
-                                        ? []
-                                        : ['', ...widget.allTickets!.data!.locationsList!.map((e) => e.departmentName ?? '')],
-                                  );
-                                },
-                              ),
-                            ),
-
-                          if (widget.allTickets != null &&
-                              widget.allTickets!.data != null &&
-                              widget.allTickets!.data!.locationsList != null &&
-                              widget.allTickets!.data!.usersList != null &&
-                              widget.allTickets!.data!.locationsList!.isNotEmpty &&
-                              widget.allTickets!.data!.usersList!.isNotEmpty)
-                            Container(
-                              // margin: EdgeInsets.symmetric(vertical: 10.h),
-                              width: MediaQuery.of(context).size.width / 2.3,
-                              child: StreamBuilder(
-                                stream: bloc.locationStream,
-                                builder: (context, snapshot) {
-                                  return StreamBuilder(
-                                    stream: bloc.getUsersWithLocationStream,
-                                    builder: (context, getUsersWithLocationStreamsnapshot) {
-                                      // print('2222222222222222222222222 ${getUsersWithLocationStreamsnapshot.data!.data!.users!.map((e) => e.departmentName ?? '')}');
-
-                                      return StreamBuilder(
-                                        stream: bloc.userTypeStream,
-                                        builder: (context, snapshot) {
-                                          if (bloc.locationStream.value.isEmpty) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(bottom: 10, top: 10),
-                                              child: Container(
-                                                height: 35,
-                                                width: double.infinity,
-                                                alignment: Alignment.centerLeft,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[200],
-                                                  borderRadius: BorderRadius.circular(12),
-                                                  border: Border.all(color: Colors.grey[400]!),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 15),
-                                                  child: Text('Users', style: TextStyle(fontSize: 12, color: Colors.grey[500], fontWeight: FontWeight.w800)),
-                                                ),
-                                              ).ripple(context, () {
-                                                // Fluttertoast.cancel();
-                                                // toastInfo(
-                                                //   msg: 'Please Select Location',
-                                                //   gravity: ToastGravity.BOTTOM,
-                                                // );
-                                                warningMotionToastInfo(context, msg: 'Please Select Location');
-                                              }),
-                                            );
-                                          } else {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: 10,
-                                                // top:10,
-                                              ),
-                                              child: CustomDropDown(
-                                                onChanged: (String? val) async {
-                                                  filterValue.add('');
-                                                  filterValue.add(val ?? '');
-
-                                                  // bloc.plateNumberStream.add('');
-                                                  // bloc.mobileNumberStream.add('');
-                                                  // bloc.barcodeStream.add('');
-                                                  _controller.text = '';
-                                                  // selectedStartDate.value = null;
-                                                  // selectedStartDate.notifyListeners();
-                                                  // selectedEndDate.value = null;
-                                                  // selectedEndDate.notifyListeners();
-
-                                                  // bloc.vehicleModelStream.add('');
-                                                  // bloc.vehicleColorStream.add('');
-                                                  // bloc.vehicleLocationStream.add('');
-                                                  // bloc.outletsStream.add('');
-                                                  // bloc.cvaInStream.add('');
-                                                  // bloc.cvaOutStream.add('');
-                                                  // // bloc.locationStream.add('');
-
-                                                  // bloc.statusStream.add('');
-
-                                                  bloc.userTypeStream.add(val ?? '');
-                                                },
-                                                value: snapshot.data ?? '',
-                                                field: 'Users',
-                                                labelText: 'Users',
-                                                // list: widget.allTickets == null || widget.allTickets?.data == null || widget.allTickets?.data?.usersList == null
-                                                //     ? []
-                                                //     : ['', ...widget.allTickets!.data!.usersList!.map((e) => e.departmentName ?? '')],
-                                                list: getUsersWithLocationStreamsnapshot.data == null ||
-                                                        getUsersWithLocationStreamsnapshot.data?.data == null ||
-                                                        getUsersWithLocationStreamsnapshot.data?.data?.users == null
-                                                    ? []
-                                                    : ['', ...getUsersWithLocationStreamsnapshot.data!.data!.users!.map((e) => e.departmentName ?? '')],
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-
-                          FilterTextField(
-                            textStream: bloc.mobileNumberStream,
-                            onTextChanged: (value) {
-                              filterValue.add('');
-                              filterValue.add(value);
-
-                              // bloc.barcodeStream.add('');
-                              // bloc.plateNumberStream.add('');
-                              _controller.text = '';
-                              // selectedStartDate.value = null;
-                              // selectedStartDate.notifyListeners();
-                              // selectedEndDate.value = null;
-                              // selectedEndDate.notifyListeners();
-                              // //print(value);
-                              // bloc.vehicleModelStream.add('');
-                              // bloc.vehicleColorStream.add('');
-                              // bloc.vehicleLocationStream.add('');
-                              // bloc.outletsStream.add('');
-                              // bloc.cvaInStream.add('');
-                              // bloc.cvaOutStream.add('');
-                              // bloc.userTypeStream.add('');
-                              // bloc.locationStream.add('');
-
-                              // bloc.statusStream.add('');
-
-                              bloc.mobileNumberStream.add(value);
-
-                              if (bloc.mobileNumberStream.value.isEmpty) {
-                                searchListNotifier.add([]);
-                              }
-                            },
-                            hintText: 'Mobile Number',
-                            keyboardType: TextInputType.number,
-                          ),
 
                           // Button
                           Align(
@@ -1977,7 +1851,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     final userId = widget.allTickets?.data?.usersList!.where((e) => e.departmentName == bloc.userTypeStream.value).firstOrNull?.departmentId;
 
                                     Future.delayed(const Duration(milliseconds: 400), () async {
-                                      final respModel = await bloc.getTicketsWithCombinations(
+                                      final respModel = await bloc.getAllTicketsWithCombinations(
                                         orderBy: 'parking_time',
                                         checkOutStatus: bloc.statusStream.value,
                                         parkingLocationId: locationId ?? 0,
@@ -1993,7 +1867,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                         mobileNumber: bloc.mobileNumberStream.value,
                                         vehicleNumber: bloc.plateNumberStream.value,
                                         barcode: bloc.barcodeStream.value,
-                                        pageNo: 1,
+                                        // pageNo: 1,
                                       );
 
                                       final list = respModel?.data?.ticketsList!;
@@ -2002,14 +1876,18 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                         searchListNotifier.add([]);
                                       }
 
+                                      searchListNotifier.add(list ?? []);
+
+                                      isSearchListNotifierAlongWithSearchKey.add(false);
+
                                       isSearchListNotifierAlongWithSearchKey.add(false);
 
                                       currentPageForTicketReport.value = 1;
                                       currentPageForTicketReport.notifyListeners();
 
-                                      searchListNotifier.add(list ?? []);
+                                      ticketListNotifier.add(list ?? []);
 
-                                      searchListRespmodelNotifier.add(respModel);
+                                      ticketListRespmodelNotifier.add(respModel);
 
                                       //print(searchListNotifier.value.length);
                                       //print(_filterController.text.isEmpty);
@@ -2032,8 +1910,8 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context, ValueNotifier<DateTime?> selectedDate) async {
-    final bloc = Provider.of<MasterReportBloc>(context, listen: false);
+  Future<void> _selectDate(BuildContext context, ValueNotifier<DateTime?> selectedDate, {bool isStartedDate = false}) async {
+    // final bloc = Provider.of<TicketBloc>(context, listen: false);
     filterValue.add('');
 
     // bloc.barcodeStream.add('');
@@ -2053,9 +1931,16 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
 
     // bloc.statusStream.add('');
 
+    final now = DateTime.now();
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate.value == null ? DateTime.now() : selectedDate.value!,
+      // initialDate: selectedDate.value == null ? DateTime.now() : selectedDate.value!,
+      initialDate: selectedDate.value == null
+          ? !isStartedDate
+              ? DateTime.now()
+              : DateTime(now.year, now.month)
+          : selectedDate.value!,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
@@ -2068,27 +1953,27 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
 
     if (picked != null) {
       // ignore: use_build_context_synchronously
-      final ThemeData theme = Theme.of(context);
-      final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDate.value ?? DateTime.now()),
-        builder: (BuildContext? context, Widget? child) {
-          return MediaQuery(
-            data: MediaQuery.of(context!).copyWith(alwaysUse24HourFormat: false),
-            child: child!,
-          );
-        },
+      // final pickedTime = await showTimePicker(
+      //   context: context,
+      //   initialTime: TimeOfDay.fromDateTime(selectedDate.value ?? DateTime.now()),
+      // );
+      // if (pickedTime != null) {
+      //   selectedDate.value = DateTime(
+      //     picked.year,
+      //     picked.month,
+      //     picked.day,
+      //     pickedTime.hour,
+      //     pickedTime.minute,
+      //   );
+
+      selectedDate.value = DateTime(
+        picked.year,
+        picked.month,
+        picked.day,
       );
-      if (pickedTime != null) {
-        selectedDate.value = DateTime(
-          picked.year,
-          picked.month,
-          picked.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-        selectedDate.notifyListeners();
-      }
+      selectedDate.notifyListeners();
+
+      print('77777777777777777777777777777 ${DateFormat('yyyy-MM-dd').format(selectedDate.value!)}');
     }
     filterValue.add('date_added');
   }
