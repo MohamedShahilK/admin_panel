@@ -1165,7 +1165,8 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
             iconColor: secondaryColor2,
             tilePadding: EdgeInsets.zero,
             collapsedIconColor: secondaryColor2,
-            backgroundColor: Colors.purple.withOpacity(.1),
+            // backgroundColor: Colors.purple.withOpacity(.1),
+            backgroundColor: Colors.white,
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
@@ -1227,7 +1228,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                 ),
                               ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedStartDate));
                             },
-                          ),  
+                          ),
                           ValueListenableBuilder(
                             valueListenable: selectedEndDate,
                             builder: (context, endDate, _) {

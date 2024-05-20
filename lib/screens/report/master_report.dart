@@ -1156,6 +1156,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
             iconColor: secondaryColor2,
             tilePadding: EdgeInsets.zero,
             collapsedIconColor: secondaryColor2,
+            backgroundColor: Colors.white,
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
