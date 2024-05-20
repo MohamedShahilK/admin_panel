@@ -458,7 +458,7 @@ class _Table extends StatelessWidget {
                   final allTickets = snapshot.data;
                   // final sampleList = ValueNotifier<List<TicketsList>>(allTickets?.data?.ticketsList ?? []);
                   sampleList.value = allTickets?.data?.ticketsList ?? [];
-                  sampleList.notifyListeners();
+                  // sampleList.notifyListeners();
 
                   return Expanded(
                     child: Column(
