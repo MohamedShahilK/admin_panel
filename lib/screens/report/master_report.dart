@@ -8,6 +8,7 @@ import 'package:admin_panel/models/old/user.dart';
 import 'package:admin_panel/responsive.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
+import 'package:admin_panel/screens/report/filter_field.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
 import 'package:admin_panel/screens/widgets/scrollable_widget.dart';
 import 'package:admin_panel/utils/constants.dart';
@@ -1175,7 +1176,10 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
               Container(
                 height: 170,
                 margin: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(color: Colors.grey[100], borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                decoration: const BoxDecoration(
+                  // color: Colors.grey[100],
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
+                ),
                 child: StreamBuilder(
                     stream: bloc.getAllCheckInItemsStream,
                     builder: (context, getAllCheckInItemsStreamsnapshot) {
@@ -1200,13 +1204,14 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     // color: Colors.white,
                                     border: Border.all(
                                       // color: Colors.grey,
-                                      color: const Color.fromARGB(146, 146, 69, 197),
+                                      // color: const Color.fromARGB(146, 146, 69, 197),
+                                      color: Colors.purple.withOpacity(.1),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     selectedStartDate.value == null ? 'Select Start Date' : DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedStartDate.value!),
-                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10, fontWeight: FontWeight.w900),
+                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
                               ).ripple(context, () => _selectDate(context, selectedStartDate));
@@ -1226,19 +1231,20 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     // color: Colors.white,
                                     border: Border.all(
                                       // color: Colors.grey,
-                                      color: const Color.fromARGB(146, 146, 69, 197),
+                                      // color: const Color.fromARGB(146, 146, 69, 197),
+                                      color: Colors.purple.withOpacity(.1),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     selectedEndDate.value == null ? 'Select End Date' : DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedEndDate.value!),
-                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10, fontWeight: FontWeight.w900),
+                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
                               ).ripple(context, () => _selectDate(context, selectedEndDate));
                             },
                           ),
-                          _FilterTextField(
+                          FilterTextField(
                             textStream: bloc.barcodeStream,
                             onTextChanged: (value) {
                               //print('object');
@@ -1320,7 +1326,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                             keyboardType: TextInputType.text,
                           ),
 
-                          _FilterTextField(
+                          FilterTextField(
                             textStream: bloc.plateNumberStream,
                             onTextChanged: (value) {
                               filterValue.add('');
@@ -1819,7 +1825,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                               ),
                             ),
 
-                          _FilterTextField(
+                          FilterTextField(
                             textStream: bloc.mobileNumberStream,
                             onTextChanged: (value) {
                               filterValue.add('');
@@ -2048,77 +2054,77 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
   }
 }
 
-class _FilterTextField extends StatefulWidget {
-  const _FilterTextField({
-    required this.textStream,
-    required this.onTextChanged,
-    required this.hintText,
-    required this.keyboardType,
-    this.errorStream,
-  });
+// class _FilterTextField extends StatefulWidget {
+//   const _FilterTextField({
+//     required this.textStream,
+//     required this.onTextChanged,
+//     required this.hintText,
+//     required this.keyboardType,
+//     this.errorStream,
+//   });
 
-  final BehaviorSubject<String> textStream;
-  final void Function(String) onTextChanged;
-  final String hintText;
-  final TextInputType keyboardType;
-  final Stream<String>? errorStream;
+//   final BehaviorSubject<String> textStream;
+//   final void Function(String) onTextChanged;
+//   final String hintText;
+//   final TextInputType keyboardType;
+//   final Stream<String>? errorStream;
 
-  @override
-  State<_FilterTextField> createState() => _FilterTextFieldState();
-}
+//   @override
+//   State<_FilterTextField> createState() => _FilterTextFieldState();
+// }
 
-class _FilterTextFieldState extends State<_FilterTextField> {
-  final _controller = TextEditingController();
-  @override
-  void initState() {
-    widget.textStream.listen((value) {
-      if (value.isEmpty) {
-        _controller.clear();
-      } else if (_controller.text != value) {
-        _controller.text = value;
-      }
-    });
-    super.initState();
-  }
+// class _FilterTextFieldState extends State<_FilterTextField> {
+//   final _controller = TextEditingController();
+//   @override
+//   void initState() {
+//     widget.textStream.listen((value) {
+//       if (value.isEmpty) {
+//         _controller.clear();
+//       } else if (_controller.text != value) {
+//         _controller.text = value;
+//       }
+//     });
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 0),
-      child: SizedBox(
-        height: 35,
-        width: MediaQuery.of(context).size.width / 5,
-        child: TextField(
-          controller: _controller,
-          onChanged: widget.onTextChanged,
-          keyboardType: widget.keyboardType,
-          style: GoogleFonts.openSans().copyWith(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.black),
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            // hintStyle: GoogleFonts.openSans().copyWith(fontSize: 12.w),
-            hintStyle: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10.5),
-            contentPadding: const EdgeInsets.only(left: 15),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 0),
+//       child: SizedBox(
+//         height: 35,
+//         width: MediaQuery.of(context).size.width / 5,
+//         child: TextField(
+//           controller: _controller,
+//           onChanged: widget.onTextChanged,
+//           keyboardType: widget.keyboardType,
+//           style: GoogleFonts.openSans().copyWith(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.black),
+//           decoration: InputDecoration(
+//             hintText: widget.hintText,
+//             // hintStyle: GoogleFonts.openSans().copyWith(fontSize: 12.w),
+//             hintStyle: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10.5),
+//             contentPadding: const EdgeInsets.only(left: 15),
 
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color.fromARGB(146, 146, 69, 197)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                // color: Color.fromARGB(255, 80, 19, 121),
-                color: Color.fromARGB(146, 146, 69, 197),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//             border: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(12),
+//             ),
+//             enabledBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(12),
+//               borderSide: const BorderSide(color: Color.fromARGB(146, 146, 69, 197)),
+//             ),
+//             focusedBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(12),
+//               borderSide: const BorderSide(
+//                 // color: Color.fromARGB(255, 80, 19, 121),
+//                 color: Color.fromARGB(146, 146, 69, 197),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 // class _FilterTextField extends StatefulWidget {
