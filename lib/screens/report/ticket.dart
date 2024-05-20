@@ -1,4 +1,5 @@
 import 'package:admin_panel/models/new/all_tickets/get_all_tickets_response.dart';
+import 'package:admin_panel/utils/utility_functions.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
@@ -919,7 +920,8 @@ class _SortablePageState extends State<SortablePage> {
       });
 
   Widget buildDataTable() {
-    final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
+    // final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
+    final columns = ['Date', 'No. of Tickets Utilized'];
 
     return DataTable(
       headingRowColor: MaterialStateProperty.all(secondaryColor2),
@@ -948,22 +950,33 @@ class _SortablePageState extends State<SortablePage> {
       .toList();
 
   List<DataRow> getRows() {
+    final now = DateTime.now();
+    final list1 = UtilityFunctions.generateDateList(startDate: selectedStartDate.value ?? DateTime(now.year, now.month), endDate: selectedEndDate.value);
     // if (users.isEmpty) {
     //   return List.generate(1, (index) => DataRow(cells: getCells(['', '', '', '', '', '', '', '', '', '', ''])));
     // }
+    List<int> countList = [];
+
+    for (final a in list1 ?? []) {
+      final ticketCountList = widget.sampleList.value?.where((e) {
+        if (e.createDate!.contains(a)) {
+          return true;
+        } else {
+          return false;
+        }
+      }).toList();
+
+      // print('4444444444444444444444444444444444 ${ticketCountList?.length}');
+
+      countList.add(ticketCountList?.length ?? 0);
+    }
+
+    print('222222222222222222222222222 $list1');
+    print('222222222222222222222222222 $countList');
     return widget.list!.map((TicketsList user) {
       final cells = [
-        user.barcode ?? '',
+        user.createDate ?? '',
         user.initialCheckinTime ?? '',
-        user.dataCheckinTime ?? '',
-        user.requestedTime ?? '',
-        user.onthewayTime ?? '',
-        user.carModelName ?? '',
-        user.carColorName ?? '',
-        user.cvaInName ?? '',
-        user.emiratesName ?? '',
-        user.vehicleNumber ?? '',
-        user.checkoutStatus ?? 'N',
       ];
 
       return DataRow(cells: getCells(cells));
@@ -986,20 +999,20 @@ class _SortablePageState extends State<SortablePage> {
     //   );
     // }
     return cells.map((data) {
-      if (data == cells.last) {
-        return DataCell(
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(color: _statusColor(cells.last, cells[2]), borderRadius: BorderRadius.circular(15)),
-            child: Text(
-              // '$data',
-              _status(cells.last, cells[2]),
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-              // textAlign: TextAlign.center,
-            ),
-          ),
-        );
-      }
+      // if (data == cells.last) {
+      //   return DataCell(
+      //     Container(
+      //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      //       decoration: BoxDecoration(color: _statusColor(cells.last, cells[2]), borderRadius: BorderRadius.circular(15)),
+      //       child: Text(
+      //         // '$data',
+      //         _status(cells.last, cells[2]),
+      //         style: const TextStyle(color: Colors.white, fontSize: 10),
+      //         // textAlign: TextAlign.center,
+      //       ),
+      //     ),
+      //   );
+      // }
       return DataCell(
         Text(
           '$data',
