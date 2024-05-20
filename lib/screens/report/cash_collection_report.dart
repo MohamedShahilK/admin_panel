@@ -28,6 +28,8 @@ import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+final cashCollectionListNotifier = BehaviorSubject<List<TicketsList>>.seeded([]);
+
 final searchListNotifier = BehaviorSubject<List<TicketsList>>.seeded([]);
 final searchListRespmodelNotifier = BehaviorSubject<GetAllTicketsResponse?>();
 final isSearchListNotifierAlongWithSearchKey = BehaviorSubject<bool>.seeded(false);

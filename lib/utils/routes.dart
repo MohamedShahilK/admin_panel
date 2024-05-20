@@ -7,6 +7,7 @@ import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:admin_panel/screens/report/cash_collection_report.dart';
 import 'package:admin_panel/screens/report/inventory_report.dart';
 import 'package:admin_panel/screens/report/master_report.dart';
+import 'package:admin_panel/screens/report/ticket.dart';
 import 'package:admin_panel/screens/search/search_page.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +54,7 @@ Route<dynamic>? generateRoutes(RouteSettings settings) {
 
     case '/ticketreport':
       // return MaterialPageRoute(builder: (_) => const SearchPage());
-      return _customPageAnimation(page: const SearchPage());
+      return _customPageAnimation(page: const TicketReport());
 
     case '/cashcollection':
       // return MaterialPageRoute(builder: (_) => const SearchPage());

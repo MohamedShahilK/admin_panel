@@ -1,7 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:admin_panel/models/new/user/user_model.dart';
-import 'package:admin_panel/screens/report/ticket.dart';
+import 'package:admin_panel/screens/report/cash_collection_report.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:admin_panel/models/new/actions/actions_response_model.dart';
 import 'package:admin_panel/models/new/all_tickets/get_all_tickets_response.dart';
@@ -214,8 +214,8 @@ class CashCollectionBloc {
   }
 
   void clearSreams() {
-    currentPageForTicket.value = 1;
-    currentPageForTicket.notifyListeners();
+    currentPageForCashCollectionReport.value = 1;
+    currentPageForCashCollectionReport.notifyListeners();
     getAllCheckInItemsStream.add(null);
     getTicketRespStream.add(null);
     getAllTicketsRespStream.add(null);
@@ -237,7 +237,7 @@ class CashCollectionBloc {
     // print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${locationStream.value}');
     locationStream.add('');
     userTypeStream.add('');
-    ticketListNotifier.add([]);
+    cashCollectionListNotifier.add([]);
     filterValue.add('');
   }
 

@@ -135,8 +135,8 @@ class TicketBloc {
   }
 
   void clearSreams() {
-    currentPageForTicket.value = 1;
-    currentPageForTicket.notifyListeners();
+    currentPageForTicketReport.value = 1;
+    currentPageForTicketReport.notifyListeners();
     getAllCheckInItemsStream.add(null);
     getAllTicketsRespStream.add(null);
     selectedStartDate.value = null;
