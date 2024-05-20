@@ -21,7 +21,7 @@ Route<dynamic>? generateRoutes(RouteSettings settings) {
   switch (uri.path) {
     case '/':
       // return MaterialPageRoute(builder: (_) => const DashboardScreen());
-      return _customPageAnimation(page: const TicketReport());
+      return _customPageAnimation(page: const DashboardScreen());
     //   break;
     // default:
 

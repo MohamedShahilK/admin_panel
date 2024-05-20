@@ -539,6 +539,19 @@ class _Table extends StatelessWidget {
                                                     countList.add(ticketCountList?.length ?? 0);
                                                   }
 
+                                                  // Map<String, int> resultMap = {};
+
+                                                  // for (int i = 0; i < list1.length; i++) {
+                                                  //   if (countList[i] != 0) {
+                                                  //     resultMap[list1[i]] = countList[i];
+                                                  //   }
+                                                  // }
+
+                                                  // // print('6666666666666666666666666666666666 $resultMap');
+                                                  // // List<String> keysList = resultMap.keys.toList();
+                                                  // List<int> valuesList = resultMap.values.toList();
+
+                                                  // final total = valuesList.reduce((a, b) => a + b);
                                                   final total = countList.reduce((a, b) => a + b);
                                                   return Text(
                                                     // '50',
@@ -1015,8 +1028,22 @@ class _SortablePageState extends State<SortablePage> {
       countList.add(ticketCountList?.length ?? 0);
     }
 
-    print('222222222222222222222222222 $list1');
-    print('222222222222222222222222222 $countList');
+    // Map<String, int> combinedMap = Map.fromIterables(list1, countList);
+
+    Map<String, int> resultMap = {};
+
+    for (int i = 0; i < list1.length; i++) {
+      if (countList[i] != 0) {
+        resultMap[list1[i]] = countList[i];
+      }
+    }
+
+    // print('6666666666666666666666666666666666 $resultMap');
+    List<String> keysList = resultMap.keys.toList();
+    List<int> valuesList = resultMap.values.toList();
+
+    // print('222222222222222222222222222 $list1');
+    // print('222222222222222222222222222 $countList');
     // return widget.list!.map((TicketsList user) {
     //   var i = 0;
     // var cells = [
@@ -1031,10 +1058,13 @@ class _SortablePageState extends State<SortablePage> {
 
     var listOfDataRow = <DataRow>[];
     var cells = [];
-    for (var i = 0; i < list1.length; i++) {
+    // for (var i = 0; i < list1.length; i++) {
+    for (var i = 0; i < keysList.length; i++) {
       cells = [
-        list1[i],
-        countList[i],
+        // list1[i],
+        // countList[i],
+        keysList[i],
+        valuesList[i],
       ];
       listOfDataRow.add(DataRow(cells: getCells(cells)));
     }
