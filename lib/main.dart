@@ -10,6 +10,9 @@ import 'package:admin_panel/logic/check_out/check_out_bloc.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_bloc.dart';
 import 'package:admin_panel/logic/notification/notification_bloc.dart';
 import 'package:admin_panel/logic/parked/parked_bloc.dart';
+import 'package:admin_panel/logic/report/cash_collection_bloc.dart';
+import 'package:admin_panel/logic/report/master_report_bloc.dart';
+import 'package:admin_panel/logic/report/navigation_report_bloc.dart';
 import 'package:admin_panel/logic/search/search_bloc.dart';
 import 'package:admin_panel/main_initialization.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
@@ -75,6 +78,21 @@ class MyApp extends StatelessWidget {
 
         Provider(
           create: (context) => ParkedBloc(),
+          dispose: (context, bloc) => bloc.dispose(),
+        ),
+
+        Provider(
+          create: (context) => MasterReportBloc(),
+          dispose: (context, bloc) => bloc.dispose(),
+        ),
+
+        Provider(
+          create: (context) => NavigationReportBloc(),
+          dispose: (context, bloc) => bloc.dispose(),
+        ),
+
+        Provider(
+          create: (context) => CashCollectionBloc(),
           dispose: (context, bloc) => bloc.dispose(),
         ),
       ],

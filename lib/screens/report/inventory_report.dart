@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:admin_panel/data/checkin_model.dart';
 import 'package:admin_panel/logic/dashboard/dashboard_bloc.dart';
-import 'package:admin_panel/logic/search/search_bloc.dart';
+import 'package:admin_panel/logic/report/navigation_report_bloc.dart';
+// import 'package:admin_panel/logic/report/master_report_bloc.dart';
+// import 'package:admin_panel/logic/search/search_bloc.dart';
 import 'package:admin_panel/models/new/all_tickets/get_all_tickets_response.dart';
 import 'package:admin_panel/models/old/user.dart';
 import 'package:admin_panel/responsive.dart';
-import 'package:admin_panel/screens/actions/checkin/custom_action_textfield.dart';
 import 'package:admin_panel/screens/dashboard/components/header.dart';
 import 'package:admin_panel/screens/main/components/side_menu.dart';
 import 'package:admin_panel/screens/widgets/custom_dropdown.dart';
@@ -25,7 +25,6 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 final searchListNotifier = BehaviorSubject<List<TicketsList>>.seeded([]);
 final searchListRespmodelNotifier = BehaviorSubject<GetAllTicketsResponse?>();
@@ -38,25 +37,25 @@ final _controller = TextEditingController();
 final selectedStartDate = ValueNotifier<DateTime?>(null);
 final selectedEndDate = ValueNotifier<DateTime?>(null);
 
-ValueNotifier<int> currentPageForSearchPage = ValueNotifier(1);
+ValueNotifier<int> currentPageForInventoryReport = ValueNotifier(1);
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({
+class InventoryReport extends StatefulWidget {
+  const InventoryReport({
     super.key,
   });
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<InventoryReport> createState() => _InventoryReportState();
 }
 
-class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
-  SearchBloc? bloc;
+class _InventoryReportState extends State<InventoryReport> with WidgetsBindingObserver {
+  NavigationReportBloc? bloc;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    context.read<SearchBloc>().mainSearchStream.listen((value) {
+    context.read<NavigationReportBloc>().mainSearchStream.listen((value) {
       if (value.isEmpty) {
         _controller.clear();
       } else if (_controller.text != value) {
@@ -95,7 +94,7 @@ class _SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    bloc ??= Provider.of<SearchBloc>(context);
+    bloc ??= Provider.of<NavigationReportBloc>(context);
     bloc?.clearSreams();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await bloc!.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
@@ -155,95 +154,6 @@ class _Body extends StatelessWidget {
         // Header
         const Header(),
       ],
-    );
-  }
-}
-
-class _DropDown extends StatefulWidget {
-  const _DropDown({
-    // required this.items,
-    required this.field,
-  });
-
-  // final List<String> items;
-  final String field;
-
-  @override
-  State<_DropDown> createState() => _DropDownState();
-}
-
-class _DropDownState extends State<_DropDown> {
-  var selectedValue = '';
-  @override
-  Widget build(BuildContext context) {
-    // final bloc = Provider.of<ParkedBloc>(context, listen: false);
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2(
-        isExpanded: true,
-        hint: Text(
-          widget.field,
-          style: GoogleFonts.openSans().copyWith(
-            color: Colors.grey[900],
-            fontWeight: FontWeight.w900,
-            fontSize: 10.5,
-          ),
-        ),
-        style: GoogleFonts.openSans().copyWith(
-          color: Colors.grey[900],
-          fontWeight: FontWeight.w900,
-          fontSize: 10.5,
-        ),
-        items: [
-          // '',
-          'DUBAI',
-          'ABU DHABI',
-          'AJMAN',
-          'Driver 4',
-        ].map((e) => DropdownMenuItem(child: Align(child: Text(e)), value: e)).toList(),
-        value: selectedValue == '' ? null : selectedValue,
-        onChanged: (value) {
-          setState(() {
-            selectedValue = value!;
-          });
-          // bloc.sourceIdStream.add(value);
-          // //print('111111111111111 $selectedValue');
-        },
-        iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor, iconDisabledColor: secondaryColor),
-        buttonStyleData: ButtonStyleData(
-          height: 50,
-          width: 160,
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(
-              color: const Color.fromARGB(146, 146, 69, 197),
-            ),
-            color: Colors.grey[200],
-            // color: Colors.white,
-          ),
-          elevation: 2,
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          height: 40,
-        ),
-        alignment: Alignment.center,
-        dropdownStyleData: DropdownStyleData(
-          offset: const Offset(-45, 0),
-          maxHeight: 200,
-          width: 188,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(width: .3, color: Colors.grey),
-            color: Colors.grey[300],
-          ),
-          // offset: const Offset(-20, 0),
-          scrollbarTheme: ScrollbarThemeData(
-            radius: const Radius.circular(40),
-            thickness: MaterialStateProperty.all(6),
-            thumbVisibility: MaterialStateProperty.all(true),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -375,7 +285,7 @@ class _Table extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = Provider.of<SearchBloc>(context);
+    final searchBloc = Provider.of<NavigationReportBloc>(context);
     final dashBloc = Provider.of<DashboardBloc>(context);
 
     // For Ipad
@@ -533,8 +443,13 @@ class _Table extends StatelessWidget {
                   );
                 } else if (snapshot.hasData) {
                   final allTickets = snapshot.data;
-                  final sampleList = ValueNotifier<List<TicketsList>>(allTickets?.data?.ticketsList ?? []);
-
+                  final list = allTickets?.data?.ticketsList?.where((e) {
+                    if (e.checkoutStatus == 'Y') {
+                      return false;
+                    }
+                    return true;
+                  }).toList();
+                  final sampleList = ValueNotifier<List<TicketsList>>(list ?? []);
                   return Expanded(
                     child: Column(
                       children: [
@@ -643,13 +558,13 @@ class _Table extends StatelessWidget {
                                                     return Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 3),
                                                       child: ValueListenableBuilder(
-                                                        valueListenable: currentPageForSearchPage,
+                                                        valueListenable: currentPageForInventoryReport,
                                                         builder: (context, ix, _) {
                                                           return Container(
                                                             height: 22,
                                                             width: 22,
                                                             decoration: BoxDecoration(
-                                                              color: index + 1 != currentPageForSearchPage.value ? Colors.grey : Colors.purple[400],
+                                                              color: index + 1 != currentPageForInventoryReport.value ? Colors.grey : Colors.purple[400],
                                                               borderRadius: BorderRadius.circular(50),
                                                             ),
                                                             child: InkWell(
@@ -660,21 +575,21 @@ class _Table extends StatelessWidget {
                                                                 );
                                                                 //print('object');
                                                                 final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
-                                                                currentPageForSearchPage.value = index + 1;
-                                                                currentPageForSearchPage.notifyListeners();
+                                                                currentPageForInventoryReport.value = index + 1;
+                                                                currentPageForInventoryReport.notifyListeners();
 
                                                                 if (isLoading) {
                                                                   Future.delayed(const Duration(seconds: 1), () {
                                                                     scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                    currentPageForSearchPage.value = index + 1;
-                                                                    currentPageForSearchPage.notifyListeners();
+                                                                    currentPageForInventoryReport.value = index + 1;
+                                                                    currentPageForInventoryReport.notifyListeners();
                                                                     Loader.hide();
                                                                   });
                                                                 } else {
                                                                   // ignore: unawaited_futures
                                                                   scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                  currentPageForSearchPage.value = index + 1;
-                                                                  currentPageForSearchPage.notifyListeners();
+                                                                  currentPageForInventoryReport.value = index + 1;
+                                                                  currentPageForInventoryReport.notifyListeners();
                                                                   Loader.hide();
                                                                 }
                                                               },
@@ -719,13 +634,13 @@ class _Table extends StatelessWidget {
                                                                 return Padding(
                                                                   padding: const EdgeInsets.symmetric(horizontal: 3),
                                                                   child: ValueListenableBuilder(
-                                                                    valueListenable: currentPageForSearchPage,
+                                                                    valueListenable: currentPageForInventoryReport,
                                                                     builder: (context, ix, _) {
                                                                       return Container(
                                                                         height: 22,
                                                                         width: 22,
                                                                         decoration: BoxDecoration(
-                                                                          color: index + 1 != currentPageForSearchPage.value ? Colors.grey : Colors.purple[400],
+                                                                          color: index + 1 != currentPageForInventoryReport.value ? Colors.grey : Colors.purple[400],
                                                                           borderRadius: BorderRadius.circular(50),
                                                                         ),
                                                                         child: InkWell(
@@ -800,8 +715,8 @@ class _Table extends StatelessWidget {
                                                                                   await searchBloc.getTicketsWithSearchKey(orderBy: 'parking_time', searchKey: filterValue.value, pageNo: 1);
                                                                               final list = respModel?.data?.ticketsList ?? [];
 
-                                                                              currentPageForSearchPage.value = 1;
-                                                                              currentPageForSearchPage.notifyListeners();
+                                                                              currentPageForInventoryReport.value = 1;
+                                                                              currentPageForInventoryReport.notifyListeners();
 
                                                                               if (_controller.text.isEmpty) {
                                                                                 searchListNotifier.add([]);
@@ -811,8 +726,8 @@ class _Table extends StatelessWidget {
 
                                                                               isSearchListNotifierAlongWithSearchKey.add(true);
 
-                                                                              currentPageForSearchPage.value = index + 1;
-                                                                              currentPageForSearchPage.notifyListeners();
+                                                                              currentPageForInventoryReport.value = index + 1;
+                                                                              currentPageForInventoryReport.notifyListeners();
                                                                             } else {
                                                                               final respModel = await searchBloc.getTicketsWithCombinations(
                                                                                 orderBy: 'parking_time',
@@ -843,29 +758,29 @@ class _Table extends StatelessWidget {
 
                                                                               isSearchListNotifierAlongWithSearchKey.add(false);
 
-                                                                              currentPageForSearchPage.value = index + 1;
-                                                                              currentPageForSearchPage.notifyListeners();
+                                                                              currentPageForInventoryReport.value = index + 1;
+                                                                              currentPageForInventoryReport.notifyListeners();
                                                                             }
 
                                                                             // if (isLoading) {
                                                                             //   Future.delayed(const Duration(seconds: 1), () {
                                                                             //     _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            //     currentPageForSearchPage.value = index + 1;
-                                                                            //     currentPageForSearchPage.notifyListeners();
+                                                                            //     currentPageForInventoryReport.value = index + 1;
+                                                                            //     currentPageForInventoryReport.notifyListeners();
                                                                             //     Loader.hide();
                                                                             //   });
                                                                             // } else {
                                                                             //   // ignore: unawaited_futures
                                                                             //   _scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            //   currentPageForSearchPage.value = index + 1;
-                                                                            //   currentPageForSearchPage.notifyListeners();
+                                                                            //   currentPageForInventoryReport.value = index + 1;
+                                                                            //   currentPageForInventoryReport.notifyListeners();
                                                                             //   Loader.hide();
                                                                             // }
 
                                                                             // ignore: unawaited_futures
                                                                             scrollController.animateTo(0, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-                                                                            currentPageForSearchPage.value = index + 1;
-                                                                            currentPageForSearchPage.notifyListeners();
+                                                                            currentPageForInventoryReport.value = index + 1;
+                                                                            currentPageForInventoryReport.notifyListeners();
                                                                             Loader.hide();
                                                                           },
                                                                           child: Center(
@@ -1177,10 +1092,10 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> checkOutStatusStaticList = ['', 'CheckIn', 'Requested', 'On The Way', 'Collect Now', 'Parked', 'CheckOut'];
-    Map<String, String> checkOutStatusStaticListMappingToSymbol = {'': '', 'CheckIn': 'N', 'Requested': 'R', 'On The Way': 'O', 'Collect Now': 'C', 'Parked': 'P', 'CheckOut': 'Y'};
-    Map<String, String> checkOutStatusStaticListMappingToName = {'': '', 'N': 'CheckIn', 'R': 'Requested', 'O': 'On The Way', 'C': 'Collect Now', 'P': 'Parked', 'Y': 'CheckOut'};
-    final bloc = Provider.of<SearchBloc>(context);
+    List<String> checkOutStatusStaticList = ['', 'CheckIn', 'Requested', 'On The Way', 'Collect Now', 'Parked'];
+    Map<String, String> checkOutStatusStaticListMappingToSymbol = {'': '', 'CheckIn': 'N', 'Requested': 'R', 'On The Way': 'O', 'Collect Now': 'C', 'Parked': 'P'};
+    Map<String, String> checkOutStatusStaticListMappingToName = {'': '', 'N': 'CheckIn', 'R': 'Requested', 'O': 'On The Way', 'C': 'Collect Now', 'P': 'Parked'};
+    final bloc = Provider.of<NavigationReportBloc>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Theme(
@@ -1207,10 +1122,10 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                 Future.delayed(
                   const Duration(milliseconds: 700),
                   () async {
-                    currentPageForSearchPage.value = 1;
-                    currentPageForSearchPage.notifyListeners();
+                    currentPageForInventoryReport.value = 1;
+                    currentPageForInventoryReport.notifyListeners();
 
-                    await context.read<SearchBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+                    await context.read<NavigationReportBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
 
                     isSearchListNotifierAlongWithSearchKey.add(false);
 
@@ -2048,8 +1963,8 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
 
                                       isSearchListNotifierAlongWithSearchKey.add(false);
 
-                                      currentPageForSearchPage.value = 1;
-                                      currentPageForSearchPage.notifyListeners();
+                                      currentPageForInventoryReport.value = 1;
+                                      currentPageForInventoryReport.notifyListeners();
 
                                       searchListNotifier.add(list ?? []);
 
@@ -2077,7 +1992,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
   }
 
   Future<void> _selectDate(BuildContext context, ValueNotifier<DateTime?> selectedDate) async {
-    final bloc = Provider.of<SearchBloc>(context, listen: false);
+    final bloc = Provider.of<NavigationReportBloc>(context, listen: false);
     filterValue.add('');
 
     // bloc.barcodeStream.add('');

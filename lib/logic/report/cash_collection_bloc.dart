@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:admin_panel/models/new/user/user_model.dart';
 import 'package:admin_panel/screens/report/ticket.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:admin_panel/models/new/actions/actions_response_model.dart';
@@ -20,6 +21,8 @@ class CashCollectionBloc {
   final getTicketRespStream = BehaviorSubject<GetAllTicketsResponse?>();
   final getAllTicketsRespStream = BehaviorSubject<GetAllTicketsResponse?>();
 
+  final getUsersWithLocationStream = BehaviorSubject<GetUsersModel?>();
+
   final barcodeStream = BehaviorSubject<String>.seeded('');
   final plateNumberStream = BehaviorSubject<String>.seeded('');
   final mobileNumberStream = BehaviorSubject<String>.seeded('');
@@ -35,8 +38,23 @@ class CashCollectionBloc {
   final userTypeStream = BehaviorSubject<String>.seeded('');
 
   Future<void> initDetails() async {}
-  
-    Future<GetAllTicketsResponse?> getAllTickets({
+  // Future<GetUsersModel?> getUsersWithLocation({
+  //   required String orderBy,
+  //   required int locationId,
+  //   String orderByDirection = 'DESC', //ASC
+  //   bool modelRequired = false,
+  // }) async {
+  //   getUsersWithLocationStream.add(null);
+  //   final respModel = await DashBoardServices().getUsersWithLocation(orderBy: orderBy, orderByDirection: orderByDirection, locationId: locationId);
+  //   if (modelRequired) {
+  //     return respModel;
+  //   } else {
+  //     getUsersWithLocationStream.add(respModel);
+  //     return null;
+  //   }
+  // }
+
+  Future<GetAllTicketsResponse?> getAllTickets({
     required String orderBy,
     String orderByDirection = 'DESC', //ASC
     bool modelRequired = false,
@@ -49,6 +67,7 @@ class CashCollectionBloc {
       return null;
     }
   }
+
   Future<bool> getAllTicketsWithPageNo({
     required String orderBy,
     required int pageNo,
@@ -129,7 +148,7 @@ class CashCollectionBloc {
     return respModel;
   }
 
-Future<GetAllTicketsResponse?> getAllTicketsWithCombinations({
+  Future<GetAllTicketsResponse?> getAllTicketsWithCombinations({
     required String orderBy,
     required String checkOutStatus,
     required int parkingLocationId,
