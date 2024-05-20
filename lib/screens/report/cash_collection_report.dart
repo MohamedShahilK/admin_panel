@@ -98,6 +98,7 @@ class _CashCollectionReportState extends State<CashCollectionReport> with Widget
     bloc ??= Provider.of<CashCollectionBloc>(context);
     bloc?.clearSreams();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      // await bloc!.getAllTickets(orderBy: 'parking_time');
       await bloc!.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
       await bloc!.getAllCheckInItems();
     });
@@ -428,7 +429,7 @@ class _Table extends StatelessWidget {
             );
           }
           return StreamBuilder(
-              stream: searchBloc.getAllTicketsRespStream,
+              stream: searchBloc.getTicketRespStream,
               builder: (context, snapshot) {
                 print('1231232131231312312321 ${snapshot.data}');
                 //print(snapshot.data);
@@ -469,24 +470,24 @@ class _Table extends StatelessWidget {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor)),
+                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor2)),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.download_for_offline_outlined, color: secondaryColor),
+                                            const Icon(Icons.download_for_offline_outlined, color: secondaryColor2),
                                             const SizedBox(width: 10),
                                             Text(
                                               'Download'.toUpperCase(),
                                               // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
-                                              style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                                              style: GoogleFonts.poppins().copyWith(color: secondaryColor2, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Container(
                                         padding: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+                                        decoration: BoxDecoration(color: secondaryColor2, borderRadius: BorderRadius.circular(10)),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           mainAxisSize: MainAxisSize.min,
@@ -572,7 +573,7 @@ class _Table extends StatelessWidget {
                                                               onTap: () async {
                                                                 Loader.show(
                                                                   context,
-                                                                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor, size: 40),
+                                                                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
                                                                 );
                                                                 //print('object');
                                                                 final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
@@ -648,7 +649,7 @@ class _Table extends StatelessWidget {
                                                                           onTap: () async {
                                                                             Loader.show(
                                                                               context,
-                                                                              progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor, size: 40),
+                                                                              progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
                                                                             );
                                                                             //print('object');
                                                                             // final isLoading = await searchBloc.getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: index + 1);
@@ -914,7 +915,7 @@ class _SortablePageState extends State<SortablePage> {
                 return const Center(
                     child: Text(
                   'No Data Found!!',
-                  style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w900, fontSize: 16),
+                  style: TextStyle(color: secondaryColor2, fontWeight: FontWeight.w900, fontSize: 16),
                 ));
               } else {
                 return ScrollableWidget(child: buildDataTable());
@@ -926,7 +927,7 @@ class _SortablePageState extends State<SortablePage> {
     final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
 
     return DataTable(
-      headingRowColor: MaterialStateProperty.all(secondaryColor),
+      headingRowColor: MaterialStateProperty.all(secondaryColor2),
       // headingRowColor: MaterialStateProperty.all(Color(0xFFFBFCFC)),
       // decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
       dividerThickness: .1,
@@ -980,7 +981,7 @@ class _SortablePageState extends State<SortablePage> {
     //     11,
     //     (index) => const DataCell(
     //       // usersNotifier.value.isEmpty
-    //       //     ? LoadingAnimationWidget.hexagonDots(color: secondaryColor, size: 13)
+    //       //     ? LoadingAnimationWidget.hexagonDots(color: secondaryColor2, size: 13)
     //       //     :
     //       Text(
     //         '',
@@ -1118,7 +1119,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
               if (!value && searchListNotifier.value.isNotEmpty && filterValue.value.isNotEmpty) {
                 Loader.show(
                   context,
-                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor, size: 40),
+                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
                 );
                 Future.delayed(
                   const Duration(milliseconds: 700),
@@ -1160,18 +1161,18 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
               }
             },
             // trailing: const SizedBox.shrink(),
-            iconColor: secondaryColor,
+            iconColor: secondaryColor2,
             tilePadding: EdgeInsets.zero,
-            collapsedIconColor: secondaryColor,
+            collapsedIconColor: secondaryColor2,
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
                 children: [
-                  const Icon(Icons.menu, color: secondaryColor, size: 20),
+                  const Icon(Icons.menu, color: secondaryColor2, size: 20),
                   const SizedBox(width: 30),
                   Text(
                     'Searching Filter'.toUpperCase(),
-                    style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 14, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins().copyWith(color: secondaryColor2, fontSize: 14, fontWeight: FontWeight.bold),
                     // textAlign: TextAlign.center,
                   ),
                 ],
@@ -1871,7 +1872,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                   // margin: const EdgeInsets.only(right: 50,top: 10,bottom: 5),
                                   margin: const EdgeInsets.only(right: 20, top: 5, bottom: 10),
                                   decoration: BoxDecoration(
-                                    color: secondaryColor,
+                                    color: secondaryColor2,
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Row(
@@ -1892,7 +1893,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                   Debouncer(milliseconds: 500).run(() async {
                                     Loader.show(
                                       context,
-                                      progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor, size: 40),
+                                      progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
                                     );
                                     String? formattedStartDate;
                                     String? formattedEndDate;

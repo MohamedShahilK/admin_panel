@@ -526,18 +526,18 @@ class _NewCheckInForm extends StatelessWidget {
                                       ),
                                       child: ExpansionTile(
                                         // trailing: const SizedBox.shrink(),
-                                        iconColor: secondaryColor,
+                                        iconColor: secondaryColor2,
                                         tilePadding: EdgeInsets.zero,
-                                        collapsedIconColor: secondaryColor,
+                                        collapsedIconColor: secondaryColor2,
                                         title: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 40),
                                           child: Row(
                                             children: [
-                                              const Icon(Icons.image_outlined, color: secondaryColor, size: 20),
+                                              const Icon(Icons.image_outlined, color: secondaryColor2, size: 20),
                                               const SizedBox(width: 30),
                                               Text(
                                                 'UPLOAD VEHICLE IMAGES',
-                                                style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 14, fontWeight: FontWeight.bold),
+                                                style: GoogleFonts.poppins().copyWith(color: secondaryColor2, fontSize: 14, fontWeight: FontWeight.bold),
                                                 // textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -563,7 +563,7 @@ class _NewCheckInForm extends StatelessWidget {
                                   Container(
                                     margin: const EdgeInsets.only(top: 30, bottom: 30),
                                     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                    decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+                                    decoration: BoxDecoration(color: secondaryColor2, borderRadius: BorderRadius.circular(10)),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       mainAxisSize: MainAxisSize.min,
@@ -1825,7 +1825,7 @@ class _DropDownState extends State<_DropDown> {
                 bloc.sourceIdStream.add(value);
                 // //print('111111111111111 $selectedValue');
               },
-              iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor, iconDisabledColor: secondaryColor),
+              iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor2, iconDisabledColor: secondaryColor2),
               buttonStyleData: ButtonStyleData(
                 height: 50,
                 width: 160,
@@ -1917,7 +1917,7 @@ class _PlateTextFieldState extends State<_PlateTextField> {
         onChanged: widget.onTextChanged,
         keyboardType: widget.keyboardType,
         textCapitalization: TextCapitalization.characters,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700,color: secondaryColor),
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700,color: secondaryColor2),
         textAlign: widget.textAlign ?? TextAlign.left,
         decoration: InputDecoration(
           hintText: widget.hintText,
@@ -2000,24 +2000,24 @@ class _Table extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: secondaryColor2)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.download_for_offline_outlined, color: secondaryColor),
+                        const Icon(Icons.download_for_offline_outlined, color: secondaryColor2),
                         const SizedBox(width: 10),
                         Text(
                           'Download'.toUpperCase(),
                           // style:  TextStyle(color: Colors.grey[700], fontSize: 18,fontWeight: FontWeight.w700),
-                          style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                          style: GoogleFonts.poppins().copyWith(color: secondaryColor2, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5),
                         ),
                       ],
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: secondaryColor2, borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
@@ -2108,7 +2108,7 @@ class _SortablePageState extends State<SortablePage> {
     final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
 
     return DataTable(
-      headingRowColor: MaterialStateProperty.all(secondaryColor),
+      headingRowColor: MaterialStateProperty.all(secondaryColor2),
       // headingRowColor: MaterialStateProperty.all(Color(0xFFFBFCFC)),
       // decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
       dividerThickness: .1,
@@ -2245,18 +2245,18 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
           ),
           child: ExpansionTile(
             // trailing: const SizedBox.shrink(),
-            iconColor: secondaryColor,
+            iconColor: secondaryColor2,
             tilePadding: EdgeInsets.zero,
-            collapsedIconColor: secondaryColor,
+            collapsedIconColor: secondaryColor2,
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
                 children: [
-                  const Icon(Icons.menu, color: secondaryColor, size: 20),
+                  const Icon(Icons.menu, color: secondaryColor2, size: 20),
                   const SizedBox(width: 30),
                   Text(
                     'Searching Filter'.toUpperCase(),
-                    style: GoogleFonts.poppins().copyWith(color: secondaryColor, fontSize: 14, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins().copyWith(color: secondaryColor2, fontSize: 14, fontWeight: FontWeight.bold),
                     // textAlign: TextAlign.center,
                   ),
                 ],
@@ -2295,7 +2295,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                             // margin: const EdgeInsets.only(right: 50,top: 10,bottom: 5),
                             margin: const EdgeInsets.only(right: 20, top: 5, bottom: 10),
                             decoration: BoxDecoration(
-                              color: secondaryColor,
+                              color: secondaryColor2,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Row(
@@ -2383,7 +2383,7 @@ class _FilterTextFieldState extends State<_FilterTextField> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   // borderSide: const BorderSide(color: Color.fromARGB(146, 146, 69, 197)),
-                  borderSide: const BorderSide(color: secondaryColor),
+                  borderSide: const BorderSide(color: secondaryColor2),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

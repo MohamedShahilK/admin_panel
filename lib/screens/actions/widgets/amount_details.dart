@@ -769,7 +769,7 @@ class AmountDetails extends StatelessWidget {
                                           alignment: Alignment.center,
                                           margin: const EdgeInsets.only(top: 30, bottom: 30),
                                           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                          decoration: BoxDecoration(color: secondaryColor, borderRadius: BorderRadius.circular(10)),
+                                          decoration: BoxDecoration(color: secondaryColor2, borderRadius: BorderRadius.circular(10)),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.end,
                                             mainAxisSize: MainAxisSize.min,

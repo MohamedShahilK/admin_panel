@@ -37,7 +37,10 @@ class CashCollectionBloc {
   final locationStream = BehaviorSubject<String>.seeded('');
   final userTypeStream = BehaviorSubject<String>.seeded('');
 
-  Future<void> initDetails() async {}
+  Future<void> initDetails() async {
+    // await getAllTickets(orderBy: 'id');
+  }
+  
   // Future<GetUsersModel?> getUsersWithLocation({
   //   required String orderBy,
   //   required int locationId,

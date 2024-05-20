@@ -32,12 +32,12 @@ class Header extends StatelessWidget {
             if (reqBackBtn)
               Padding(
                 padding: EdgeInsets.only(left: !Responsive.isMobile(context) ? 35 : 20),
-                child: const Icon(Icons.arrow_back_ios_rounded, color: secondaryColor).ripple(context, () => Navigator.pop(context)),
+                child: const Icon(Icons.arrow_back_ios_rounded, color: secondaryColor2).ripple(context, () => Navigator.pop(context)),
               )
             else ...[
               if (!Responsive.isDesktop(context))
                 IconButton(
-                  icon: const Icon(Icons.menu, color: secondaryColor),
+                  icon: const Icon(Icons.menu, color: secondaryColor2),
                   onPressed: () {
                     print('111111111111111111111111111');
                     Scaffold.of(context).openDrawer();
@@ -49,7 +49,7 @@ class Header extends StatelessWidget {
               //     child: Text(
               //       // "Dashboard",
               //       menu.myMenu,
-              //       style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor, fontWeight: FontWeight.bold),
+              //       style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor2, fontWeight: FontWeight.bold),
               //     ),
               //   ),
             ],
@@ -74,7 +74,7 @@ class Header extends StatelessWidget {
                   badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
                   child: SvgPicture.asset(
                     'assets/icons/notification.svg',
-                    colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(secondaryColor2, BlendMode.srcIn),
                     width: 25,
                     fit: BoxFit.cover,
                   ),
@@ -95,7 +95,7 @@ class Header extends StatelessWidget {
                   badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
                   child: SvgPicture.asset(
                     'assets/icons/car_ontheway.svg',
-                    colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(secondaryColor2, BlendMode.srcIn),
                     width: 25,
                     fit: BoxFit.cover,
                   ),
@@ -124,7 +124,7 @@ class ProfileCard extends StatelessWidget {
         vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: secondaryColor2,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.white10),
       ),
@@ -164,7 +164,7 @@ class SearchField extends StatelessWidget {
     return TextField(
       decoration: InputDecoration(
         hintText: "Search",
-        fillColor: secondaryColor,
+        fillColor: secondaryColor2,
         filled: true,
         border: const OutlineInputBorder(
           borderSide: BorderSide.none,

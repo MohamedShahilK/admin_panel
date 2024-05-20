@@ -1,8 +1,6 @@
-import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +38,8 @@ class SideMenu extends StatelessWidget {
               ),
               DrawerListTile(
                 title: "Dashboard",
-                svgSrc: "assets/icons/dashboard_new.svg",
+                svgSrc: "assets/icons/dashboard_new2.svg",
+                svgHeight: 17,
                 press: () {
                   menu.setMyMenu('Dashboard');
                   _handlePageNavigation(context, '/');
@@ -94,8 +93,9 @@ class SideMenu extends StatelessWidget {
               ///////////////////////////////////////////
               DrawerListTile(
                 title: "Tickets",
-                // svgSrc: "assets/icons/checkin.svg",
-                icon: FontAwesomeIcons.car,
+                svgSrc: "assets/icons/tickets.svg",
+                // svgHeight: 16,
+                // icon: FontAwesomeIcons.car,
                 press: () {
                   menu.setMyMenu('Tickets');
                   _handlePageNavigation(context, '/tickets');
@@ -149,7 +149,7 @@ class SideMenu extends StatelessWidget {
               ),
               ExpansionDrawerListTile(
                 title: "Report",
-                svgSrc: "assets/icons/report_icon.svg",
+                svgSrc: "assets/icons/report-file.svg",
                 svgHeight: 16,
                 press: () {
                   menu.setMyMenu('Report');
@@ -268,21 +268,31 @@ class DrawerListTile extends StatelessWidget {
     final menu = Provider.of<SideMenuController>(context);
     final isSelected = menu.myMenu == title;
     return ColoredBox(
-      color: isSelected ? Colors.white54 : Colors.transparent,
+      // color: isSelected ? Colors.white54 : Colors.transparent,
+      color: isSelected ? secondaryColor2 : Colors.transparent,
       child: ListTile(
+        hoverColor: Colors.purple[100],
         onTap: press,
         horizontalTitleGap: 12.0,
         leading: icon == null
             ? SvgPicture.asset(
                 svgSrc!,
                 // color: Colors.white54,
-                colorFilter: ColorFilter.mode(isSelected ? primaryColor : Colors.black87, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  // isSelected ? primaryColor : Colors.black87,
+                  isSelected ? Colors.white : Colors.black87,
+                  BlendMode.srcIn,
+                ),
                 height: svgHeight ?? 20,
               )
-            : Icon(icon, size: svgHeight ?? 13, color: Colors.black87),
+            : Icon(icon, size: svgHeight ?? 13, color: isSelected ? Colors.white : Colors.black87),
         title: Text(
           title,
-          style: TextStyle(color: isSelected ? primaryColor : Colors.black87, fontSize: 13),
+          style: TextStyle(
+            // color: isSelected ? primaryColor : Colors.black87,
+            color: isSelected ? Colors.white : Colors.black87,
+            fontSize: 13,
+          ),
         ),
       ),
     );

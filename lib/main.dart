@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: bgColor,
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white),
-          canvasColor: secondaryColor,
+          canvasColor: secondaryColor2,
         ),
 
         routes: routes,

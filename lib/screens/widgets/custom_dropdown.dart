@@ -95,14 +95,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(
                           // color: Color.fromARGB(146, 146, 69, 197),
-                          color: secondaryColor,
+                          color: secondaryColor2,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(
                           // color: Color.fromARGB(146, 146, 69, 197),
-                          color: secondaryColor,
+                          color: secondaryColor2,
                         ),
                       ),
                       // focusedBorder: InputBorder.none,
@@ -122,7 +122,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     // color: const Color.fromARGB(146, 146, 69, 197),
-                    color: secondaryColor,
+                    color: secondaryColor2,
                   ),
                 ),
               ),
@@ -150,7 +150,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
               underline: const SizedBox(),
               isExpanded: true,
 
-              iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor),
+              iconStyleData: const IconStyleData(iconEnabledColor: secondaryColor2),
               onChanged: widget.onChanged,
               items: widget.list
                   .map<DropdownMenuItem<String>>(
