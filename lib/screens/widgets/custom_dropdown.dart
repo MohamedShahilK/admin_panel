@@ -122,7 +122,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     // color: const Color.fromARGB(146, 146, 69, 197),
-                    color: secondaryColor2,
+                    // color: secondaryColor2,
+                    color: Colors.purple.withOpacity(.1),
                   ),
                 ),
               ),
@@ -163,7 +164,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
                                 !widget.isReg ? widget.labelText : 'Country Of Registraion',
                                 style: GoogleFonts.openSans().copyWith(
                                   color: Colors.grey[700],
-                                  fontSize:12,
+                                  fontSize: 12,
                                 ),
                               )
                             : Text(

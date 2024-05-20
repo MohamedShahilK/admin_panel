@@ -1111,7 +1111,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            // color: Colors.grey[100],
             borderRadius: BorderRadius.circular(15),
           ),
           child: ExpansionTile(
@@ -1160,10 +1160,12 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                 );
               }
             },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             // trailing: const SizedBox.shrink(),
             iconColor: secondaryColor2,
             tilePadding: EdgeInsets.zero,
             collapsedIconColor: secondaryColor2,
+            backgroundColor: Colors.purple.withOpacity(.1),
             title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
@@ -1182,7 +1184,12 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
               Container(
                 height: 170,
                 margin: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(color: Colors.grey[100], borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                decoration: const BoxDecoration(
+                  // color: Colors.grey[100],
+                  // color: Colors.purple.withOpacity(.15),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
+                ),
                 child: StreamBuilder(
                     stream: bloc.getAllCheckInItemsStream,
                     builder: (context, getAllCheckInItemsStreamsnapshot) {
@@ -1203,22 +1210,24 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.only(left: 15),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    // color: Colors.white,
+                                    // color: Colors.purple.withOpacity(.1),
                                     // color: Colors.white,
                                     border: Border.all(
                                       // color: Colors.grey,
-                                      color: const Color.fromARGB(146, 146, 69, 197),
+                                      // color: const Color.fromARGB(146, 146, 69, 197),
+                                      color: Colors.purple.withOpacity(.1),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     selectedStartDate.value == null ? 'Select Start Date' : DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedStartDate.value!),
-                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10, fontWeight: FontWeight.w900),
+                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                              ).ripple(context, () => _selectDate(context, selectedStartDate));
+                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedStartDate));
                             },
-                          ),
+                          ),  
                           ValueListenableBuilder(
                             valueListenable: selectedEndDate,
                             builder: (context, endDate, _) {
@@ -1229,20 +1238,21 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.only(left: 15),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    // color: Colors.white,
                                     // color: Colors.white,
                                     border: Border.all(
                                       // color: Colors.grey,
-                                      color: const Color.fromARGB(146, 146, 69, 197),
+                                      // color: const Color.fromARGB(146, 146, 69, 197),
+                                      color: Colors.purple.withOpacity(.1),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     selectedEndDate.value == null ? 'Select End Date' : DateFormat('yyyy-MM-dd HH:mm:ss').format(selectedEndDate.value!),
-                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10, fontWeight: FontWeight.w900),
+                                    style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                              ).ripple(context, () => _selectDate(context, selectedEndDate));
+                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedEndDate));
                             },
                           ),
                           _FilterTextField(
@@ -2103,23 +2113,22 @@ class _FilterTextFieldState extends State<_FilterTextField> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             // hintStyle: GoogleFonts.openSans().copyWith(fontSize: 12.w),
-            hintStyle: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 10.5),
+            hintStyle: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
             contentPadding: const EdgeInsets.only(left: 15),
-
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color.fromARGB(146, 146, 69, 197)),
-            ),
+                borderRadius: BorderRadius.circular(12),
+                // borderSide: const BorderSide(color: Color.fromARGB(146, 146, 69, 197)),
+                borderSide: BorderSide(color: Colors.purple.withOpacity(.1))),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                // color: Color.fromARGB(255, 80, 19, 121),
-                color: Color.fromARGB(146, 146, 69, 197),
-              ),
-            ),
+                borderRadius: BorderRadius.circular(12),
+                // borderSide: const BorderSide(
+                //   // color: Color.fromARGB(255, 80, 19, 121),
+                //   color: Color.fromARGB(146, 146, 69, 197),
+                // ),
+                borderSide: BorderSide(color: Colors.purple.withOpacity(.1))),
           ),
         ),
       ),

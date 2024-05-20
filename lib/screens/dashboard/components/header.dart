@@ -71,7 +71,7 @@ class Header extends StatelessWidget {
                     softWrap: true,
                     style: TextStyle(fontSize: 10),
                   ),
-                  badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                  badgeStyle: const badges.BadgeStyle(badgeColor: secondaryColor2),
                   child: SvgPicture.asset(
                     'assets/icons/notification.svg',
                     colorFilter: const ColorFilter.mode(secondaryColor2, BlendMode.srcIn),
@@ -92,7 +92,7 @@ class Header extends StatelessWidget {
                     softWrap: true,
                     style: TextStyle(fontSize: 10),
                   ),
-                  badgeStyle: const badges.BadgeStyle(badgeColor: primaryColor),
+                  badgeStyle: const badges.BadgeStyle(badgeColor: secondaryColor2),
                   child: SvgPicture.asset(
                     'assets/icons/car_ontheway.svg',
                     colorFilter: const ColorFilter.mode(secondaryColor2, BlendMode.srcIn),

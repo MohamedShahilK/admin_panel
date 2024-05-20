@@ -1194,7 +1194,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            // color: Colors.grey[100],
             borderRadius: BorderRadius.circular(15),
           ),
           child: ExpansionTile(

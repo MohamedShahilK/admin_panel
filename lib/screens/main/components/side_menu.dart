@@ -140,7 +140,7 @@ class SideMenu extends StatelessWidget {
 
               DrawerListTile(
                 title: "Search",
-                svgSrc: "assets/icons/search.svg",
+                svgSrc: "assets/icons/search2.svg",
                 svgHeight: 18,
                 press: () {
                   menu.setMyMenu('Search');
@@ -212,7 +212,8 @@ class SideMenu extends StatelessWidget {
               ),
               DrawerListTile(
                 title: "LogOut",
-                svgSrc: "assets/icons/logout.svg",
+                svgHeight: 17,
+                svgSrc: "assets/icons/logout2.svg",
                 press: () {
                   menu.setMyMenu('LogOut');
                 },
