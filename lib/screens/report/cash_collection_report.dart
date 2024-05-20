@@ -446,13 +446,13 @@ class _Table extends StatelessWidget {
                   );
                 } else if (snapshot.hasData) {
                   final allTickets = snapshot.data;
-                  final list = allTickets?.data?.ticketsList?.where((e) {
-                    if (e.checkoutStatus == 'Y') {
-                      return false;
-                    }
-                    return true;
-                  }).toList();
-                  final sampleList = ValueNotifier<List<TicketsList>>(list ?? []);
+                  // final list = allTickets?.data?.ticketsList?.where((e) {
+                  //   if (e.checkoutStatus == 'Y') {
+                  //     return false;
+                  //   }
+                  //   return true;
+                  // }).toList();
+                  final sampleList = ValueNotifier<List<TicketsList>>(allTickets?.data?.ticketsList ?? []);
                   return Expanded(
                     child: Column(
                       children: [
@@ -925,7 +925,22 @@ class _SortablePageState extends State<SortablePage> {
       });
 
   Widget buildDataTable() {
-    final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
+    // final columns = ['Ticket No.', 'Checkin Time', 'Checkin Updation Time', 'Request Time', 'On the way Time', 'Car Brand', 'Car Colour', 'CVA-In', 'Emirates', 'Plate No.', 'Status'];
+    final columns = [
+      'Ticket No.',
+      'Checkin Time',
+      'Checkin Updation Time',
+      // 'Duration',
+      'Location',
+      // 'Verified Outlet',
+      'Plate No',
+      'Payment Type',
+      'Total Amount(AED)',
+      'Incl. VAT(%)',
+      'Incl. VAT Amount(AED)',
+      'Net Amount(AED)',
+      'Status'
+    ];
 
     return DataTable(
       headingRowColor: MaterialStateProperty.all(secondaryColor2),
@@ -962,13 +977,15 @@ class _SortablePageState extends State<SortablePage> {
         user.barcode ?? '',
         user.initialCheckinTime ?? '',
         user.dataCheckinTime ?? '',
-        user.requestedTime ?? '',
-        user.onthewayTime ?? '',
-        user.carModelName ?? '',
-        user.carColorName ?? '',
-        user.cvaInName ?? '',
-        user.emiratesName ?? '',
+        // user.requestedTime ?? '',
+        user.locationName ?? '',
+        // user.locationName?? '',
         user.vehicleNumber ?? '',
+        user.paymentPaidMethod ?? '',
+        user.subTotal ?? '',
+        user.vatPercentage ?? '',
+        user.vatAmount ?? '',
+        user.payment ?? '',
         user.checkoutStatus ?? 'N',
       ];
 
@@ -1117,20 +1134,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
           ),
           child: ExpansionTile(
             onExpansionChanged: (value) {
-              if (!value && searchListNotifier.value.isNotEmpty && filterValue.value.isNotEmpty) {
-                Loader.show(
-                  context,
-                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
-                );
-                Future.delayed(
-                  const Duration(milliseconds: 700),
-                  () async {
-                    currentPageForCashCollectionReport.value = 1;
-                    currentPageForCashCollectionReport.notifyListeners();
-
-                    await context.read<CashCollectionBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
-
-                    isSearchListNotifierAlongWithSearchKey.add(false);
+               isSearchListNotifierAlongWithSearchKey.add(false);
 
                     _controller.text = '';
                     filterValue.add('');
@@ -1155,6 +1159,45 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                     bloc.statusStream.add('');
 
                     searchListNotifier.add([]);
+
+              if (!value && searchListNotifier.value.isNotEmpty && filterValue.value.isNotEmpty) {
+                Loader.show(
+                  context,
+                  progressIndicator: LoadingAnimationWidget.fallingDot(color: secondaryColor2, size: 40),
+                );
+                Future.delayed(
+                  const Duration(milliseconds: 700),
+                  () async {
+                    currentPageForCashCollectionReport.value = 1;
+                    currentPageForCashCollectionReport.notifyListeners();
+
+                    await context.read<CashCollectionBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+
+                    // isSearchListNotifierAlongWithSearchKey.add(false);
+
+                    // _controller.text = '';
+                    // filterValue.add('');
+                    // // filterValue.add(_controller.text);
+                    // selectedStartDate.value = null;
+                    // selectedStartDate.notifyListeners();
+                    // selectedEndDate.value = null;
+                    // selectedEndDate.notifyListeners();
+                    // bloc.barcodeStream.add('');
+                    // bloc.plateNumberStream.add('');
+                    // bloc.vehicleModelStream.add('');
+                    // bloc.vehicleColorStream.add('');
+                    // bloc.mobileNumberStream.add('');
+
+                    // bloc.vehicleLocationStream.add('');
+                    // bloc.outletsStream.add('');
+                    // bloc.cvaInStream.add('');
+                    // bloc.cvaOutStream.add('');
+                    // bloc.userTypeStream.add('');
+                    // bloc.locationStream.add('');
+
+                    // bloc.statusStream.add('');
+
+                    // searchListNotifier.add([]);
 
                     Loader.hide();
                   },

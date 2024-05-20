@@ -1109,6 +1109,31 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
           ),
           child: ExpansionTile(
             onExpansionChanged: (value) {
+              isSearchListNotifierAlongWithSearchKey.add(false);
+
+              _controller.text = '';
+              filterValue.add('');
+              // filterValue.add(_controller.text);
+              selectedStartDate.value = null;
+              selectedStartDate.notifyListeners();
+              selectedEndDate.value = null;
+              selectedEndDate.notifyListeners();
+              bloc.barcodeStream.add('');
+              bloc.plateNumberStream.add('');
+              bloc.vehicleModelStream.add('');
+              bloc.vehicleColorStream.add('');
+              bloc.mobileNumberStream.add('');
+
+              bloc.vehicleLocationStream.add('');
+              bloc.outletsStream.add('');
+              bloc.cvaInStream.add('');
+              bloc.cvaOutStream.add('');
+              bloc.userTypeStream.add('');
+              bloc.locationStream.add('');
+
+              bloc.statusStream.add('');
+
+              searchListNotifier.add([]);
               if (!value && searchListNotifier.value.isNotEmpty && filterValue.value.isNotEmpty) {
                 Loader.show(
                   context,
@@ -1122,31 +1147,31 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
 
                     await context.read<MasterReportBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
 
-                    isSearchListNotifierAlongWithSearchKey.add(false);
+                    // isSearchListNotifierAlongWithSearchKey.add(false);
 
-                    _controller.text = '';
-                    filterValue.add('');
-                    // filterValue.add(_controller.text);
-                    selectedStartDate.value = null;
-                    selectedStartDate.notifyListeners();
-                    selectedEndDate.value = null;
-                    selectedEndDate.notifyListeners();
-                    bloc.barcodeStream.add('');
-                    bloc.plateNumberStream.add('');
-                    bloc.vehicleModelStream.add('');
-                    bloc.vehicleColorStream.add('');
-                    bloc.mobileNumberStream.add('');
+                    // _controller.text = '';
+                    // filterValue.add('');
+                    // // filterValue.add(_controller.text);
+                    // selectedStartDate.value = null;
+                    // selectedStartDate.notifyListeners();
+                    // selectedEndDate.value = null;
+                    // selectedEndDate.notifyListeners();
+                    // bloc.barcodeStream.add('');
+                    // bloc.plateNumberStream.add('');
+                    // bloc.vehicleModelStream.add('');
+                    // bloc.vehicleColorStream.add('');
+                    // bloc.mobileNumberStream.add('');
 
-                    bloc.vehicleLocationStream.add('');
-                    bloc.outletsStream.add('');
-                    bloc.cvaInStream.add('');
-                    bloc.cvaOutStream.add('');
-                    bloc.userTypeStream.add('');
-                    bloc.locationStream.add('');
+                    // bloc.vehicleLocationStream.add('');
+                    // bloc.outletsStream.add('');
+                    // bloc.cvaInStream.add('');
+                    // bloc.cvaOutStream.add('');
+                    // bloc.userTypeStream.add('');
+                    // bloc.locationStream.add('');
 
-                    bloc.statusStream.add('');
+                    // bloc.statusStream.add('');
 
-                    searchListNotifier.add([]);
+                    // searchListNotifier.add([]);
 
                     Loader.hide();
                   },
@@ -1214,7 +1239,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                              ).ripple(context, () => _selectDate(context, selectedStartDate));
+                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedStartDate));
                             },
                           ),
                           ValueListenableBuilder(
@@ -1241,7 +1266,7 @@ class _CustomExpansionTileState extends State<_CustomExpansionTile> {
                                     style: GoogleFonts.openSans().copyWith(color: Colors.grey[700], fontSize: 12, fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                              ).ripple(context, () => _selectDate(context, selectedEndDate));
+                              ).ripple(context, overlayColor: Colors.transparent, () => _selectDate(context, selectedEndDate));
                             },
                           ),
                           FilterTextField(
