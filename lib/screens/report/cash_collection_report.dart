@@ -1039,7 +1039,7 @@ class _SortablePageState extends State<SortablePage> {
     if (status == 'N' && dataCheckInTime != null && dataCheckInTime == '') {
       return Colors.green[600];
     } else if (status == 'N' && dataCheckInTime != null && dataCheckInTime != '') {
-      return Colors.yellow[800];
+      return const Color.fromARGB(255, 57, 41, 165);
     } else if (status == 'R') {
       return Colors.blue[600];
     } else if (status == 'O') {

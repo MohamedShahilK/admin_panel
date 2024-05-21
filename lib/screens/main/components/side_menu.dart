@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:html' as html;
+
 class SideMenu extends StatelessWidget {
   const SideMenu({
     super.key,
@@ -167,7 +169,7 @@ class SideMenu extends StatelessWidget {
                         DrawerListTile(
                           title: "Master Report",
                           svgSrc: "assets/icons/report_graph.svg",
-                          svgHeight: 13,
+                          svgHeight: 14,
                           press: () {
                             menu.setMyMenu('Master Report');
                             menu.setmyMenuExpand('Report');
@@ -177,7 +179,7 @@ class SideMenu extends StatelessWidget {
                         DrawerListTile(
                           title: "Inventory Report",
                           svgSrc: "assets/icons/report_graph.svg",
-                          svgHeight: 13,
+                          svgHeight: 14,
                           press: () {
                             menu.setMyMenu('Inventory Report');
                             menu.setmyMenuExpand('Report');
@@ -187,7 +189,7 @@ class SideMenu extends StatelessWidget {
                         DrawerListTile(
                           title: "Ticket",
                           svgSrc: "assets/icons/report_graph.svg",
-                          svgHeight: 13,
+                          svgHeight: 14,
                           press: () {
                             menu.setMyMenu('Ticket');
                             menu.setmyMenuExpand('Report');
@@ -197,7 +199,7 @@ class SideMenu extends StatelessWidget {
                         DrawerListTile(
                           title: "Cash Collection",
                           svgSrc: "assets/icons/report_graph.svg",
-                          svgHeight: 13,
+                          svgHeight: 14,
                           press: () {
                             menu.setMyMenu('Cash Collection');
                             menu.setmyMenuExpand('Report');
@@ -209,15 +211,89 @@ class SideMenu extends StatelessWidget {
                   ),
                 ],
               ),
-              DrawerListTile(
+              // DrawerListTile(
+              //   title: "Account",
+              //   svgSrc: "assets/icons/account.svg",
+              //   svgHeight: 15,
+              //   press: () {
+              //     menu.setMyMenu('Account');
+              //     menu.setmyMenuExpand('');
+              //     _handlePageNavigation(context, '/account');
+              //   },
+              // ),
+              ExpansionDrawerListTile(
                 title: "Account",
                 svgSrc: "assets/icons/account.svg",
                 svgHeight: 15,
                 press: () {
-                  menu.setMyMenu('Account');
-                  menu.setmyMenuExpand('');
-                  _handlePageNavigation(context, '/account');
+                  menu.setmyMenuExpand('Account');
+                  print('1231231213 ${menu.myMenuExpand}');
+                  // _handlePageNavigation(context, '/');
                 },
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Column(
+                      children: [
+                        DrawerListTile(
+                          title: "About Us",
+                          pngSrc: "assets/images/about_us_icon.png",
+                          svgHeight: 16,
+                          press: () {
+                            // menu.setMyMenu('About Us');
+                            menu.setmyMenuExpand('Account');
+                            // _handlePageNavigation(context, '/inventoryreport');
+                            openInWindow('https://sites.google.com/view/vstaboutus/home', 'About Us');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Contact Us",
+                          pngSrc: "assets/images/contact_us_icon.png",
+                          svgHeight: 16,
+                          press: () {
+                            // menu.setMyMenu('Contact Us');
+                            menu.setmyMenuExpand('Account');
+                            // _handlePageNavigation(context, '/ticketreport');
+                            openInWindow('https://sites.google.com/view/vstcontactus/home', 'Contact Us');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Terms & Conditions",
+                          pngSrc: "assets/images/t_c_icon.png",
+                          svgHeight: 16,
+                          press: () {
+                            // menu.setMyMenu('Terms & Conditions');
+                            menu.setmyMenuExpand('Account');
+                            // _handlePageNavigation(context, '/cashcollection');
+                            openInWindow('https://sites.google.com/view/tancvi/home', 'Terms & Conditions');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Privacy Policy",
+                          pngSrc: "assets/images/privacy_policy.png",
+                          svgHeight: 16,
+                          press: () {
+                            // menu.setMyMenu('Privacy Policy');
+                            menu.setmyMenuExpand('Account');
+                            // _handlePageNavigation(context, '/masterreport');
+                            openInWindow('https://sites.google.com/view/privacypolicyvst/home', 'Privacy Policy');
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "FAQ",
+                          pngSrc: "assets/images/faq_icon.png",
+                          svgHeight: 16,
+                          press: () {
+                            // menu.setMyMenu('FAQ');
+                            menu.setmyMenuExpand('Account');
+                            // _handlePageNavigation(context, '/masterreport');
+                            openInWindow('https://arabinfotechllc.com/faq.html', 'FAQ');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               DrawerListTile(
                 title: "LogOut",
@@ -256,11 +332,16 @@ class SideMenu extends StatelessWidget {
     //   ),
     // );
   }
+
+  void openInWindow(String uri, String name) {
+    html.window.open(uri, name);
+  }
 }
 
 class DrawerListTile extends StatelessWidget {
   final String title;
   final String? svgSrc;
+  final String? pngSrc;
   final IconData? icon;
   final double? svgHeight;
   final VoidCallback press;
@@ -269,6 +350,7 @@ class DrawerListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.press,
+    this.pngSrc,
     this.svgSrc,
     this.icon,
     this.svgHeight,
@@ -285,18 +367,20 @@ class DrawerListTile extends StatelessWidget {
         hoverColor: Colors.purple[100],
         onTap: press,
         horizontalTitleGap: 12.0,
-        leading: icon == null
-            ? SvgPicture.asset(
-                svgSrc!,
-                // color: Colors.white54,
-                colorFilter: ColorFilter.mode(
-                  // isSelected ? primaryColor : Colors.black87,
-                  isSelected ? Colors.white : Colors.black87,
-                  BlendMode.srcIn,
-                ),
-                height: svgHeight ?? 20,
-              )
-            : Icon(icon, size: svgHeight ?? 13, color: isSelected ? Colors.white : Colors.black87),
+        leading: pngSrc == null
+            ? icon == null
+                ? SvgPicture.asset(
+                    svgSrc!,
+                    // color: Colors.white54,
+                    colorFilter: ColorFilter.mode(
+                      // isSelected ? primaryColor : Colors.black87,
+                      isSelected ? Colors.white : Colors.black87,
+                      BlendMode.srcIn,
+                    ),
+                    height: svgHeight ?? 20,
+                  )
+                : Icon(icon, size: svgHeight ?? 13, color: isSelected ? Colors.white : Colors.black87)
+            : Image.asset(pngSrc!, height: svgHeight ?? 13),
         title: Text(
           title,
           style: TextStyle(

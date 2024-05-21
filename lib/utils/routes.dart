@@ -4,11 +4,13 @@ import 'package:admin_panel/screens/actions/checkin/checkin_page.dart';
 import 'package:admin_panel/screens/actions/checkout/checkout_page.dart';
 import 'package:admin_panel/screens/actions/payment/payment_page.dart';
 import 'package:admin_panel/screens/dashboard/dashboard_screen.dart';
+import 'package:admin_panel/screens/login/login.dart';
 import 'package:admin_panel/screens/report/cash_collection_report.dart';
 import 'package:admin_panel/screens/report/inventory_report.dart';
 import 'package:admin_panel/screens/report/master_report.dart';
 import 'package:admin_panel/screens/report/ticket.dart';
 import 'package:admin_panel/screens/search/search_page.dart';
+import 'package:admin_panel/splash.dart';
 import 'package:flutter/material.dart';
 
 final Map<String, Widget Function(BuildContext context)> routes = {
@@ -20,6 +22,10 @@ Route<dynamic>? generateRoutes(RouteSettings settings) {
   final uri = Uri.parse(settings.name ?? '');
   switch (uri.path) {
     case '/':
+      return _customPageAnimation(page: const SplashPage());
+    case '/login':
+      return _customPageAnimation(page: const LoginPage());
+    case '/dashboard':
       // return MaterialPageRoute(builder: (_) => const DashboardScreen());
       return _customPageAnimation(page: const DashboardScreen());
     //   break;

@@ -68,6 +68,7 @@ dependencies:
   marquee: ^2.2.3
   flutter_esc_pos_utils: ^1.0.1
   qr_flutter: ^4.1.0
+  country_picker: ^2.0.26
 
 dev_dependencies:
   flutter_test:
