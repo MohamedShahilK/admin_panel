@@ -142,12 +142,21 @@ class _SplashPageState extends State<SplashPage> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/splash1.jpg'),
-              fit: BoxFit.contain,
+              colorFilter: ColorFilter.matrix(<double>[
+                // R  G  B  A  Offset
+                0.65, 0, 0, 0, 0, // Red channel
+                0, 0.65, 0, 0, 0, // Green channel
+                0, 0, 0.65, 0, 0, // Blue channel
+                0, 0, 0, 1, 0, // Alpha channel
+              ]),
+              image: AssetImage('assets/images/splash2.jpg'),
+              // image: NetworkImage('https://img.freepik.com/free-photo/view-3d-car_23-2150998612.jpg?t=st=1716273978~exp=1716277578~hmac=3ea4a9e8ad70110943472f919daf84e3247839aa3630684b06d9896f1758da27&w=1380'),
+              fit: BoxFit.cover,
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 150),
+            // padding: const EdgeInsets.only(top: 230),
+            padding: const EdgeInsets.only(top: 50),
             child: Column(
               children: [
                 Container(),

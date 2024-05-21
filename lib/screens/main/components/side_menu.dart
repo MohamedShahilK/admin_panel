@@ -1,5 +1,9 @@
+import 'package:admin_panel/screens/login/login.dart';
+import 'package:admin_panel/services/auth/auth_services.dart';
 import 'package:admin_panel/utils/constants.dart';
 import 'package:admin_panel/controllers/sidemenu_controller.dart';
+import 'package:admin_panel/utils/custom_tools.dart';
+import 'package:admin_panel/utils/storage_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,7 +49,7 @@ class SideMenu extends StatelessWidget {
                 press: () {
                   menu.setMyMenu('Dashboard');
                   menu.setmyMenuExpand('');
-                  _handlePageNavigation(context, '/');
+                  _handlePageNavigation(context, '/dashboard');
                 },
               ),
               // DrawerListTile(
@@ -299,9 +303,73 @@ class SideMenu extends StatelessWidget {
                 title: "LogOut",
                 svgHeight: 17,
                 svgSrc: "assets/icons/logout2.svg",
-                press: () {
-                  menu.setMyMenu('LogOut');
+                press: () async {
+                  // menu.setMyMenu('LogOut');
                   menu.setmyMenuExpand('');
+                  customLoader(context);
+                  final operatorId = StorageServices.to
+                      .getString('operatorId')
+                      .trim()
+                      .replaceAll(' ', '')
+                      .replaceAll(',', '')
+                      .replaceAll(RegExp(r'[^\w\s]+'), '')
+                      .replaceAll(RegExp(r'\s+(?=\d)'), '')
+                      .replaceAll(RegExp(r'[\s,]+(?=\d)'), '');
+                  final userType = StorageServices.to.getString('userType');
+                  final locationName = StorageServices.to
+                      .getString('locationName')
+                      .trim()
+                      .replaceAll(' ', '')
+                      .replaceAll(',', '')
+                      .replaceAll(RegExp(r'[^\w\s]+'), '')
+                      .replaceAll(RegExp(r'\s+(?=\d)'), '')
+                      .replaceAll(RegExp(r'[\s,]+(?=\d)'), '');
+
+                  customLoader(context);
+                  await AuthServices().logout().then((value) async {
+                    await StorageServices.to.remove('cvas');
+                    await StorageServices.to.remove('logoPath');
+                    await StorageServices.to.remove('locationId');
+                    await StorageServices.to.remove('locationName');
+                    await StorageServices.to.remove('operatorId');
+                    await StorageServices.to.remove('userType');
+                    await StorageServices.to.remove('userName');
+
+                    // final filePath = await StorageServices.to.getString('company_logo_file_path');
+                    // if (filePath != '') {
+                    //   final file = File(filePath);
+                    //   if (file.existsSync()) {
+                    //     await file.delete().then((value) => successMotionToastInfo(context, msg: 'File Deleted Successfully'));
+                    //   }
+                    // } else {
+                    //   await StorageServices.to.remove('company_logo_file_path');
+                    // }
+
+                    await StorageServices.to.remove('company_logo_file_path');
+
+                    await StorageServices.to.remove('appEndDate');
+                    await StorageServices.to.remove('curreny');
+                    await StorageServices.to.remove('timezone');
+                    await StorageServices.to.remove('companyUrl');
+                    await StorageServices.to.remove('blue_mac');
+                    // Loader.hide();
+                    Navigator.pushReplacement(
+                      // Navigator.pushAndRemoveUntil(
+                      context,
+                      // MaterialPageRoute(
+                      //   builder: (context) => UpgradeAlert(
+                      //     dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino : UpgradeDialogStyle.material,
+                      //     upgrader: Upgrader(durationUntilAlertAgain: const Duration(seconds: 2)),
+                      //     showIgnore: false,
+                      //     child: const LoginPage(),
+                      //   ),
+                      // ),
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                      // (route) => false,
+                    );
+                  });
                 },
               ),
             ],

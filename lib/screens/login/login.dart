@@ -219,8 +219,9 @@ class _LoginPageState extends State<LoginPage> with RouteAware {
               image: AssetImage(
                 // 'assets/images/car4.jpeg',
                 // AppImages.car5,
-                'assets/images/bg4.jpg',
+                'assets/images/splash2.jpg',
               ),
+              // image: NetworkImage('https://img.freepik.com/free-photo/view-3d-car_23-2150998612.jpg?t=st=1716273978~exp=1716277578~hmac=3ea4a9e8ad70110943472f919daf84e3247839aa3630684b06d9896f1758da27&w=1380'),
               fit: BoxFit.cover,
             ),
           ),
@@ -906,7 +907,7 @@ class _LoginPageState extends State<LoginPage> with RouteAware {
                                 isLoading = true;
                               });
                               Future.delayed(
-                                const Duration(seconds: 2),
+                                const Duration(seconds: 0),
                                 () async {
                                   final dashBloc = Provider.of<DashboardBloc>(context, listen: false);
                                   final dashTabController = Provider.of<DashBoardTabController>(context, listen: false);
@@ -994,25 +995,24 @@ class _LoginPageState extends State<LoginPage> with RouteAware {
 
                                     // print('1111111111111111111111111111locationName $locationName$operatorId');
 
-                                    if (userCat != 'A') {
-                                      try {
-                                        // await FirebaseMessaging.instance.subscribeToTopic('$locationName$operatorId').then((value) {
-                                        //   // print('111111111111111111111222222222222222222222222223333333333333333333');
-                                        // });
-                                      } catch (e) {
-                                        print('erorrrrrrrrrrrrrrrrrrrr $e');
-                                        await erroMotionToastInfo(context, msg: "Can't able to subscribe the current firebase messaging.Please contact developer");
-                                        Loader.hide();
-                                        // return;
-                                      }
-                                    }
+                                    // if (userCat != 'A') {
+                                    //   try {
+                                    //     // await FirebaseMessaging.instance.subscribeToTopic('$locationName$operatorId').then((value) {
+                                    //     //   // print('111111111111111111111222222222222222222222222223333333333333333333');
+                                    //     // });
+                                    //   } catch (e) {
+                                    //     print('erorrrrrrrrrrrrrrrrrrrr $e');
+                                    //     await erroMotionToastInfo(context, msg: "Can't able to subscribe the current firebase messaging.Please contact developer");
+                                    //     Loader.hide();
+                                    //     // return;
+                                    //   }
+                                    // }
 
                                     await context.read<DashboardBloc>().getSettings();
 
                                     await context.read<SearchBloc>().getAllCheckInItems();
-                                    await context.read<SearchBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
-                                    // await context.read<DashboardBloc>().getDashBoardWithTicket(pageNo: 1);
-                                    // await context.read<DashboardBloc>().getDashBoardAllTicketsWithDate(pageNo: 1, startDate: formattedStartDate, endDate: formattedEndDate);
+                                    // await context.read<SearchBloc>().getAllTicketsWithPageNo(orderBy: 'parking_time', pageNo: 1);
+               
 
                                     // final now = DateTime.now();
                                     final now = DateTime.now().subtract(UtilityFunctions.convertLocalToDubaiTime());
@@ -1032,19 +1032,19 @@ class _LoginPageState extends State<LoginPage> with RouteAware {
                                     dashTabController.setMenuName('Current Inventory');
                                     dashBloc.state.filterDate.add('Last 3 Days');
 
-                                    await context.read<ActionsBloc>().getAllCheckInItems();
+                                    // await context.read<ActionsBloc>().getAllCheckInItems();
                                     await context.read<DashboardBloc>().getCarBrands();
 
                                     // // To refresh notification count in bottom navigation bar
-                                    await context.read<NotificationBloc>().getRequestedTickets(orderBy: 'id');
-                                    await context.read<NotificationBloc>().getOntheWayTickets(orderBy: 'id');
+                                    // await context.read<NotificationBloc>().getRequestedTickets(orderBy: 'id');
+                                    // await context.read<NotificationBloc>().getOntheWayTickets(orderBy: 'id');
 
-                                    await context.read<DashboardBloc>().getCheckInTickets(orderBy: 'id', pageNo: 1);
-                                    await context.read<DashboardBloc>().getCheckOutTickets(orderBy: 'id', pageNo: 1);
-                                    await context.read<DashboardBloc>().getRequestedTickets(orderBy: 'id', pageNo: 1);
-                                    await context.read<DashboardBloc>().getOntheWayTickets(orderBy: 'id', pageNo: 1);
-                                    await context.read<DashboardBloc>().getCollectNowTickets(orderBy: 'id', pageNo: 1);
-                                    await context.read<DashboardBloc>().getParkedTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getCheckInTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getCheckOutTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getRequestedTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getOntheWayTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getCollectNowTickets(orderBy: 'id', pageNo: 1);
+                                    // await context.read<DashboardBloc>().getParkedTickets(orderBy: 'id', pageNo: 1);
 
                                     if (userCat == 'A' || userCat == 'ADMIN') {
                                       await context.read<DashboardBloc>().getAllTickets(orderBy: 'id');
